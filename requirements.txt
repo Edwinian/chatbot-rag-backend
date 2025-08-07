@@ -1,0 +1,13 @@
+langchain
+langchain-huggingface
+langchain-core
+langchain_community
+docx2txt
+pypdf
+langchain_chroma
+python-multipart
+fastapi
+uvicorn
+transformers
+torch
+sentence_transformers
