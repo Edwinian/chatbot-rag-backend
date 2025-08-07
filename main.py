@@ -1,14 +1,14 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException, WebSocket
-from pydantic_models import QueryInput, QueryResponse, DocumentInfo, DeleteFileRequest
-from langchain_service import LangChainService  # Import the new LangChainService class
-from db_service import DBService
-from chroma_service import ChromaService
 import os
 import uuid
 import logging
 import shutil
 import uvicorn
 import asyncio
+from fastapi import FastAPI, File, UploadFile, HTTPException, WebSocket
+from pydantic_models import QueryInput, QueryResponse, DocumentInfo, DeleteFileRequest
+from langchain_service import LangChainService
+from db_service import DBService
+from chroma_service import ChromaService
 
 # Set up logging
 logging.basicConfig(filename="app.log", level=logging.INFO)
@@ -116,8 +116,7 @@ async def websocket_chat(websocket: WebSocket):
         message = data.get("message")
         session_id = data.get("session_id", str(uuid.uuid4()))
         chat_history = db_service.get_chat_history(session_id)
-        collection_name = chroma_service.choose_collection(message)
-        rag_chain = langchain_service.get_rag_chain(collection_name=collection_name)
+        rag_chain = langchain_service.get_rag_chain()
         answer = rag_chain.invoke({"input": message, "chat_history": chat_history})[
             "answer"
         ]

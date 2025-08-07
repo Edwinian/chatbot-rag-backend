@@ -7,11 +7,13 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
 import torch
 
+from chroma_service import ChromaService
+
 
 class LangChainService:
     def __init__(
         self,
-        chroma_service,
+        chroma_service: ChromaService,
         model_name: str = "mistralai/Mixtral-8x7B-Instruct-v0.1",
         max_length: int = 512,
     ):
