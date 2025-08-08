@@ -7,9 +7,11 @@ from langchain.chains.history_aware_retriever import create_history_aware_retrie
 from langchain.chains.retrieval import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from dotenv import load_dotenv
+from sympy import re
 
 from chroma_service import ChromaService
-from pydantic_models import ModelName
+from db_service import DBService
+from pydantic_models import ModelName, QueryInput
 
 load_dotenv()  # Loads the .env file
 
@@ -17,7 +19,6 @@ load_dotenv()  # Loads the .env file
 class LangChainService:
     def __init__(
         self,
-        chroma_service: ChromaService,
         model_name: Optional[str] = ModelName.Mixtral_v0_1.value,
         max_length: int = 512,
     ):
@@ -29,10 +30,11 @@ class LangChainService:
             model_name: Hugging Face model name (e.g., mistralai/Mistral-7B-Instruct-v0.3)
             max_length: Maximum length for generated text
         """
-        self.chroma_service = chroma_service
+        self.chroma_service = ChromaService()
+        self.db_service = DBService()
+        self.output_parser = StrOutputParser()
         self.model_name = model_name
         self.max_length = max_length
-        self.output_parser = StrOutputParser()
 
         # Initialize prompt templates
         self.contextualize_q_system_prompt = (
@@ -90,18 +92,34 @@ class LangChainService:
         """
         Create and return a RAG chain for the specified collection.
 
-        Args:
-            collection_name: Name of the Chroma collection (e.g., 'anime', 'tech')
-
         Returns:
             RAG chain for processing queries
         """
-        retriever = self.chroma_service.get_retriever(search_kwargs={"k": 2})
+        retriever = self.chroma_service.get_retriever(
+            collection_name=collection_name, search_kwargs={"k": 2}
+        )
+        # A history-aware retriever that rephrases the question if it depends on past messages (e.g., if the user says “Tell me more,” it figures out what “more” means by looking at the history)
         history_aware_retriever = create_history_aware_retriever(
             self.llm, retriever, self.contextualize_q_prompt
         )
+        # A question-answer chain that combines the retrieved documents, chat history, and question to produce a clear answer
         question_answer_chain = create_stuff_documents_chain(self.llm, self.qa_prompt)
         rag_chain = create_retrieval_chain(
             history_aware_retriever, question_answer_chain
         )
         return rag_chain
+
+    def get_model_answer(
+        self,
+        query_input: QueryInput,
+        collection_name: str = None,
+        session_id: str = None,
+    ):
+        chat_history = (
+            self.db_service.get_chat_history(session_id) if session_id else []
+        )
+        rag_chain = self.get_rag_chain(collection_name=collection_name)
+        answer = rag_chain.invoke(
+            {"input": query_input.question, "chat_history": chat_history}
+        )["answer"]
+        return answer

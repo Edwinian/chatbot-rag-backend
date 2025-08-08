@@ -26,7 +26,7 @@ class DBService:
                     (id INTEGER PRIMARY KEY AUTOINCREMENT,
                      session_id TEXT,
                      user_query TEXT,
-                     gpt_response TEXT,
+                     model_response TEXT,
                      model TEXT,
                      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)"""
             )
@@ -44,13 +44,13 @@ class DBService:
             conn.commit()
 
     def insert_application_logs(
-        self, session_id: str, user_query: str, gpt_response: str, model: str
+        self, session_id: str, user_query: str, model_response: str, model: str
     ):
         """Insert a log entry into application_logs."""
         with self._get_db_connection() as conn:
             conn.execute(
-                "INSERT INTO application_logs (session_id, user_query, gpt_response, model) VALUES (?, ?, ?, ?)",
-                (session_id, user_query, gpt_response, model),
+                "INSERT INTO application_logs (session_id, user_query, model_response, model) VALUES (?, ?, ?, ?)",
+                (session_id, user_query, model_response, model),
             )
             conn.commit()
 
@@ -59,7 +59,7 @@ class DBService:
         with self._get_db_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(
-                "SELECT user_query, gpt_response FROM application_logs WHERE session_id = ? ORDER BY created_at",
+                "SELECT user_query, model_response FROM application_logs WHERE session_id = ? ORDER BY created_at",
                 (session_id,),
             )
             messages = []
@@ -67,7 +67,7 @@ class DBService:
                 messages.extend(
                     [
                         {"role": "human", "content": row["user_query"]},
-                        {"role": "ai", "content": row["gpt_response"]},
+                        {"role": "ai", "content": row["model_response"]},
                     ]
                 )
             return messages

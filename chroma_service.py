@@ -21,7 +21,7 @@ class ChromaService:
         chunk_size: int = 1000,
         chunk_overlap: int = 200,
     ):
-        """Initialize ChromaService with vector store and text splitter."""
+        self.persist_directory = persist_directory
         self.embedding_function = HuggingFaceEmbeddings(model_name=embedding_model)
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size, chunk_overlap=chunk_overlap, length_function=len
@@ -81,6 +81,14 @@ class ChromaService:
             )
             return False
 
-    def get_retriever(self, search_kwargs: dict = {"k": 2}):
-        """Return a retriever for the Chroma vector store."""
-        return self.vectorstore.as_retriever(search_kwargs=search_kwargs)
+    def get_retriever(
+        self,
+        collection_name: str,
+        search_kwargs: dict = {"k": 2},
+    ):
+        vectorstore = Chroma(
+            collection_name=collection_name,
+            persist_directory=self.persist_directory,
+            embedding_function=self.embedding_function,
+        )
+        return vectorstore.as_retriever(search_kwargs=search_kwargs)

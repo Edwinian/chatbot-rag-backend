@@ -12,6 +12,7 @@ class QueryInput(BaseModel):
     question: str
     session_id: str = Field(default=None)
     model: ModelName = Field(default=ModelName.Mixtral_v0_1)
+    collection_name: str = Field(default=None)
 
 
 class QueryResponse(BaseModel):

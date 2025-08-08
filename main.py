@@ -22,8 +22,8 @@ logging.basicConfig(filename="app.log", level=logging.INFO)
 app = FastAPI()
 
 # Initialize services
-db_service = DBService(db_name="rag_app.db")
-chroma_service = ChromaService(persist_directory="./chroma_db")
+db_service = DBService()
+chroma_service = ChromaService()
 
 
 @app.post("/delete-doc")
@@ -84,26 +84,25 @@ def upload_and_index_document(file: UploadFile = File(...)):
 
 @app.post("/chat", response_model=QueryResponse)
 def chat(query_input: QueryInput):
-    langchain_service = LangChainService(
-        chroma_service=chroma_service, model_name=query_input.model
-    )
+    langchain_service = LangChainService(model_name=query_input.model)
     session_id = query_input.session_id or str(uuid.uuid4())
     model_name = query_input.model or langchain_service.model_name
+    collection_name = query_input.collection_name or "default_collection"
 
     logging.info(
-        f"Session ID: {session_id}, User Query: {query_input.question}, Model: {model_name}"
+        f"Session ID: {session_id}, User Query: {query_input.question}, Model: {model_name}, Collection: {collection_name}"
     )
 
-    chat_history = db_service.get_chat_history(session_id)
-    # collection_name = chroma_service.choose_collection(query_input.question)
-    rag_chain = langchain_service.get_rag_chain()
-    answer = rag_chain.invoke(
-        {"input": query_input.question, "chat_history": chat_history}
-    )["answer"]
-    db_service.insert_application_logs(
-        session_id, query_input.question, answer, query_input.model.value
+    answer = langchain_service.get_model_answer(
+        session_id=session_id, query_input=query_input, collection_name=collection_name
     )
-    logging.info(f"Session ID: {session_id}, AI Response: {answer}")
+    db_service.insert_application_logs(
+        session_id=session_id,
+        user_query=query_input.question,
+        model_response=answer,
+        model=query_input.model.value,
+    )
+    logging.info(f"Session ID: {session_id}, Model Response: {answer}")
     return QueryResponse(answer=answer, session_id=session_id, model=query_input.model)
 
 
@@ -124,18 +123,23 @@ async def websocket_chat(websocket: WebSocket):
         stop_task = asyncio.create_task(check_stop())
 
         data = await websocket.receive_json()
-        message = data.get("message")
-        session_id = data.get("session_id", str(uuid.uuid4()))
         model = data.get("model", None)
-        langchain_service = LangChainService(
-            chroma_service=chroma_service, model_name=model
-        )
+        langchain_service = LangChainService(model_name=model)
+        session_id = data.get("session_id", str(uuid.uuid4()))
+        message = data.get("message")
+        collection_name = data.get("collection_name", "default_collection")
 
-        chat_history = db_service.get_chat_history(session_id)
-        rag_chain = langchain_service.get_rag_chain()
-        answer = rag_chain.invoke({"input": message, "chat_history": chat_history})[
-            "answer"
-        ]
+        answer = langchain_service.get_model_answer(
+            session_id=session_id,
+            query_input=message,
+            collection_name=collection_name,
+        )
+        db_service.insert_application_logs(
+            session_id=session_id,
+            user_query=message,
+            model_response=answer,
+            model=model,
+        )
         chunks = answer.split(". ")
 
         for i, chunk in enumerate(chunks):
