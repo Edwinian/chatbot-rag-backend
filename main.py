@@ -213,11 +213,13 @@ async def websocket_chat(websocket: WebSocket):
                 except asyncio.TimeoutError:
                     pass  # No stop/disconnect message, continue streaming
 
+                is_last_chunk = i == len(chunks) - 1
                 await websocket.send_json(
                     {
                         "status": "streaming",
-                        "chunk": chunk + (". " if i < len(chunks) - 1 else ""),
+                        "chunk": chunk + (". " if not is_last_chunk else ""),
                         "session_id": session_id,
+                        "is_last_chunk": is_last_chunk,
                     }
                 )
                 await asyncio.sleep(0.5)
