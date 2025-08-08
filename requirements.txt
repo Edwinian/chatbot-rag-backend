@@ -11,3 +11,4 @@ uvicorn
 transformers
 torch
 sentence_transformers
+huggingface_hub

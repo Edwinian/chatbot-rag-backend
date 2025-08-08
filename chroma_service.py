@@ -10,12 +10,14 @@ from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from typing import List
 
+from pydantic_models import ModelName
+
 
 class ChromaService:
     def __init__(
         self,
         persist_directory: str = "./chroma_db",
-        embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2",
+        embedding_model: str = ModelName.All_mini_l6_v2.value,
         chunk_size: int = 1000,
         chunk_overlap: int = 200,
     ):
@@ -29,15 +31,15 @@ class ChromaService:
             embedding_function=self.embedding_function,
         )
 
-    def load_and_split_document(self, file_path: str) -> List[Document]:
+    def split_document(self, file_path: str) -> List[Document]:
         """Load and split a document based on file type."""
         file_extension = os.path.splitext(file_path)[1].lower()
-        file_extension_loader_map = {
+        file_loader_map = {
             ".pdf": PyPDFLoader,
             ".docx": Docx2txtLoader,
             ".html": UnstructuredHTMLLoader,
         }
-        loader_class = file_extension_loader_map.get(file_extension, None)
+        loader_class = file_loader_map.get(file_extension, None)
 
         if not loader_class:
             raise ValueError(f"Unsupported file type: {file_path}")
@@ -53,7 +55,7 @@ class ChromaService:
         Returns True on success, False on failure.
         """
         try:
-            splits = self.load_and_split_document(file_path)
+            splits = self.split_document(file_path)
             for split in splits:
                 split.metadata["file_id"] = file_id
             self.vectorstore.add_documents(splits)

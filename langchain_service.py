@@ -1,20 +1,24 @@
-from langchain_huggingface import HuggingFacePipeline
+import os
+from typing import Optional
+from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain.chains import history_aware_retriever
+from langchain.chains.history_aware_retriever import create_history_aware_retriever
 from langchain.chains.retrieval import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
-from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
-import torch
+from dotenv import load_dotenv
 
 from chroma_service import ChromaService
+from pydantic_models import ModelName
+
+load_dotenv()  # Loads the .env file
 
 
 class LangChainService:
     def __init__(
         self,
         chroma_service: ChromaService,
-        model_name: str = "mistralai/Mixtral-8x7B-Instruct-v0.1",
+        model_name: Optional[str] = ModelName.Mixtral_v0_1.value,
         max_length: int = 512,
     ):
         """
@@ -22,7 +26,7 @@ class LangChainService:
 
         Args:
             chroma_service: ChromaService instance for retrieval
-            model_name: Hugging Face model name for text generation
+            model_name: Hugging Face model name (e.g., mistralai/Mistral-7B-Instruct-v0.3)
             max_length: Maximum length for generated text
         """
         self.chroma_service = chroma_service
@@ -40,7 +44,7 @@ class LangChainService:
         )
         self.contextualize_q_prompt = ChatPromptTemplate.from_messages(
             [
-                ("system", f"[INST] {self.contextualize_q_system_prompt} [/INST]"),
+                ("system", self.contextualize_q_system_prompt),
                 MessagesPlaceholder("chat_history"),
                 ("human", "{input}"),
             ]
@@ -49,30 +53,38 @@ class LangChainService:
             [
                 (
                     "system",
-                    "[INST] You are a helpful AI assistant. Use the following context to answer the user's question.\n\nContext: {context} [/INST]",
+                    "You are a helpful AI assistant. Use the following context to answer the user's question.\n\nContext: {context}",
                 ),
                 MessagesPlaceholder(variable_name="chat_history"),
                 ("human", "{input}"),
             ]
         )
 
+        self.llm = self._initialize_llm()
+
+    def _initialize_llm(self):
+        """Initialize and return the ChatHuggingFace LLM."""
+        try:
+            endpoint = HuggingFaceEndpoint(
+                repo_id=self.model_name,
+                huggingfacehub_api_token=os.getenv("HUGGINGFACE_TOKEN"),
+                max_new_tokens=self.max_length,
+                temperature=0.7,  # Controls response randomness
+                top_p=0.9,  # Controls response diversity
+                return_full_text=False,
+            )
+            # Wrap with ChatHuggingFace since HuggingFaceEndpoint always defaults to text-generation task, which is not supported by all models
+            return ChatHuggingFace(llm=endpoint)
+        except Exception as e:
+            raise Exception(f"Failed to initialize LLM {self.model_name}: {str(e)}")
+
+    def get_model_name(self):
+        """Return the model name."""
+        return self.model_name
+
     def get_huggingface_llm(self):
-        """Initialize and return a HuggingFacePipeline LLM."""
-        tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-        model = AutoModelForCausalLM.from_pretrained(
-            self.model_name,
-            torch_dtype=torch.float16 if torch.cuda.is_available() else torch.float32,
-            device_map="auto" if torch.cuda.is_available() else None,
-        )
-        pipe = pipeline(
-            "text-generation",
-            model=model,
-            tokenizer=tokenizer,
-            max_length=self.max_length,
-            truncation=True,
-            return_full_text=False,
-        )
-        return HuggingFacePipeline(pipeline=pipe)
+        """Return the preloaded ChatHuggingFace LLM."""
+        return self.llm
 
     def get_rag_chain(self, collection_name: str = None):
         """
@@ -84,15 +96,12 @@ class LangChainService:
         Returns:
             RAG chain for processing queries
         """
-        llm = self.get_huggingface_llm()
-        retriever = self.chroma_service.get_retriever(
-            collection_name=collection_name, search_kwargs={"k": 2}
+        retriever = self.chroma_service.get_retriever(search_kwargs={"k": 2})
+        history_aware_retriever = create_history_aware_retriever(
+            self.llm, retriever, self.contextualize_q_prompt
         )
-        create_history_aware_retriever = history_aware_retriever(
-            llm, retriever, self.contextualize_q_prompt
-        )
-        question_answer_chain = create_stuff_documents_chain(llm, self.qa_prompt)
+        question_answer_chain = create_stuff_documents_chain(self.llm, self.qa_prompt)
         rag_chain = create_retrieval_chain(
-            create_history_aware_retriever, question_answer_chain
+            history_aware_retriever, question_answer_chain
         )
         return rag_chain

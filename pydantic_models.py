@@ -4,14 +4,14 @@ from datetime import datetime
 
 
 class ModelName(str, Enum):
-    GPT4_O = "gpt-4o"
-    GPT4_O_MINI = "gpt-4o-mini"
+    Mixtral_v0_1 = "mistralai/Mixtral-8x7B-Instruct-v0.1"
+    All_mini_l6_v2 = "sentence-transformers/all-MiniLM-L6-v2"
 
 
 class QueryInput(BaseModel):
     question: str
     session_id: str = Field(default=None)
-    model: ModelName = Field(default=ModelName.GPT4_O_MINI)
+    model: ModelName = Field(default=ModelName.Mixtral_v0_1)
 
 
 class QueryResponse(BaseModel):

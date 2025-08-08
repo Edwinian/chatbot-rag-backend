@@ -5,7 +5,12 @@ import shutil
 import uvicorn
 import asyncio
 from fastapi import FastAPI, File, UploadFile, HTTPException, WebSocket
-from pydantic_models import QueryInput, QueryResponse, DocumentInfo, DeleteFileRequest
+from pydantic_models import (
+    QueryInput,
+    QueryResponse,
+    DocumentInfo,
+    DeleteFileRequest,
+)
 from langchain_service import LangChainService
 from db_service import DBService
 from chroma_service import ChromaService
@@ -19,9 +24,6 @@ app = FastAPI()
 # Initialize services
 db_service = DBService(db_name="rag_app.db")
 chroma_service = ChromaService(persist_directory="./chroma_db")
-langchain_service = LangChainService(
-    chroma_service=chroma_service, model_name="mistralai/Mixtral-8x7B-Instruct-v0.1"
-)
 
 
 @app.post("/delete-doc")
@@ -82,10 +84,16 @@ def upload_and_index_document(file: UploadFile = File(...)):
 
 @app.post("/chat", response_model=QueryResponse)
 def chat(query_input: QueryInput):
-    session_id = query_input.session_id or str(uuid.uuid4())
-    logging.info(
-        f"Session ID: {session_id}, User Query: {query_input.question}, Model: {query_input.model.value}"
+    langchain_service = LangChainService(
+        chroma_service=chroma_service, model_name=query_input.model
     )
+    session_id = query_input.session_id or str(uuid.uuid4())
+    model_name = query_input.model or langchain_service.model_name
+
+    logging.info(
+        f"Session ID: {session_id}, User Query: {query_input.question}, Model: {model_name}"
+    )
+
     chat_history = db_service.get_chat_history(session_id)
     # collection_name = chroma_service.choose_collection(query_input.question)
     rag_chain = langchain_service.get_rag_chain()
@@ -114,15 +122,22 @@ async def websocket_chat(websocket: WebSocket):
                     break
 
         stop_task = asyncio.create_task(check_stop())
+
         data = await websocket.receive_json()
         message = data.get("message")
         session_id = data.get("session_id", str(uuid.uuid4()))
+        model = data.get("model", None)
+        langchain_service = LangChainService(
+            chroma_service=chroma_service, model_name=model
+        )
+
         chat_history = db_service.get_chat_history(session_id)
         rag_chain = langchain_service.get_rag_chain()
         answer = rag_chain.invoke({"input": message, "chat_history": chat_history})[
             "answer"
         ]
         chunks = answer.split(". ")
+
         for i, chunk in enumerate(chunks):
             if stop_signal:
                 await websocket.send_json(
@@ -137,8 +152,10 @@ async def websocket_chat(websocket: WebSocket):
                 }
             )
             await asyncio.sleep(0.5)
+
         if not stop_signal:
             await websocket.send_json({"status": "completed", "session_id": session_id})
+
         stop_task.cancel()
     except Exception as e:
         await websocket.send_json({"error": f"Error: {str(e)}"})
