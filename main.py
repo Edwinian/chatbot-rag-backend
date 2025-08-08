@@ -2,10 +2,19 @@ import os
 import uuid
 import logging
 import shutil
+from fastapi.websockets import WebSocketState
 import uvicorn
 import asyncio
-from fastapi import FastAPI, File, UploadFile, HTTPException, WebSocket
+from fastapi import (
+    FastAPI,
+    File,
+    UploadFile,
+    HTTPException,
+    WebSocket,
+    WebSocketDisconnect,
+)
 from pydantic_models import (
+    ModelName,
     QueryInput,
     QueryResponse,
     DocumentInfo,
@@ -110,61 +119,121 @@ def chat(query_input: QueryInput):
 async def websocket_chat(websocket: WebSocket):
     await websocket.accept()
     try:
-        stop_signal = False
+        # Idle timeout (5 minutes)
+        idle_timeout = 300  # seconds
+        #  manages the timeout internally
+        last_active = asyncio.get_event_loop().time()
 
-        async def check_stop():
-            nonlocal stop_signal
-            while True:
-                data = await websocket.receive_json()
-                if data.get("action") == "stop":
-                    stop_signal = True
-                    break
+        while True:
+            # Receive client message with timeout
+            try:
+                data = await asyncio.wait_for(
+                    websocket.receive_json(), timeout=idle_timeout
+                )
+                last_active = asyncio.get_event_loop().time()  # Reset activity timer
+            except asyncio.TimeoutError:
+                # Close idle connection
+                if websocket.client_state == WebSocketState.CONNECTED:
+                    await websocket.send_json(
+                        {
+                            "status": "timeout",
+                            "message": "Connection closed due to inactivity",
+                        }
+                    )
+                    await websocket.close()
+                return
+            except WebSocketDisconnect:
+                break
 
-        stop_task = asyncio.create_task(check_stop())
+            # Handle client actions
+            action = data.get("action", "connect")
+            session_id = data.get("session_id", str(uuid.uuid4()))
 
-        data = await websocket.receive_json()
-        model = data.get("model", None)
-        langchain_service = LangChainService(model_name=model)
-        session_id = data.get("session_id", str(uuid.uuid4()))
-        message = data.get("message")
-        collection_name = data.get("collection_name", "default_collection")
-
-        answer = langchain_service.get_model_answer(
-            session_id=session_id,
-            query_input=message,
-            collection_name=collection_name,
-        )
-        db_service.insert_application_logs(
-            session_id=session_id,
-            user_query=message,
-            model_response=answer,
-            model=model,
-        )
-        chunks = answer.split(". ")
-
-        for i, chunk in enumerate(chunks):
-            if stop_signal:
+            if action == "disconnect":
+                # Client-initiated closure
+                await websocket.send_json(
+                    {"status": "disconnected", "session_id": session_id}
+                )
+                await websocket.close()
+                return
+            elif action == "stop":
+                # Stop current interaction
                 await websocket.send_json(
                     {"status": "stopped", "session_id": session_id}
                 )
-                break
-            await websocket.send_json(
-                {
-                    "status": "streaming",
-                    "chunk": chunk + (". " if i < len(chunks) - 1 else ""),
-                    "session_id": session_id,
-                }
+                continue
+
+            # Process chat message
+            message = data.get("message")
+            if not message:
+                await websocket.send_json({"error": "No message provided"})
+                continue
+
+            model = data.get("model", ModelName.Mixtral_v0_1.value)
+            collection_name = data.get("collection_name", "default_collection")
+
+            # Initialize services and generate answer
+            langchain_service = LangChainService(model_name=model)
+            chat_history = db_service.get_chat_history(session_id)
+            rag_chain = langchain_service.get_rag_chain(collection_name=collection_name)
+            answer = rag_chain.invoke({"input": message, "chat_history": chat_history})[
+                "answer"
+            ]
+
+            # Log interaction
+            db_service.insert_application_logs(
+                session_id=session_id,
+                user_query=message,
+                model_response=answer,
+                model=model,
             )
-            await asyncio.sleep(0.5)
 
-        if not stop_signal:
-            await websocket.send_json({"status": "completed", "session_id": session_id})
+            # Stream answer in chunks
+            chunks = answer.split(". ")
+            for i, chunk in enumerate(chunks):
+                if websocket.client_state != WebSocketState.CONNECTED:
+                    break
+                # Check for stop or disconnect signal
+                try:
+                    stop_data = await asyncio.wait_for(
+                        websocket.receive_json(), timeout=0.1
+                    )
+                    stop_data_action = stop_data.get("action", "connect")
+                    if stop_data_action == "stop":
+                        await websocket.send_json(
+                            {"status": "stopped", "session_id": session_id}
+                        )
+                        break
+                    elif stop_data_action == "disconnect":
+                        await websocket.send_json(
+                            {"status": "disconnected", "session_id": session_id}
+                        )
+                        await websocket.close()
+                        return
+                except asyncio.TimeoutError:
+                    pass  # No stop/disconnect message, continue streaming
 
-        stop_task.cancel()
+                await websocket.send_json(
+                    {
+                        "status": "streaming",
+                        "chunk": chunk + (". " if i < len(chunks) - 1 else ""),
+                        "session_id": session_id,
+                    }
+                )
+                await asyncio.sleep(0.5)
+
+            # Send completion status
+            if websocket.client_state == WebSocketState.CONNECTED:
+                await websocket.send_json(
+                    {"status": "completed", "session_id": session_id}
+                )
+
     except Exception as e:
-        await websocket.send_json({"error": f"Error: {str(e)}"})
+        if websocket.client_state == WebSocketState.CONNECTED:
+            await websocket.send_json({"error": f"Error: {str(e)}"})
     finally:
-        await websocket.close()
+        if websocket.client_state == WebSocketState.CONNECTED:
+            await websocket.close()
 
 
 if __name__ == "__main__":

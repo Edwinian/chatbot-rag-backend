@@ -11,7 +11,7 @@ from sympy import re
 
 from chroma_service import ChromaService
 from db_service import DBService
-from pydantic_models import ModelName, QueryInput
+from pydantic_models import ModelName
 
 load_dotenv()  # Loads the .env file
 
@@ -80,14 +80,6 @@ class LangChainService:
         except Exception as e:
             raise Exception(f"Failed to initialize LLM {self.model_name}: {str(e)}")
 
-    def get_model_name(self):
-        """Return the model name."""
-        return self.model_name
-
-    def get_huggingface_llm(self):
-        """Return the preloaded ChatHuggingFace LLM."""
-        return self.llm
-
     def get_rag_chain(self, collection_name: str = None):
         """
         Create and return a RAG chain for the specified collection.
@@ -111,7 +103,7 @@ class LangChainService:
 
     def get_model_answer(
         self,
-        query_input: QueryInput,
+        query: str,
         collection_name: str = None,
         session_id: str = None,
     ):
@@ -119,7 +111,7 @@ class LangChainService:
             self.db_service.get_chat_history(session_id) if session_id else []
         )
         rag_chain = self.get_rag_chain(collection_name=collection_name)
-        answer = rag_chain.invoke(
-            {"input": query_input.question, "chat_history": chat_history}
-        )["answer"]
+        answer = rag_chain.invoke({"input": query, "chat_history": chat_history})[
+            "answer"
+        ]
         return answer
