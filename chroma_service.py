@@ -1,3 +1,4 @@
+import os
 from langchain_community.document_loaders import (
     PyPDFLoader,
     Docx2txtLoader,
@@ -30,16 +31,20 @@ class ChromaService:
 
     def load_and_split_document(self, file_path: str) -> List[Document]:
         """Load and split a document based on file type."""
-        if file_path.endswith(".pdf"):
-            loader = PyPDFLoader(file_path)
-        elif file_path.endswith(".docx"):
-            loader = Docx2txtLoader(file_path)
-        elif file_path.endswith(".html"):
-            loader = UnstructuredHTMLLoader(file_path)
-        else:
+        file_extension = os.path.splitext(file_path)[1].lower()
+        file_extension_loader_map = {
+            ".pdf": PyPDFLoader,
+            ".docx": Docx2txtLoader,
+            ".html": UnstructuredHTMLLoader,
+        }
+        loader_class = file_extension_loader_map.get(file_extension, None)
+
+        if not loader_class:
             raise ValueError(f"Unsupported file type: {file_path}")
 
-        documents = loader.load()
+        # Instantiate the loader with the file path
+        loader = loader_class(file_path)
+        documents = loader.load()  # Call load on the instance
         return self.text_splitter.split_documents(documents)
 
     def index_document(self, file_path: str, file_id: int) -> bool:

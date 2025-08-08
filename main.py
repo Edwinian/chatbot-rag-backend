@@ -52,12 +52,14 @@ def list_documents():
 def upload_and_index_document(file: UploadFile = File(...)):
     allowed_extensions = [".pdf", ".docx", ".html"]
     file_extension = os.path.splitext(file.filename)[1].lower()
+
     if file_extension not in allowed_extensions:
         raise HTTPException(
             status_code=400,
             detail=f"Unsupported file type. Allowed types are: {', '.join(allowed_extensions)}",
         )
     temp_file_path = f"temp_{file.filename}"
+
     try:
         with open(temp_file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
