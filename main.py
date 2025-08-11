@@ -129,14 +129,12 @@ def chat(query_input: QueryInput):
 async def websocket_chat(websocket: WebSocket):
     await websocket.accept()
 
-    async def disconnect_websocket(
-        websocket: WebSocket, session_id: Optional[str] = None
-    ):
-        await websocket.send_json({"status": "disconnected", "session_id": session_id})
+    async def close_websocket(websocket: WebSocket, session_id: Optional[str] = None):
+        await websocket.send_json({"status": "closed", "session_id": session_id})
         await websocket.close()
+        db_service.delete_application_logs(session_id)
 
-        if session_id:
-            db_service.delete_application_logs(session_id)
+    session_id = str(uuid.uuid4())
 
     try:
         # Idle timeout (5 minutes)
@@ -167,11 +165,11 @@ async def websocket_chat(websocket: WebSocket):
 
             # Handle client actions
             action = data.get("action", "open")
-            session_id = data.get("session_id", str(uuid.uuid4()))
+            session_id = data.get("session_id", None) or session_id
 
             if action == "close":
                 # Client-initiated closure
-                await disconnect_websocket(websocket=websocket, session_id=session_id)
+                await close_websocket(websocket=websocket, session_id=session_id)
                 return
 
             if action == "stop":
@@ -226,7 +224,7 @@ async def websocket_chat(websocket: WebSocket):
                         break
 
                     if stop_data_action == "close":
-                        await disconnect_websocket(
+                        await close_websocket(
                             websocket=websocket, session_id=session_id
                         )
                         return
@@ -253,7 +251,7 @@ async def websocket_chat(websocket: WebSocket):
     except Exception as e:
         if websocket.client_state == WebSocketState.CONNECTED:
             await websocket.send_json({"error": f"Error: {str(e)}"})
-            await disconnect_websocket(websocket=websocket)
+            await close_websocket(websocket=websocket, session_id=session_id)
 
 
 if __name__ == "__main__":
