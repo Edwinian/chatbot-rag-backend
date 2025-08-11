@@ -867,3 +867,705 @@ Chapter 9 begins with Jeremiah's prayer to God, expressing his grief over the pe
 A recurring theme in Jeremiah 44 and earlier chapters of Jeremiah is God's judgment on Judah and Jerusalem due to the people's disobedience and idolatry. In Deuteronomy 28:15-68, God outlines the consequences of disobedience to His covenant, many of which are evident in the book of Jeremiah.
 
 In summary, Jeremiah 8-9 portrays a dire situation for Judah and Jerusalem due to the people's rejection of God and their wicked ways. The prophet expresses deep sadness over their fate while acknowledging God's righteous judgment.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:root:Session ID: 9d1e507a-6aa7-4fed-a3d7-abbd88c8d1b1, User Query: Summarize the book of Jeremiah chapter 8-9, Model: ModelName.Mixtral_v0_1, Collection: None
+INFO:root:Session ID: 9d1e507a-6aa7-4fed-a3d7-abbd88c8d1b1, Model Response:  Jeremiah 8-9 contains a series of messages from the prophet Jeremiah, lamenting the sins and impending judgments on Judah. In chapter 8, Jeremiah denounces the people's deceit, religious hypocrisy, and refusal to repent. He mourns over their rejection of God's teachings, comparing them to a bird that cannot fly without its wings. Chapter 9 begins with Jeremiah's prayer for judgment on the wicked and false prophets. He continues to lament the coming destruction, comparing it to the pains of childbirth and mourning over the fate of his people. Overall, Jeremiah communicates God's pain and sorrow over His people's unfaithfulness, warning of the impending consequences. The chapter also highlights Jeremiah's deep emotional connection with the Lord and His people, exemplifying the raw expression of emotions in response to sorrow and frustration.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Document 0 content: ...
+INFO:chroma_service:Created 0 splits, 0 valid from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Error indexing document with file_id 16: Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Document 0 content: ...
+INFO:chroma_service:Created 0 splits, 0 valid from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Error indexing document with file_id 17: Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Document 0 content: ...
+INFO:chroma_service:Created 0 splits, 0 valid from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Error indexing document with file_id 18: Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Document 0 content: ...
+INFO:chroma_service:Created 0 splits, 0 valid from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Error indexing document with file_id 19: Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Document 0 content: ...
+INFO:chroma_service:Created 0 splits, 0 valid from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Error indexing document with file_id 20: Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+ERROR:root:Error processing Redis on Windows Release Notes.docx: 500: Failed to index Redis on Windows Release Notes.docx. The document may be empty, contain no extractable text, or have unsupported formatting.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 14 documents from temp_Jeremiah_Finding_God_in_Chaos_7789.PDF
+INFO:chroma_service:Document 0 content: JEREMIAH:
+Finding God in Chaos
+JON KEHRER | 12 SESSIONS...
+INFO:chroma_service:Document 1 content: Jeremiah: Finding God in ChaosSession 1: Jeremiah 1
+Session Notes:
+¢ÙHow would you summarize the message of Jeremiah1?
+¢ÚWhat about this text or about Jeremiah¡¯s call resonatedwith you?
+\u25e6  How have you experienced loss or trauma in your life? Can you relate to theexperience as ¡°disorienting¡±?
+¢ÛRead Psalm 23. How does this text speak to God¡¯spresence with his people in themidst of di\ufb03cult times?
+¢ÜDo you believe that God walks with you in the midstof your pain? How wouldyour life be di\ufb00erent if your...
+INFO:chroma_service:Document 2 content: Jeremiah: Finding God in ChaosSession 2: Jeremiah 2
+Session Notes:
+¢ÙHow would you summarize the message of Jeremiah2?
+¢ÚWhich of the metaphors from Jeremiah 2 resonatedmost with how God hasworked in your life?
+\u25e6  Are there any other metaphors that come to your mind about your relationshipwith God in the past?
+¢ÛRead Deuteronomy 32:7-14. How is God¡¯s relationshipwith his people describedthere?
+\u25e6  Now read Deuteronomy 32:15-38. How is this similar to God¡¯s words in Jeremiah2?
+¢ÜWhat metaphor best des...
+INFO:chroma_service:Document 3 content: Jeremiah: Finding God in ChaosSession 3: Jeremiah 7:1-8:3
+Session Notes:
+¢ÙHow would you summarize the message of Jeremiah7:1-8:3?
+¢ÚThe video discussed several forms of improper worship. Were any of thesesurprising for you? Why or why not?
+¢ÛRead Mark 7:1-13. What were some forms of improperworship in use by thereligious leaders in Jesus¡¯ day?
+¢ÜThink about your own worship. While you may notbe o\ufb00ering sacri\ufb01ces to theQueen of Heaven, in what ways have you trusted in human-built structures ratherth...
+INFO:chroma_service:Document 4 content: Jeremiah: Finding God in ChaosSession 4: Jeremiah 8:4-9:22Session Notes:
+¢ÙHow would you summarize the message of Jeremiah8:4-9:22?
+¢ÚHow have you experienced grief in the past? Do you\ufb01nd it di\ufb03cult to weep overheartbreak and tragedy, even in your own life?
+¢ÛIt may be di\ufb03cult for us to think about God expressinglament and grief overfallen Jerusalem. Is lament or grief something you typically think of God expressing?Why or why not?
+\u25e6  Read John 11:28-37. How did Jesus respond to loss in the story? ...
+INFO:chroma_service:Document 5 content: Jeremiah: Finding God in ChaosSession 5: Jeremiah 17:1-13Session Notes:
+¢ÙHow would you summarize the message of Jeremiah17:1-13?
+¢ÚWhat ideas or images stood out to you from thistext?
+¢ÛRead Psalm 1. How is this similar to this text?How is it di\ufb00erent?
+\u25e6  If you were to describe your spiritual life with an agricultural metaphor(\ufb02ourishing oak tree, dry cactus in the desert, withering rose bush, etc.), whatimage would you choose and why?
+¢ÜDo you really believe that it is better to trustin the Lord ...
+INFO:chroma_service:Document 6 content: Jeremiah: Finding God in ChaosSession 6: Jeremiah 18:1-17Session Notes:
+¢ÙHow would you summarize the message of Jeremiah18:1-17?
+¢ÚWhat stood out to you from this text?
+¢ÛRead Genesis 1. How is God pictured at work in creation?Make a list of hischaracteristics and attributes.
+¢ÜDo you regularly recognize God¡¯s sovereignty overall of life? What would it looklike for you to take a step this week to trust more fully in the sovereignty of God?
+¢ÝThink about a big decision you will need to makethis week....
+INFO:chroma_service:Document 7 content: Jeremiah: Finding God in ChaosSession 7: Jeremiah 29:1-14Session Notes:
+¢ÙHow would you summarize the message of Jeremiah29:1-14?
+¢ÚHave you heard parts of this text before, like Jeremiah29:11? If so, how does itchange the message when you hear it in its original context?
+¢ÛRead Psalm 88:1-7. How does the Psalmist feel inthis text? How could this besimilar to the feelings of the exiles?
+¢ÜDo you have a hard time trusting God in the midstof your darkness and pain?How does this text speak to God¡¯s pre...
+INFO:chroma_service:Document 8 content: Jeremiah: Finding God in ChaosSession 8: Jeremiah 31:1-34Session Notes:
+¢ÙHow would you summarize the message of Jeremiah31:1-34?
+¢ÚWhich of the pictures of renewal most resonatedwith you? Why?
+¢ÛRead Hebrews 8. How does the writer of Hebrews usethis text from Jeremiah?
+¢ÜDo you believe that God could renew you? What areasof your life are most inneed of God¡¯s renewal?
+\u25e6  What barriers do you think you will face if you invite God in to renew these areas?
+¢ÝJesus has initiated the new covenant with us....
+INFO:chroma_service:Document 9 content: Jeremiah: Finding God in ChaosSession 9: Jeremiah 36Session Notes:
+¢ÙHow would you summarize the message of Jeremiah36?
+¢ÚWhat elements of the story stood out to you?
+¢ÛRead 2 Kings 23:36-24:7. How is Jehoiakim describedin that text? What do welearn about his character and actions from these texts?
+¢ÜJehoiakim joined a long line of world rulers whotried to silence God¡¯s word. ReadIsaiah 40:6-8. What does this remind us about the Word of God?
+\u25e6  Now read 1 Peter 1:22-25. What impact does the Word of ...
+INFO:chroma_service:Document 10 content: Jeremiah: Finding God in ChaosSession 10: Jeremiah 39:1-40:6Session Notes:
+¢ÙHow would you summarize the message of Jeremiah39:1-40:6?
+¢ÚThe book of Jeremiah has predicted this moment fromchapter 1. How did it strikeyou to \ufb01nally read about the destruction of the city?
+¢ÛRead Jeremiah 52. How does this text provide a fulleror di\ufb00erent picture ofJerusalem¡¯s destruction?
+¢ÜAlthough this tragedy was predictable, God was stillfaithful. How have you seenGod faithful through the book of Jeremiah?
+\u25e6  Jerem...
+INFO:chroma_service:Document 11 content: Jeremiah: Finding God in ChaosSession 11: Jeremiah 44Session Notes:
+¢ÙHow would you summarize the message of Jeremiah44?
+¢ÚWhat similarities do you see between God¡¯s wordin Jeremiah 44 and earliersections of Jeremiah?
+¢ÛSpend some time reading through Deuteronomy 28:15-68.How have the covenantcurses come on the people because of their disobedience?
+¢ÜIf God sent a prophet to you this week, what problemsor issues might he addressin your life? Consider how you might respond to the word of the Lord in ...
+INFO:chroma_service:Document 12 content: Jeremiah: Finding God in ChaosSession 12: Jeremiah 46-51Session Notes:
+¢ÙHow would you summarize the message of Jeremiah46-51?
+¢ÚHow does this section provide any comfort or hopefor the people of Judah?
+¢ÛRead Jeremiah 25:15-29. What is the cup of God¡¯swrath? Why do the nations drinkit?
+¢ÜBefore his cruci\ufb01xion, Jesus asked God to let thecup pass from him (see Matthew26:36-46). Do you think this was the cup of God¡¯s wrath? Why or why not?
+\u25e6  What does it mean that Jesus drank from the cup and endured...
+INFO:chroma_service:Document 13 content: This video was made possible with support from:...
+INFO:chroma_service:Created 33 splits, 33 valid from temp_Jeremiah_Finding_God_in_Chaos_7789.PDF
+INFO:chroma_service:Split 0 content: JEREMIAH:
+Finding God in Chaos
+JON KEHRER | 12 SESSIONS...
+INFO:chroma_service:Split 1 content: Jeremiah: Finding God in ChaosSession 1: Jeremiah 1
+Session Notes:
+¢ÙHow would you summarize the message of Jeremiah1?
+¢ÚWhat about this text or about Jeremiah¡¯s call resonatedwith you?
+\u25e6  How have you ...
+INFO:chroma_service:Split 2 content: ¢ÜDo you believe that God walks with you in the midstof your pain? How wouldyour life be di\ufb00erent if your e a l l y believed that?
+¢ÝDo you consistently meditate on the fact that Godis with you, even in...
+INFO:chroma_service:Split 3 content: Jeremiah: Finding God in ChaosSession 2: Jeremiah 2
+Session Notes:
+¢ÙHow would you summarize the message of Jeremiah2?
+¢ÚWhich of the metaphors from Jeremiah 2 resonatedmost with how God hasworked in yo...
+INFO:chroma_service:Split 4 content: \u25e6  Now read Deuteronomy 32:15-38. How is this similar to God¡¯s words in Jeremiah2?
+¢ÜWhat metaphor best describes your relationship withGod currently? How couldyou press in to the Lord more fully durin...
+INFO:chroma_service:Split 5 content: \u25e6  Additional Ideas for Practicing Faith: Spend thirty minutes or so charting out atimeline of your spiritual journey. How have you seen God work? How can yourespond to that today?...
+INFO:chroma_service:Split 6 content: Jeremiah: Finding God in ChaosSession 3: Jeremiah 7:1-8:3
+Session Notes:
+¢ÙHow would you summarize the message of Jeremiah7:1-8:3?
+¢ÚThe video discussed several forms of improper worship. Were any of th...
+INFO:chroma_service:Split 7 content: ¢ÜThink about your own worship. While you may notbe o\ufb00ering sacri\ufb01ces to theQueen of Heaven, in what ways have you trusted in human-built structures ratherthan in the Lord?
+¢ÝConsider taking some time t...
+INFO:chroma_service:Split 8 content: \u25e6  Additional Ideas for Practicing Faith: Experiment with a new form of worship thisweek. Consider visiting a church outside of your typical worship experience. Howcan you see God¡¯s hand at work in th...
+INFO:chroma_service:Split 9 content: Jeremiah: Finding God in ChaosSession 4: Jeremiah 8:4-9:22Session Notes:
+¢ÙHow would you summarize the message of Jeremiah8:4-9:22?
+¢ÚHow have you experienced grief in the past? Do you\ufb01nd it di\ufb03cult to ...
+INFO:chroma_service:Split 10 content: \u25e6  Read John 11:28-37. How did Jesus respond to loss in the story? How is that similaror di\ufb00erent from Jeremiah 8-9?
+¢ÜSometimes, we move too quickly through grief. Arethere any losses in your lifethat...
+INFO:chroma_service:Split 11 content: ¢ÝHow does it change your life knowing that God walkswith his people even in themidst of their pain?
+\u25e6  Additional Ideas for Practicing Faith: Spend one hour this week alone with theLord. Ask him if th...
+INFO:chroma_service:Split 12 content: Jeremiah: Finding God in ChaosSession 5: Jeremiah 17:1-13Session Notes:
+¢ÙHow would you summarize the message of Jeremiah17:1-13?
+¢ÚWhat ideas or images stood out to you from thistext?
+¢ÛRead Psalm 1. Ho...
+INFO:chroma_service:Split 13 content: ¢ÜDo you really believe that it is better to trustin the Lord than to trust in humans?List out some reasons why trusting in God is best.
+¢ÝHow would your life look di\ufb00erent this week ifyou chose to trus...
+INFO:chroma_service:Split 14 content: Jeremiah: Finding God in ChaosSession 6: Jeremiah 18:1-17Session Notes:
+¢ÙHow would you summarize the message of Jeremiah18:1-17?
+¢ÚWhat stood out to you from this text?
+¢ÛRead Genesis 1. How is God pict...
+INFO:chroma_service:Split 15 content: ¢ÝThink about a big decision you will need to makethis week. How could you takea step towards trusting God more in the midst of that decision? What obstacles doyou think you will face as you try to tru...
+INFO:chroma_service:Split 16 content: Jeremiah: Finding God in ChaosSession 7: Jeremiah 29:1-14Session Notes:
+¢ÙHow would you summarize the message of Jeremiah29:1-14?
+¢ÚHave you heard parts of this text before, like Jeremiah29:11? If so, h...
+INFO:chroma_service:Split 17 content: ¢ÜDo you have a hard time trusting God in the midstof your darkness and pain?How does this text speak to God¡¯s presence in those places?
+¢ÝHow could you trust God in the midst of your lifethis week? Wha...
+INFO:chroma_service:Split 18 content: \u25e6  Additional Ideas for Practicing Faith: Do an inductive study on the word ¡°hope¡±in the book of Psalms. To do this, use a Bible concordance, Bible software, or anonline Bible website and search for t...
+INFO:chroma_service:Split 19 content: Jeremiah: Finding God in ChaosSession 8: Jeremiah 31:1-34Session Notes:
+¢ÙHow would you summarize the message of Jeremiah31:1-34?
+¢ÚWhich of the pictures of renewal most resonatedwith you? Why?
+¢ÛRead He...
+INFO:chroma_service:Split 20 content: \u25e6  What barriers do you think you will face if you invite God in to renew these areas?
+¢ÝJesus has initiated the new covenant with us. Howcould you celebrate his sacri\ufb01cethis week?
+\u25e6  Additional Ideas ...
+INFO:chroma_service:Split 21 content: Jeremiah: Finding God in ChaosSession 9: Jeremiah 36Session Notes:
+¢ÙHow would you summarize the message of Jeremiah36?
+¢ÚWhat elements of the story stood out to you?
+¢ÛRead 2 Kings 23:36-24:7. How is Je...
+INFO:chroma_service:Split 22 content: \u25e6  Now read 1 Peter 1:22-25. What impact does the Word of God have on us?
+¢ÝHow could you honor the Word of God in your lifethis week?
+\u25e6  Additional Ideas for Practicing Faith: Spend some time meditati...
+INFO:chroma_service:Split 23 content: Jeremiah: Finding God in ChaosSession 10: Jeremiah 39:1-40:6Session Notes:
+¢ÙHow would you summarize the message of Jeremiah39:1-40:6?
+¢ÚThe book of Jeremiah has predicted this moment fromchapter 1. How...
+INFO:chroma_service:Split 24 content: \u25e6  Jeremiah¡¯s ministry involved faithful service. What kind of faithful service is Godcalling you into in your own life?
+¢ÝWhat would it look like for you to choose faithfulservice to the Lord instead ...
+INFO:chroma_service:Split 25 content: \u25e6  Additional Ideas for Practicing Faith: Spend some time this week reading aboutChristian martyrs who gave their life for their faith. Check out recent books withstories of martyrs, or \ufb01nd a copy of ...
+INFO:chroma_service:Split 26 content: Jeremiah: Finding God in ChaosSession 11: Jeremiah 44Session Notes:
+¢ÙHow would you summarize the message of Jeremiah44?
+¢ÚWhat similarities do you see between God¡¯s wordin Jeremiah 44 and earliersectio...
+INFO:chroma_service:Split 27 content: ¢ÜIf God sent a prophet to you this week, what problemsor issues might he addressin your life? Consider how you might respond to the word of the Lord in your currentsituation.
+¢ÝPraise the Lord that the...
+INFO:chroma_service:Split 28 content: \u25e6  Additional Ideas for Practicing Faith: On a sheet of paper, make a list of all theways you have turned away from the Lord in the last 3 months. Now, surrenderthat list to the Lord, and then destroy...
+INFO:chroma_service:Split 29 content: Jeremiah: Finding God in ChaosSession 12: Jeremiah 46-51Session Notes:
+¢ÙHow would you summarize the message of Jeremiah46-51?
+¢ÚHow does this section provide any comfort or hopefor the people of Judah?...
+INFO:chroma_service:Split 30 content: \u25e6  What does it mean that Jesus drank from the cup and endured death? Whatimplications are there for us?
+¢ÝThe message of Jeremiah involves trusting in theLord; this seems to be the answerto \ufb01nding God...
+INFO:chroma_service:Split 31 content: \u25e6  Additional Ideas for Practicing Faith: Take a day of solitude away from your busylife to be by yourself. Spend time re\ufb02ecting on the message of Jeremiah, and askthe Lord to help you sort through th...
+INFO:chroma_service:Split 32 content: This video was made possible with support from:...
+INFO:chroma_service:Indexing 33 splits for file_id 21
+INFO:chroma_service:Successfully indexed document with file_id 21
+INFO:root:File Jeremiah_Finding_God_in_Chaos_7789.PDF uploaded and indexed with file_id 21
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 14 documents from temp_Jeremiah_Finding_God_in_Chaos_7789.PDF
+INFO:chroma_service:Document 0 content: JEREMIAH:
+Finding God in Chaos
+JON KEHRER | 12 SESSIONS...
+INFO:chroma_service:Document 1 content: Jeremiah: Finding God in ChaosSession 1: Jeremiah 1
+Session Notes:
+¢ÙHow would you summarize the message of Jeremiah1?
+¢ÚWhat about this text or about Jeremiah¡¯s call resonatedwith you?
+\u25e6  How have you experienced loss or trauma in your life? Can you relate to theexperience as ¡°disorienting¡±?
+¢ÛRead Psalm 23. How does this text speak to God¡¯spresence with his people in themidst of di\ufb03cult times?
+¢ÜDo you believe that God walks with you in the midstof your pain? How wouldyour life be di\ufb00erent if your...
+INFO:chroma_service:Document 2 content: Jeremiah: Finding God in ChaosSession 2: Jeremiah 2
+Session Notes:
+¢ÙHow would you summarize the message of Jeremiah2?
+¢ÚWhich of the metaphors from Jeremiah 2 resonatedmost with how God hasworked in your life?
+\u25e6  Are there any other metaphors that come to your mind about your relationshipwith God in the past?
+¢ÛRead Deuteronomy 32:7-14. How is God¡¯s relationshipwith his people describedthere?
+\u25e6  Now read Deuteronomy 32:15-38. How is this similar to God¡¯s words in Jeremiah2?
+¢ÜWhat metaphor best des...
+INFO:chroma_service:Document 3 content: Jeremiah: Finding God in ChaosSession 3: Jeremiah 7:1-8:3
+Session Notes:
+¢ÙHow would you summarize the message of Jeremiah7:1-8:3?
+¢ÚThe video discussed several forms of improper worship. Were any of thesesurprising for you? Why or why not?
+¢ÛRead Mark 7:1-13. What were some forms of improperworship in use by thereligious leaders in Jesus¡¯ day?
+¢ÜThink about your own worship. While you may notbe o\ufb00ering sacri\ufb01ces to theQueen of Heaven, in what ways have you trusted in human-built structures ratherth...
+INFO:chroma_service:Document 4 content: Jeremiah: Finding God in ChaosSession 4: Jeremiah 8:4-9:22Session Notes:
+¢ÙHow would you summarize the message of Jeremiah8:4-9:22?
+¢ÚHow have you experienced grief in the past? Do you\ufb01nd it di\ufb03cult to weep overheartbreak and tragedy, even in your own life?
+¢ÛIt may be di\ufb03cult for us to think about God expressinglament and grief overfallen Jerusalem. Is lament or grief something you typically think of God expressing?Why or why not?
+\u25e6  Read John 11:28-37. How did Jesus respond to loss in the story? ...
+INFO:chroma_service:Document 5 content: Jeremiah: Finding God in ChaosSession 5: Jeremiah 17:1-13Session Notes:
+¢ÙHow would you summarize the message of Jeremiah17:1-13?
+¢ÚWhat ideas or images stood out to you from thistext?
+¢ÛRead Psalm 1. How is this similar to this text?How is it di\ufb00erent?
+\u25e6  If you were to describe your spiritual life with an agricultural metaphor(\ufb02ourishing oak tree, dry cactus in the desert, withering rose bush, etc.), whatimage would you choose and why?
+¢ÜDo you really believe that it is better to trustin the Lord ...
+INFO:chroma_service:Document 6 content: Jeremiah: Finding God in ChaosSession 6: Jeremiah 18:1-17Session Notes:
+¢ÙHow would you summarize the message of Jeremiah18:1-17?
+¢ÚWhat stood out to you from this text?
+¢ÛRead Genesis 1. How is God pictured at work in creation?Make a list of hischaracteristics and attributes.
+¢ÜDo you regularly recognize God¡¯s sovereignty overall of life? What would it looklike for you to take a step this week to trust more fully in the sovereignty of God?
+¢ÝThink about a big decision you will need to makethis week....
+INFO:chroma_service:Document 7 content: Jeremiah: Finding God in ChaosSession 7: Jeremiah 29:1-14Session Notes:
+¢ÙHow would you summarize the message of Jeremiah29:1-14?
+¢ÚHave you heard parts of this text before, like Jeremiah29:11? If so, how does itchange the message when you hear it in its original context?
+¢ÛRead Psalm 88:1-7. How does the Psalmist feel inthis text? How could this besimilar to the feelings of the exiles?
+¢ÜDo you have a hard time trusting God in the midstof your darkness and pain?How does this text speak to God¡¯s pre...
+INFO:chroma_service:Document 8 content: Jeremiah: Finding God in ChaosSession 8: Jeremiah 31:1-34Session Notes:
+¢ÙHow would you summarize the message of Jeremiah31:1-34?
+¢ÚWhich of the pictures of renewal most resonatedwith you? Why?
+¢ÛRead Hebrews 8. How does the writer of Hebrews usethis text from Jeremiah?
+¢ÜDo you believe that God could renew you? What areasof your life are most inneed of God¡¯s renewal?
+\u25e6  What barriers do you think you will face if you invite God in to renew these areas?
+¢ÝJesus has initiated the new covenant with us....
+INFO:chroma_service:Document 9 content: Jeremiah: Finding God in ChaosSession 9: Jeremiah 36Session Notes:
+¢ÙHow would you summarize the message of Jeremiah36?
+¢ÚWhat elements of the story stood out to you?
+¢ÛRead 2 Kings 23:36-24:7. How is Jehoiakim describedin that text? What do welearn about his character and actions from these texts?
+¢ÜJehoiakim joined a long line of world rulers whotried to silence God¡¯s word. ReadIsaiah 40:6-8. What does this remind us about the Word of God?
+\u25e6  Now read 1 Peter 1:22-25. What impact does the Word of ...
+INFO:chroma_service:Document 10 content: Jeremiah: Finding God in ChaosSession 10: Jeremiah 39:1-40:6Session Notes:
+¢ÙHow would you summarize the message of Jeremiah39:1-40:6?
+¢ÚThe book of Jeremiah has predicted this moment fromchapter 1. How did it strikeyou to \ufb01nally read about the destruction of the city?
+¢ÛRead Jeremiah 52. How does this text provide a fulleror di\ufb00erent picture ofJerusalem¡¯s destruction?
+¢ÜAlthough this tragedy was predictable, God was stillfaithful. How have you seenGod faithful through the book of Jeremiah?
+\u25e6  Jerem...
+INFO:chroma_service:Document 11 content: Jeremiah: Finding God in ChaosSession 11: Jeremiah 44Session Notes:
+¢ÙHow would you summarize the message of Jeremiah44?
+¢ÚWhat similarities do you see between God¡¯s wordin Jeremiah 44 and earliersections of Jeremiah?
+¢ÛSpend some time reading through Deuteronomy 28:15-68.How have the covenantcurses come on the people because of their disobedience?
+¢ÜIf God sent a prophet to you this week, what problemsor issues might he addressin your life? Consider how you might respond to the word of the Lord in ...
+INFO:chroma_service:Document 12 content: Jeremiah: Finding God in ChaosSession 12: Jeremiah 46-51Session Notes:
+¢ÙHow would you summarize the message of Jeremiah46-51?
+¢ÚHow does this section provide any comfort or hopefor the people of Judah?
+¢ÛRead Jeremiah 25:15-29. What is the cup of God¡¯swrath? Why do the nations drinkit?
+¢ÜBefore his cruci\ufb01xion, Jesus asked God to let thecup pass from him (see Matthew26:36-46). Do you think this was the cup of God¡¯s wrath? Why or why not?
+\u25e6  What does it mean that Jesus drank from the cup and endured...
+INFO:chroma_service:Document 13 content: This video was made possible with support from:...
+INFO:chroma_service:Created 33 splits, 33 valid from temp_Jeremiah_Finding_God_in_Chaos_7789.PDF
+INFO:chroma_service:Split 0 content: JEREMIAH:
+Finding God in Chaos
+JON KEHRER | 12 SESSIONS...
+INFO:chroma_service:Split 1 content: Jeremiah: Finding God in ChaosSession 1: Jeremiah 1
+Session Notes:
+¢ÙHow would you summarize the message of Jeremiah1?
+¢ÚWhat about this text or about Jeremiah¡¯s call resonatedwith you?
+\u25e6  How have you ...
+INFO:chroma_service:Split 2 content: ¢ÜDo you believe that God walks with you in the midstof your pain? How wouldyour life be di\ufb00erent if your e a l l y believed that?
+¢ÝDo you consistently meditate on the fact that Godis with you, even in...
+INFO:chroma_service:Split 3 content: Jeremiah: Finding God in ChaosSession 2: Jeremiah 2
+Session Notes:
+¢ÙHow would you summarize the message of Jeremiah2?
+¢ÚWhich of the metaphors from Jeremiah 2 resonatedmost with how God hasworked in yo...
+INFO:chroma_service:Split 4 content: \u25e6  Now read Deuteronomy 32:15-38. How is this similar to God¡¯s words in Jeremiah2?
+¢ÜWhat metaphor best describes your relationship withGod currently? How couldyou press in to the Lord more fully durin...
+INFO:chroma_service:Split 5 content: \u25e6  Additional Ideas for Practicing Faith: Spend thirty minutes or so charting out atimeline of your spiritual journey. How have you seen God work? How can yourespond to that today?...
+INFO:chroma_service:Split 6 content: Jeremiah: Finding God in ChaosSession 3: Jeremiah 7:1-8:3
+Session Notes:
+¢ÙHow would you summarize the message of Jeremiah7:1-8:3?
+¢ÚThe video discussed several forms of improper worship. Were any of th...
+INFO:chroma_service:Split 7 content: ¢ÜThink about your own worship. While you may notbe o\ufb00ering sacri\ufb01ces to theQueen of Heaven, in what ways have you trusted in human-built structures ratherthan in the Lord?
+¢ÝConsider taking some time t...
+INFO:chroma_service:Split 8 content: \u25e6  Additional Ideas for Practicing Faith: Experiment with a new form of worship thisweek. Consider visiting a church outside of your typical worship experience. Howcan you see God¡¯s hand at work in th...
+INFO:chroma_service:Split 9 content: Jeremiah: Finding God in ChaosSession 4: Jeremiah 8:4-9:22Session Notes:
+¢ÙHow would you summarize the message of Jeremiah8:4-9:22?
+¢ÚHow have you experienced grief in the past? Do you\ufb01nd it di\ufb03cult to ...
+INFO:chroma_service:Split 10 content: \u25e6  Read John 11:28-37. How did Jesus respond to loss in the story? How is that similaror di\ufb00erent from Jeremiah 8-9?
+¢ÜSometimes, we move too quickly through grief. Arethere any losses in your lifethat...
+INFO:chroma_service:Split 11 content: ¢ÝHow does it change your life knowing that God walkswith his people even in themidst of their pain?
+\u25e6  Additional Ideas for Practicing Faith: Spend one hour this week alone with theLord. Ask him if th...
+INFO:chroma_service:Split 12 content: Jeremiah: Finding God in ChaosSession 5: Jeremiah 17:1-13Session Notes:
+¢ÙHow would you summarize the message of Jeremiah17:1-13?
+¢ÚWhat ideas or images stood out to you from thistext?
+¢ÛRead Psalm 1. Ho...
+INFO:chroma_service:Split 13 content: ¢ÜDo you really believe that it is better to trustin the Lord than to trust in humans?List out some reasons why trusting in God is best.
+¢ÝHow would your life look di\ufb00erent this week ifyou chose to trus...
+INFO:chroma_service:Split 14 content: Jeremiah: Finding God in ChaosSession 6: Jeremiah 18:1-17Session Notes:
+¢ÙHow would you summarize the message of Jeremiah18:1-17?
+¢ÚWhat stood out to you from this text?
+¢ÛRead Genesis 1. How is God pict...
+INFO:chroma_service:Split 15 content: ¢ÝThink about a big decision you will need to makethis week. How could you takea step towards trusting God more in the midst of that decision? What obstacles doyou think you will face as you try to tru...
+INFO:chroma_service:Split 16 content: Jeremiah: Finding God in ChaosSession 7: Jeremiah 29:1-14Session Notes:
+¢ÙHow would you summarize the message of Jeremiah29:1-14?
+¢ÚHave you heard parts of this text before, like Jeremiah29:11? If so, h...
+INFO:chroma_service:Split 17 content: ¢ÜDo you have a hard time trusting God in the midstof your darkness and pain?How does this text speak to God¡¯s presence in those places?
+¢ÝHow could you trust God in the midst of your lifethis week? Wha...
+INFO:chroma_service:Split 18 content: \u25e6  Additional Ideas for Practicing Faith: Do an inductive study on the word ¡°hope¡±in the book of Psalms. To do this, use a Bible concordance, Bible software, or anonline Bible website and search for t...
+INFO:chroma_service:Split 19 content: Jeremiah: Finding God in ChaosSession 8: Jeremiah 31:1-34Session Notes:
+¢ÙHow would you summarize the message of Jeremiah31:1-34?
+¢ÚWhich of the pictures of renewal most resonatedwith you? Why?
+¢ÛRead He...
+INFO:chroma_service:Split 20 content: \u25e6  What barriers do you think you will face if you invite God in to renew these areas?
+¢ÝJesus has initiated the new covenant with us. Howcould you celebrate his sacri\ufb01cethis week?
+\u25e6  Additional Ideas ...
+INFO:chroma_service:Split 21 content: Jeremiah: Finding God in ChaosSession 9: Jeremiah 36Session Notes:
+¢ÙHow would you summarize the message of Jeremiah36?
+¢ÚWhat elements of the story stood out to you?
+¢ÛRead 2 Kings 23:36-24:7. How is Je...
+INFO:chroma_service:Split 22 content: \u25e6  Now read 1 Peter 1:22-25. What impact does the Word of God have on us?
+¢ÝHow could you honor the Word of God in your lifethis week?
+\u25e6  Additional Ideas for Practicing Faith: Spend some time meditati...
+INFO:chroma_service:Split 23 content: Jeremiah: Finding God in ChaosSession 10: Jeremiah 39:1-40:6Session Notes:
+¢ÙHow would you summarize the message of Jeremiah39:1-40:6?
+¢ÚThe book of Jeremiah has predicted this moment fromchapter 1. How...
+INFO:chroma_service:Split 24 content: \u25e6  Jeremiah¡¯s ministry involved faithful service. What kind of faithful service is Godcalling you into in your own life?
+¢ÝWhat would it look like for you to choose faithfulservice to the Lord instead ...
+INFO:chroma_service:Split 25 content: \u25e6  Additional Ideas for Practicing Faith: Spend some time this week reading aboutChristian martyrs who gave their life for their faith. Check out recent books withstories of martyrs, or \ufb01nd a copy of ...
+INFO:chroma_service:Split 26 content: Jeremiah: Finding God in ChaosSession 11: Jeremiah 44Session Notes:
+¢ÙHow would you summarize the message of Jeremiah44?
+¢ÚWhat similarities do you see between God¡¯s wordin Jeremiah 44 and earliersectio...
+INFO:chroma_service:Split 27 content: ¢ÜIf God sent a prophet to you this week, what problemsor issues might he addressin your life? Consider how you might respond to the word of the Lord in your currentsituation.
+¢ÝPraise the Lord that the...
+INFO:chroma_service:Split 28 content: \u25e6  Additional Ideas for Practicing Faith: On a sheet of paper, make a list of all theways you have turned away from the Lord in the last 3 months. Now, surrenderthat list to the Lord, and then destroy...
+INFO:chroma_service:Split 29 content: Jeremiah: Finding God in ChaosSession 12: Jeremiah 46-51Session Notes:
+¢ÙHow would you summarize the message of Jeremiah46-51?
+¢ÚHow does this section provide any comfort or hopefor the people of Judah?...
+INFO:chroma_service:Split 30 content: \u25e6  What does it mean that Jesus drank from the cup and endured death? Whatimplications are there for us?
+¢ÝThe message of Jeremiah involves trusting in theLord; this seems to be the answerto \ufb01nding God...
+INFO:chroma_service:Split 31 content: \u25e6  Additional Ideas for Practicing Faith: Take a day of solitude away from your busylife to be by yourself. Spend time re\ufb02ecting on the message of Jeremiah, and askthe Lord to help you sort through th...
+INFO:chroma_service:Split 32 content: This video was made possible with support from:...
+INFO:chroma_service:Indexing 33 splits for file_id 22
+INFO:chroma_service:Successfully indexed document with file_id 22
+INFO:root:File Jeremiah_Finding_God_in_Chaos_7789.PDF uploaded and indexed with file_id 22
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Application_Form_One-Year-Placement-Programme-2025 (7).docx
+INFO:chroma_service:Document 0 content: Hong Kong Observatory One-Year Placement Programme 2025
+
+Personal Particulars
+
+English Full-name (Same as that shown on your HKID Card, Passport or Student visa) 
+
+Click or tap here to enter text.
+
+
+
+Chinese Full-name (Enter NA if not available) 
+
+Click or tap here to enter text.
+
+
+
+Gender
+
+Choose
+
+
+
+Email 
+
+Click or tap here to enter text.
+
+
+
+Phone Number 
+
+Click or tap here to enter text.
+
+
+
+Student Number 
+
+Click or tap here to enter text.
+
+
+
+University / Institution
+
+Click or tap here to ent...
+INFO:chroma_service:Created 12 splits, 12 valid from temp_Application_Form_One-Year-Placement-Programme-2025 (7).docx
+INFO:chroma_service:Split 0 content: Hong Kong Observatory One-Year Placement Programme 2025
+
+Personal Particulars
+
+English Full-name (Same as that shown on your HKID Card, Passport or Student visa) 
+
+Click or tap here to enter text.
+
+
+
+...
+INFO:chroma_service:Split 1 content: Student Number 
+
+Click or tap here to enter text.
+
+
+
+University / Institution
+
+Click or tap here to enter text.
+
+
+
+Department 
+
+Click or tap here to enter text.
+
+
+
+Year of Study Completed as of 2 Janu...
+INFO:chroma_service:Split 2 content: Year of Study Completed as of 2 January 2025 
+
+Click or tap here to enter text.
+
+No Objection Letter (NOL) ¨C If you are a non-local student, please provide a ¡°No Objection Letter¡± (NOL) from the Immig...
+INFO:chroma_service:Split 3 content: Choose
+
+
+
+Link of Portfolio (if any) 
+
+Click or tap here to enter text.
+
+
+
+Cumulative Grade Point Average (CGPA) / Grading / Marks
+
+e.g. 4.11/4.30 or Grading or Marks
+
+
+
+Remarks (if any) 
+
+If you have...
+INFO:chroma_service:Split 4 content: Technical Knowledge and Strengths (Optional) 
+
+e.g. AI, Linux, Python, R programming, Adobe Illustrator¡­.
+
+	
+
+Transcript and resume (In format with filenames ¡°yourname_transcript.pdf¡± and ¡°yourname_re...
+INFO:chroma_service:Split 5 content: Project Applied (At least one and not necessary to fill all)
+
+	
+
+Priority (Up to 3)
+
+Project Code
+
+Project Title
+
+ 
+
+A2(a)
+
+Automatic weather reporting for the Hong Kong International Airport (HKIA)
+
+...
+INFO:chroma_service:Split 6 content: A4(b)
+
+Enhancement of volcano monitoring using satellite data
+
+ 
+
+A6
+
+Investigate risk associated with aviation hazardous weather based on deterministic and probabilistic forecasts
+
+ 
+
+A6 & A1
+
+Study ...
+INFO:chroma_service:Split 7 content: D2(a)
+
+Enhancement of a regional air¨Csea coupled modelling system for marine forecasting
+
+ 
+
+D2(b)
+
+Quantitative study of the effect of sea temperature and salinity profiles on rapid intensity change ...
+INFO:chroma_service:Split 8 content: D3
+
+Evaluate the skills and explore new prediction tools for supporting sub-seasonal to seasonal forecast
+
+ 
+
+F1(a)
+
+Study of extremely hot weather (XHOT) conditions in Hong Kong and development of XH...
+INFO:chroma_service:Split 9 content: F13(a)
+
+Study of severe weather impact on people in terms of population and societal activities
+
+ 
+
+F13(b)
+
+Study the use of urban-scale weather observations and land use data in forecasting regional ...
+INFO:chroma_service:Split 10 content: Enhancement of Automatic Forecast of Regional Weather and Probabilistic Prediction
+
+ 
+
+F3(b)
+
+Enhancement of Severe Weather Nowcast Algorithm for High-impact Significant Convective Weather Phenomena
+
+...
+INFO:chroma_service:Split 11 content: R2
+
+Development and enhancement of the radiation and meteorological measurement device and assembly kit for school community
+
+ 
+
+R3(a)
+
+Enhancement and optimization of microclimate station network for...
+INFO:chroma_service:Indexing 12 splits for file_id 23
+INFO:chroma_service:Successfully indexed document with file_id 23
+INFO:root:File Application_Form_One-Year-Placement-Programme-2025 (7).docx uploaded and indexed with file_id 23
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Document 0 content: ...
+INFO:chroma_service:Created 0 splits, 0 valid from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Error indexing document with file_id 24: Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+ERROR:root:Error processing Redis on Windows Release Notes.docx: 500: Failed to index Redis on Windows Release Notes.docx. The document may be empty, contain no extractable text, or have unsupported formatting.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Document 0 content: ...
+INFO:chroma_service:Created 0 splits, 0 valid from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Error indexing document with file_id 25: Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+ERROR:root:Error processing Redis on Windows Release Notes.docx: 500: Failed to index Redis on Windows Release Notes.docx. The document may be empty, contain no extractable text, or have unsupported formatting.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Document 0 content: ...
+INFO:chroma_service:Created 0 splits, 0 valid from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Error indexing document with file_id 26: Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+ERROR:root:Error processing Redis on Windows Release Notes.docx: 500: Failed to index Redis on Windows Release Notes.docx. The document may be empty, contain no extractable text, or have unsupported formatting.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Document 0 content: ...
+INFO:chroma_service:Created 0 splits, 0 valid from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Error indexing document with file_id 27: Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+ERROR:root:Error processing Redis on Windows Release Notes.docx: 500: Failed to index Redis on Windows Release Notes.docx. The document may be empty, contain no extractable text, or have unsupported formatting.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Document 0 content: ...
+INFO:chroma_service:Created 0 splits, 0 valid from temp_Redis on Windows Release Notes.docx
+ERROR:chroma_service:Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Error indexing document with file_id 28: Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+ERROR:root:Error processing Redis on Windows Release Notes.docx: 500: Failed to index Redis on Windows Release Notes.docx. The document may be empty, contain no extractable text, or have unsupported formatting.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Document 0 content: ...
+INFO:chroma_service:Created 0 splits, 0 valid from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Error indexing document with file_id 29: Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+ERROR:root:Error processing Redis on Windows Release Notes.docx: 500: Failed to index Redis on Windows Release Notes.docx. The document may be empty, contain no extractable text, or have unsupported formatting.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Document 0 content: ...
+INFO:chroma_service:Created 0 splits, 0 valid from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+INFO:chroma_service:Error indexing document with file_id 30: Failed to load or split document temp_Redis on Windows Release Notes.docx: No valid text chunks extracted from temp_Redis on Windows Release Notes.docx
+ERROR:root:Error processing Redis on Windows Release Notes.docx: 500: Failed to index Redis on Windows Release Notes.docx. The document may be empty, contain no extractable text, or have unsupported formatting.

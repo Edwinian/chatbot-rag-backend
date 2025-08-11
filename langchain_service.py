@@ -6,12 +6,12 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains.history_aware_retriever import create_history_aware_retriever
 from langchain.chains.retrieval import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
-from dotenv import load_dotenv
 import requests
 
 from chroma_service import ChromaService
 from db_service import DBService
 from pydantic_models import ModelName
+from dotenv import load_dotenv
 
 load_dotenv()  # Loads the .env file
 

@@ -14,6 +14,7 @@ from fastapi import (
     WebSocket,
     WebSocketDisconnect,
 )
+from fastapi.middleware.cors import CORSMiddleware  # Import CORSMiddleware
 from pydantic_models import (
     ModelName,
     QueryInput,
@@ -24,12 +25,24 @@ from pydantic_models import (
 from langchain_service import LangChainService
 from db_service import DBService
 from chroma_service import ChromaService
+from dotenv import load_dotenv
+
+load_dotenv()  # Loads the .env file
 
 # Set up logging
 logging.basicConfig(filename="app.log", level=logging.INFO)
 
 # Initialize FastAPI app
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[os.getenv("FRONTEND_URL")],  # Allow frontend origin
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allow all headers
+)
 
 # Initialize services
 db_service = DBService()
@@ -92,6 +105,9 @@ async def upload_doc(
         file_id = db_service.insert_document_record(file.filename)
         success = chroma_service.index_document(temp_file_path, file_id)
         if success:
+            logging.info(
+                f"File {file.filename} uploaded and indexed with file_id {file_id}"
+            )
             return {
                 "message": f"File {file.filename} has been successfully uploaded and indexed.",
                 "file_id": file_id,
@@ -99,8 +115,15 @@ async def upload_doc(
         else:
             db_service.delete_document_record(file_id)
             raise HTTPException(
-                status_code=500, detail=f"Failed to index {file.filename}."
+                status_code=500,
+                detail=f"Failed to index {file.filename}. The document may be empty, contain no extractable text, or have unsupported formatting.",
             )
+    except Exception as e:
+        db_service.delete_document_record(file_id)
+        logging.error(f"Error processing {file.filename}: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Error processing {file.filename}: {str(e)}"
+        )
     finally:
         if os.path.exists(temp_file_path):
             os.remove(temp_file_path)
