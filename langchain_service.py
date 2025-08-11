@@ -142,7 +142,8 @@ class LangChainService:
             result = ""
             if "answer_box" in data and "answer" in data["answer_box"]:
                 result = data["answer_box"]["answer"]
-            elif "organic_results" in data and len(data["organic_results"]) > 0:
+
+            if "organic_results" in data and len(data["organic_results"]) > 0:
                 snippets = [
                     result.get("snippet", None)
                     for result in data["organic_results"]
@@ -150,14 +151,17 @@ class LangChainService:
                 ]
                 valid_snippets = [s for s in snippets if s]
                 result = ". ".join(valid_snippets) + (". " if valid_snippets else "")
-            else:
-                result = "No relevant information found."
+
             return result
         except requests.exceptions.RequestException as e:
-            raise Exception(f"Failed to retrieve content from SerpAPI: {str(e)}")
+            print(f"Failed to retrieve content from web: {str(e)}")
+            return ""
 
     def get_hybrid_answer(self, query: str, chat_history: List[Dict], rag_results: Any):
         search_results = self.retrieve_content(query)
+
+        if not search_results:
+            return rag_results["answer"]
 
         # Combine both sources of information
         combined_context = f"""
