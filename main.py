@@ -113,7 +113,7 @@ def chat(query_input: QueryInput):
     )
 
     answer = langchain_service.get_model_answer(
-        session_id=session_id, query_input=query_input
+        session_id=session_id, query=query_input.question
     )
     db_service.insert_application_logs(
         session_id=session_id,
@@ -128,6 +128,16 @@ def chat(query_input: QueryInput):
 @app.websocket("/ws/chat")
 async def websocket_chat(websocket: WebSocket):
     await websocket.accept()
+
+    async def disconnect_websocket(
+        websocket: WebSocket, session_id: Optional[str] = None
+    ):
+        await websocket.send_json({"status": "disconnected", "session_id": session_id})
+        await websocket.close()
+
+        if session_id:
+            db_service.delete_application_logs(session_id)
+
     try:
         # Idle timeout (5 minutes)
         idle_timeout = 300  # seconds
@@ -156,17 +166,15 @@ async def websocket_chat(websocket: WebSocket):
                 break
 
             # Handle client actions
-            action = data.get("action", "connect")
+            action = data.get("action", "open")
             session_id = data.get("session_id", str(uuid.uuid4()))
 
-            if action == "disconnect":
+            if action == "close":
                 # Client-initiated closure
-                await websocket.send_json(
-                    {"status": "disconnected", "session_id": session_id}
-                )
-                await websocket.close()
+                await disconnect_websocket(websocket=websocket, session_id=session_id)
                 return
-            elif action == "stop":
+
+            if action == "stop":
                 # Stop current interaction
                 await websocket.send_json(
                     {"status": "stopped", "session_id": session_id}
@@ -204,25 +212,26 @@ async def websocket_chat(websocket: WebSocket):
             for i, chunk in enumerate(chunks):
                 if websocket.client_state != WebSocketState.CONNECTED:
                     break
-                # Check for stop or disconnect signal
+                # Check for stop or close signal
                 try:
                     stop_data = await asyncio.wait_for(
                         websocket.receive_json(), timeout=0.1
                     )
-                    stop_data_action = stop_data.get("action", "connect")
+                    stop_data_action = stop_data.get("action", "open")
+
                     if stop_data_action == "stop":
                         await websocket.send_json(
                             {"status": "stopped", "session_id": session_id}
                         )
                         break
-                    elif stop_data_action == "disconnect":
-                        await websocket.send_json(
-                            {"status": "disconnected", "session_id": session_id}
+
+                    if stop_data_action == "close":
+                        await disconnect_websocket(
+                            websocket=websocket, session_id=session_id
                         )
-                        await websocket.close()
                         return
                 except asyncio.TimeoutError:
-                    pass  # No stop/disconnect message, continue streaming
+                    pass  # No stop/close message, continue streaming
 
                 is_last_chunk = i == len(chunks) - 1
                 await websocket.send_json(
@@ -244,9 +253,7 @@ async def websocket_chat(websocket: WebSocket):
     except Exception as e:
         if websocket.client_state == WebSocketState.CONNECTED:
             await websocket.send_json({"error": f"Error: {str(e)}"})
-    finally:
-        if websocket.client_state == WebSocketState.CONNECTED:
-            await websocket.close()
+            await disconnect_websocket(websocket=websocket)
 
 
 if __name__ == "__main__":

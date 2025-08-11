@@ -72,6 +72,31 @@ class DBService:
                 )
             return messages
 
+    def delete_application_logs(self, session_id: str) -> bool:
+        """
+        Delete all application log entries for a given session_id.
+
+        Args:
+            session_id: The session ID to delete logs for.
+
+        Returns:
+            bool: True if deletion was successful or no logs existed, False on failure.
+        """
+        try:
+            with self._get_db_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute(
+                    "DELETE FROM application_logs WHERE session_id = ?", (session_id,)
+                )
+                conn.commit()
+                print(f"Deleted application logs for session_id '{session_id}'")
+                return True
+        except Exception as e:
+            print(
+                f"Error deleting application logs for session_id '{session_id}': {str(e)}"
+            )
+            return False
+
     def insert_document_record(self, filename: str) -> int:
         """Insert a document record into document_store and return the file_id."""
         with self._get_db_connection() as conn:
