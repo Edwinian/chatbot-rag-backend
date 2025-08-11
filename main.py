@@ -3,6 +3,7 @@ import uuid
 import logging
 import shutil
 from fastapi.websockets import WebSocketState
+from typing import Optional
 import uvicorn
 import asyncio
 from fastapi import (
@@ -54,13 +55,21 @@ def delete_document(request: DeleteFileRequest):
         }
 
 
+@app.get("/list-collections", response_model=list[str])
+def list_collections():
+    return chroma_service.get_all_collection_names()
+
+
 @app.get("/list-docs", response_model=list[DocumentInfo])
 def list_documents():
     return db_service.get_all_documents()
 
 
 @app.post("/upload-doc")
-def upload_and_index_document(file: UploadFile = File(...)):
+async def upload_doc(
+    file: UploadFile = File(...), collection_name: Optional[str] = None
+):
+    chroma_service = ChromaService(collection_name=collection_name)
     allowed_extensions = [".pdf", ".docx", ".html"]
     file_extension = os.path.splitext(file.filename)[1].lower()
 
@@ -96,8 +105,7 @@ def chat(query_input: QueryInput):
     langchain_service = LangChainService(model_name=query_input.model)
     session_id = query_input.session_id or str(uuid.uuid4())
     model_name = query_input.model or langchain_service.model_name
-    collection_name = query_input.collection_name or "default_collection"
-
+    collection_name = query_input.collection_name
     logging.info(
         f"Session ID: {session_id}, User Query: {query_input.question}, Model: {model_name}, Collection: {collection_name}"
     )
@@ -170,12 +178,14 @@ async def websocket_chat(websocket: WebSocket):
                 continue
 
             model = data.get("model", ModelName.Mixtral_v0_1.value)
-            collection_name = data.get("collection_name", "default_collection")
+            collection_name = data.get("collection_name", None)
 
             # Initialize services and generate answer
-            langchain_service = LangChainService(model_name=model)
+            langchain_service = LangChainService(
+                model_name=model, collection_name=collection_name
+            )
             chat_history = db_service.get_chat_history(session_id)
-            rag_chain = langchain_service.get_rag_chain(collection_name=collection_name)
+            rag_chain = langchain_service.get_rag_chain()
             answer = rag_chain.invoke({"input": message, "chat_history": chat_history})[
                 "answer"
             ]

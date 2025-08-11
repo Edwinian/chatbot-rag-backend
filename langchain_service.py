@@ -19,6 +19,7 @@ load_dotenv()  # Loads the .env file
 class LangChainService:
     def __init__(
         self,
+        collection_name: Optional[str] = None,
         model_name: Optional[str] = ModelName.Mixtral_v0_1.value,
         max_length: int = 512,
     ):
@@ -30,7 +31,7 @@ class LangChainService:
             model_name: Hugging Face model name (e.g., mistralai/Mistral-7B-Instruct-v0.3)
             max_length: Maximum length for generated text
         """
-        self.chroma_service = ChromaService()
+        self.chroma_service = ChromaService(collection_name=collection_name)
         self.db_service = DBService()
         self.output_parser = StrOutputParser()
         self.model_name = model_name

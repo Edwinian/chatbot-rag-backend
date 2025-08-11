@@ -8,7 +8,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
-from typing import List
+from typing import List, Optional
 
 from pydantic_models import ModelName
 
@@ -16,6 +16,7 @@ from pydantic_models import ModelName
 class ChromaService:
     def __init__(
         self,
+        collection_name: Optional[str] = None,
         persist_directory: str = "./chroma_db",
         embedding_model: str = ModelName.All_mini_l6_v2.value,
         chunk_size: int = 1000,
@@ -26,7 +27,10 @@ class ChromaService:
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size, chunk_overlap=chunk_overlap, length_function=len
         )
+
+        collection_name = collection_name or "default_collection"
         self.vectorstore = Chroma(
+            collection_name=collection_name.lower().replace(" ", "_"),
             persist_directory=persist_directory,
             embedding_function=self.embedding_function,
         )
@@ -44,9 +48,8 @@ class ChromaService:
         if not loader_class:
             raise ValueError(f"Unsupported file type: {file_path}")
 
-        # Instantiate the loader with the file path
         loader = loader_class(file_path)
-        documents = loader.load()  # Call load on the instance
+        documents = loader.load()
         return self.text_splitter.split_documents(documents)
 
     def index_document(self, file_path: str, file_id: int) -> bool:
@@ -83,12 +86,18 @@ class ChromaService:
 
     def get_retriever(
         self,
-        collection_name: str,
         search_kwargs: dict = {"k": 2},
     ):
-        vectorstore = Chroma(
-            collection_name=collection_name,
-            persist_directory=self.persist_directory,
-            embedding_function=self.embedding_function,
-        )
-        return vectorstore.as_retriever(search_kwargs=search_kwargs)
+        return self.vectorstore.as_retriever(search_kwargs=search_kwargs)
+
+    def get_all_collection_names(self) -> List[str]:
+        """
+        Retrieve the names of all collections in the Chroma database.
+        Returns a list of collection names.
+        """
+        try:
+            collections = self.vectorstore._client.list_collections()
+            return [collection.name for collection in collections]
+        except Exception as e:
+            print(f"Error retrieving collection names: {str(e)}")
+            return []
