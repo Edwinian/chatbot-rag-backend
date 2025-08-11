@@ -797,3 +797,73 @@ INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransform
 INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
 INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
 INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:root:Session ID: 2a315e31-7e13-4e90-8412-2d53cd71910a, User Query: What is the weather in HK?, Model: ModelName.Mixtral_v0_1, Collection: None
+INFO:root:Session ID: 2a315e31-7e13-4e90-8412-2d53cd71910a, Model Response:  According to the most recent data from the Hong Kong Observatory, partly cloudy skies are expected in the evening, followed by occasional showers overnight. The low temperature will be near 80F, and the winds will be from the SSE at 5 to 10 mph. The chance of rain is 40%. This forecast is from the hourly weather section, but a more detailed extended forecast is also available on the Hong Kong Observatory website. The other weather information provided in the search results is not specific to the same time or location.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:root:Session ID: f4c10b38-0b9d-49b8-93cf-527859a45590, User Query: Latest close price of TSLA, Model: ModelName.Mixtral_v0_1, Collection: None
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:root:Session ID: 03f9842a-8094-4df4-9332-31a0b856b657, User Query: Latest close price of TSLA, Model: ModelName.Mixtral_v0_1, Collection: None
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:root:Session ID: 3b8fbf1b-7949-40ad-ba69-32ef31179829, User Query: Latest close price of TSLA, Model: ModelName.Mixtral_v0_1, Collection: None
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:root:Session ID: 7da3ac42-9675-45f5-9d5c-d7e2f0b7f573, User Query: Latest close price of TSLA, Model: ModelName.Mixtral_v0_1, Collection: None
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:root:Session ID: 011929c9-f37d-46fc-a037-288ef6609111, User Query: Latest close price of TSLA, Model: ModelName.Mixtral_v0_1, Collection: None
+INFO:root:Session ID: 011929c9-f37d-46fc-a037-288ef6609111, Model Response:  Based on the web search results, the latest close price of TSLA (Tesla Inc) is $329.65.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:root:Session ID: 13704e3d-8dcb-46ce-8038-1fe042f69583, User Query: Summarize the book of Jeremiah chapter 8-9, Model: ModelName.Mixtral_v0_1, Collection: None
+INFO:root:Session ID: 13704e3d-8dcb-46ce-8038-1fe042f69583, Model Response:  Jeremiah 8-9 contains a series of woes and laments from the prophet Jeremiah regarding the spiritual condition of Judah and Jerusalem. In chapter 8, Jeremiah denounces the people for their deceit, unwillingness to repent, and rejection of God's teachings. He also laments over the coming destruction of the nation.
+
+Chapter 9 begins with Jeremiah's prayer to God, expressing his grief over the people's sinfulness and God's impending judgment. He acknowledges the justness of God's punishment and, at the same time, pleads for mercy. In verses 23-24, Jeremiah reflects on true wisdom and understanding, which come from knowing God and His instructions.
+
+A recurring theme in Jeremiah 44 and earlier chapters of Jeremiah is God's judgment on Judah and Jerusalem due to the people's disobedience and idolatry. In Deuteronomy 28:15-68, God outlines the consequences of disobedience to His covenant, many of which are evident in the book of Jeremiah.
+
+In summary, Jeremiah 8-9 portrays a dire situation for Judah and Jerusalem due to the people's rejection of God and their wicked ways. The prophet expresses deep sadness over their fate while acknowledging God's righteous judgment.

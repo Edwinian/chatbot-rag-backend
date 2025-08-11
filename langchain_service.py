@@ -1,5 +1,5 @@
 import os
-from typing import Optional
+from typing import Any, Dict, List, Optional
 from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
@@ -105,17 +105,24 @@ class LangChainService:
         self,
         query: str,
         session_id: str = None,
+        skip_hybrid: bool = False,
     ):
-        if True:
-            return self.get_hybrid_answer(query=query, session_id=session_id)
-
         chat_history = (
             self.db_service.get_chat_history(session_id) if session_id else []
         )
         rag_chain = self.get_rag_chain()
-        answer = rag_chain.invoke({"input": query, "chat_history": chat_history})[
-            "answer"
-        ]
+        rag_results = rag_chain.invoke({"input": query, "chat_history": chat_history})
+        answer = rag_results["answer"]
+
+        if not skip_hybrid:
+            need_hybrid = self.need_hybrid_answer(query=query, answer=answer)
+            print("need_hybrid", need_hybrid)
+
+            if need_hybrid:
+                answer = self.get_hybrid_answer(
+                    query=query, chat_history=chat_history, rag_results=rag_results
+                )
+
         return answer
 
     def retrieve_content(self, query: str) -> str:
@@ -149,16 +156,7 @@ class LangChainService:
         except requests.exceptions.RequestException as e:
             raise Exception(f"Failed to retrieve content from SerpAPI: {str(e)}")
 
-    def get_hybrid_answer(self, query: str, session_id: str = None):
-        chat_history = (
-            self.db_service.get_chat_history(session_id) if session_id else []
-        )
-
-        # Get both vector DB results and search API results
-        rag_results = self.get_rag_chain().invoke(
-            {"input": query, "chat_history": chat_history}
-        )
-
+    def get_hybrid_answer(self, query: str, chat_history: List[Dict], rag_results: Any):
         search_results = self.retrieve_content(query)
 
         # Combine both sources of information
@@ -190,3 +188,48 @@ class LangChainService:
         )
 
         return answer
+
+    def need_hybrid_answer(self, query: str, answer: str) -> bool:
+        """
+        Determine if a hybrid answer is needed based on the query.
+
+        """
+
+        def _is_low_confident(answer: str) -> bool:
+            """Heuristic to detect when external search might be needed"""
+            low_confidence_phrases = [
+                "I don't know",
+                "I'm not sure",
+                "not in my knowledge",
+                "no information",
+                "can't find",
+                "unable to",
+                "you may want to check",
+                "verify this information",
+                "as of my last update",
+                "latest",
+                "news",
+                "update",
+                "current",
+            ]
+            return any(phrase in answer.lower() for phrase in low_confidence_phrases)
+
+        def _llm_decides(query: str, answer: str) -> bool:
+            """Use the LLM to evaluate if external search is needed"""
+            decision_prompt = f"""
+            Based on the following interaction, should we search external sources for more information?
+            
+            Query: {query}
+            Current Answer: {answer}
+            
+            Respond ONLY with 'YES' or 'NO'. Do not provide any explanation.
+            """
+
+            response = self.get_model_answer(
+                query=decision_prompt,
+                skip_hybrid=True,
+            )
+
+            return response.upper() == "YES"
+
+        return any([_is_low_confident(answer), _llm_decides(query, answer)])
