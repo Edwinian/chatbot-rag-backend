@@ -7,7 +7,7 @@ from langchain.chains.history_aware_retriever import create_history_aware_retrie
 from langchain.chains.retrieval import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from dotenv import load_dotenv
-from sympy import re
+import requests
 
 from chroma_service import ChromaService
 from db_service import DBService
@@ -106,6 +106,9 @@ class LangChainService:
         query: str,
         session_id: str = None,
     ):
+        if True:
+            return self.get_hybrid_answer(query=query, session_id=session_id)
+
         chat_history = (
             self.db_service.get_chat_history(session_id) if session_id else []
         )
@@ -113,4 +116,77 @@ class LangChainService:
         answer = rag_chain.invoke({"input": query, "chat_history": chat_history})[
             "answer"
         ]
+        return answer
+
+    def retrieve_content(self, query: str) -> str:
+        try:
+            api_url = "https://serpapi.com/search"
+            headers = {"Content-Type": "application/json"}
+            params = {
+                "q": query,
+                "api_key": os.getenv("SERPAPI_KEY"),
+                "engine": "google",
+                "num": 10,
+            }
+            response = requests.get(api_url, headers=headers, params=params)
+            response.raise_for_status()
+            data = response.json()
+
+            result = ""
+            if "answer_box" in data and "answer" in data["answer_box"]:
+                result = data["answer_box"]["answer"]
+            elif "organic_results" in data and len(data["organic_results"]) > 0:
+                snippets = [
+                    result.get("snippet", None)
+                    for result in data["organic_results"]
+                    if result.get("snippet")
+                ]
+                valid_snippets = [s for s in snippets if s]
+                result = ". ".join(valid_snippets) + (". " if valid_snippets else "")
+            else:
+                result = "No relevant information found."
+            return result
+        except requests.exceptions.RequestException as e:
+            raise Exception(f"Failed to retrieve content from SerpAPI: {str(e)}")
+
+    def get_hybrid_answer(self, query: str, session_id: str = None):
+        chat_history = (
+            self.db_service.get_chat_history(session_id) if session_id else []
+        )
+
+        # Get both vector DB results and search API results
+        rag_results = self.get_rag_chain().invoke(
+            {"input": query, "chat_history": chat_history}
+        )
+
+        search_results = self.retrieve_content(query)
+
+        # Combine both sources of information
+        combined_context = f"""
+        Vector Database Results:
+        {rag_results['context']}
+        
+        Web Search Results:
+        {search_results}
+        """
+
+        # Create a prompt for the combined context
+        hybrid_prompt = ChatPromptTemplate.from_messages(
+            [
+                (
+                    "system",
+                    "You are a helpful AI assistant. Use the following information to answer the user's question."
+                    "\n\n{context}\n\n"
+                    "If the information is conflicting, prioritize the most recent or authoritative source.",
+                ),
+                MessagesPlaceholder(variable_name="chat_history"),
+                ("human", "{input}"),
+            ]
+        )
+
+        hybrid_chain = hybrid_prompt | self.chat_llm | self.output_parser
+        answer = hybrid_chain.invoke(
+            {"input": query, "chat_history": chat_history, "context": combined_context}
+        )
+
         return answer

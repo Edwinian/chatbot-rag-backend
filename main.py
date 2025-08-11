@@ -34,6 +34,7 @@ app = FastAPI()
 # Initialize services
 db_service = DBService()
 chroma_service = ChromaService()
+langchain_service = LangChainService()
 
 
 @app.post("/delete-doc")
@@ -53,6 +54,11 @@ def delete_document(request: DeleteFileRequest):
         return {
             "error": f"Failed to delete document with file_id {request.file_id} from Chroma."
         }
+
+
+@app.post("/retrieve-content", response_model=str)
+def retrieve_content(query_input: QueryInput):
+    return langchain_service.retrieve_content(query_input.question)
 
 
 @app.get("/list-collections", response_model=list[str])
