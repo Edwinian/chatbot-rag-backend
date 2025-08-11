@@ -62,10 +62,9 @@ class LangChainService:
                 ("human", "{input}"),
             ]
         )
+        self.chat_llm = self._initialize_chat_llm()
 
-        self.llm = self._initialize_llm()
-
-    def _initialize_llm(self):
+    def _initialize_chat_llm(self):
         """Initialize and return the ChatHuggingFace LLM."""
         try:
             endpoint = HuggingFaceEndpoint(
@@ -81,22 +80,22 @@ class LangChainService:
         except Exception as e:
             raise Exception(f"Failed to initialize LLM {self.model_name}: {str(e)}")
 
-    def get_rag_chain(self, collection_name: str = None):
+    def get_rag_chain(self):
         """
         Create and return a RAG chain for the specified collection.
 
         Returns:
             RAG chain for processing queries
         """
-        retriever = self.chroma_service.get_retriever(
-            collection_name=collection_name, search_kwargs={"k": 2}
-        )
+        retriever = self.chroma_service.get_retriever(search_kwargs={"k": 2})
         # A history-aware retriever that rephrases the question if it depends on past messages (e.g., if the user says “Tell me more,” it figures out what “more” means by looking at the history)
         history_aware_retriever = create_history_aware_retriever(
-            self.llm, retriever, self.contextualize_q_prompt
+            self.chat_llm, retriever, self.contextualize_q_prompt
         )
         # A question-answer chain that combines the retrieved documents, chat history, and question to produce a clear answer
-        question_answer_chain = create_stuff_documents_chain(self.llm, self.qa_prompt)
+        question_answer_chain = create_stuff_documents_chain(
+            self.chat_llm, self.qa_prompt
+        )
         rag_chain = create_retrieval_chain(
             history_aware_retriever, question_answer_chain
         )
@@ -105,13 +104,12 @@ class LangChainService:
     def get_model_answer(
         self,
         query: str,
-        collection_name: str = None,
         session_id: str = None,
     ):
         chat_history = (
             self.db_service.get_chat_history(session_id) if session_id else []
         )
-        rag_chain = self.get_rag_chain(collection_name=collection_name)
+        rag_chain = self.get_rag_chain()
         answer = rag_chain.invoke({"input": query, "chat_history": chat_history})[
             "answer"
         ]

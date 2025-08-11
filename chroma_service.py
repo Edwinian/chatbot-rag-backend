@@ -1,4 +1,6 @@
 import os
+import re
+from fastapi import HTTPException
 from langchain_community.document_loaders import (
     PyPDFLoader,
     Docx2txtLoader,
@@ -14,26 +16,69 @@ from pydantic_models import ModelName
 
 
 class ChromaService:
+    DEFAULT_COLLECTION_NAME = "default_collection"
+    PERSIST_DIRECTORY = "./chroma_db"
+
     def __init__(
         self,
         collection_name: Optional[str] = None,
-        persist_directory: str = "./chroma_db",
         embedding_model: str = ModelName.All_mini_l6_v2.value,
         chunk_size: int = 1000,
         chunk_overlap: int = 200,
     ):
-        self.persist_directory = persist_directory
         self.embedding_function = HuggingFaceEmbeddings(model_name=embedding_model)
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size, chunk_overlap=chunk_overlap, length_function=len
         )
 
-        collection_name = collection_name or "default_collection"
+        self.collection_name = collection_name or self.DEFAULT_COLLECTION_NAME
         self.vectorstore = Chroma(
-            collection_name=collection_name.lower().replace(" ", "_"),
-            persist_directory=persist_directory,
+            collection_name=self.format_collection_name(
+                self.collection_name
+            ),  # Create one if not exist
+            persist_directory=self.PERSIST_DIRECTORY,
             embedding_function=self.embedding_function,
         )
+
+    def format_collection_name(self, name: str) -> str:
+        """
+        Format collection name to comply with Chroma naming rules:
+        - Alphanumeric, underscores, hyphens, periods only.
+        - No leading/trailing underscores, hyphens, or periods.
+        - No spaces or other special characters.
+        - Maximum length of 63 characters.
+        - Non-empty.
+        """
+        if not name or not name.strip():
+            raise HTTPException(
+                status_code=400, detail="Collection name cannot be empty or whitespace."
+            )
+
+        # Convert to lowercase
+        formatted_name = name.lower()
+
+        # Replace spaces with underscores
+        formatted_name = formatted_name.replace(" ", "_")
+
+        # Keep only alphanumeric, underscores, hyphens, and periods
+        formatted_name = re.sub(r"[^a-z0-9_\-.]", "", formatted_name)
+
+        # Remove leading/trailing underscores, hyphens, or periods
+        formatted_name = formatted_name.strip("_-.")
+
+        # Check if the resulting name is empty after cleaning
+        if not formatted_name:
+            raise HTTPException(
+                status_code=400,
+                detail="Collection name is invalid after formatting (e.g., contains only special characters).",
+            )
+
+        # Enforce maximum length
+        MAX_COLLECTION_NAME_LENGTH = 63
+        if len(formatted_name) > MAX_COLLECTION_NAME_LENGTH:
+            formatted_name = formatted_name[:MAX_COLLECTION_NAME_LENGTH].rstrip("_-.")
+
+        return formatted_name
 
     def split_document(self, file_path: str) -> List[Document]:
         """Load and split a document based on file type."""
@@ -90,7 +135,7 @@ class ChromaService:
     ):
         return self.vectorstore.as_retriever(search_kwargs=search_kwargs)
 
-    def get_all_collection_names(self) -> List[str]:
+    def get_all_collections(self) -> List[str]:
         """
         Retrieve the names of all collections in the Chroma database.
         Returns a list of collection names.

@@ -57,7 +57,7 @@ def delete_document(request: DeleteFileRequest):
 
 @app.get("/list-collections", response_model=list[str])
 def list_collections():
-    return chroma_service.get_all_collection_names()
+    return chroma_service.get_all_collections()
 
 
 @app.get("/list-docs", response_model=list[DocumentInfo])
@@ -102,16 +102,18 @@ async def upload_doc(
 
 @app.post("/chat", response_model=QueryResponse)
 def chat(query_input: QueryInput):
-    langchain_service = LangChainService(model_name=query_input.model)
+    collection_name = query_input.collection_name
+    langchain_service = LangChainService(
+        model_name=query_input.model, collection_name=collection_name
+    )
     session_id = query_input.session_id or str(uuid.uuid4())
     model_name = query_input.model or langchain_service.model_name
-    collection_name = query_input.collection_name
     logging.info(
         f"Session ID: {session_id}, User Query: {query_input.question}, Model: {model_name}, Collection: {collection_name}"
     )
 
     answer = langchain_service.get_model_answer(
-        session_id=session_id, query_input=query_input, collection_name=collection_name
+        session_id=session_id, query_input=query_input
     )
     db_service.insert_application_logs(
         session_id=session_id,
@@ -184,11 +186,10 @@ async def websocket_chat(websocket: WebSocket):
             langchain_service = LangChainService(
                 model_name=model, collection_name=collection_name
             )
-            chat_history = db_service.get_chat_history(session_id)
-            rag_chain = langchain_service.get_rag_chain()
-            answer = rag_chain.invoke({"input": message, "chat_history": chat_history})[
-                "answer"
-            ]
+            answer = langchain_service.get_model_answer(
+                session_id=session_id,
+                query=message,
+            )
 
             # Log interaction
             db_service.insert_application_logs(
