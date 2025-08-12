@@ -14,6 +14,8 @@ from typing import Dict, List, Optional
 import logging
 
 from pydantic_models import ModelName
+from langchain_core.retrievers import BaseRetriever
+
 
 # Configure logging
 logging.basicConfig(filename="app.log", level=logging.INFO)
@@ -197,10 +199,6 @@ class ChromaService:
             )
             return False
 
-    def get_retriever(self):
-        documents = self.get_documents()
-        return self.vectorstore.as_retriever(search_kwargs={"k": len(documents)})
-
     def get_all_collections(self) -> List[str]:
         """
         Retrieve the names of all collections in the Chroma database.
@@ -211,3 +209,6 @@ class ChromaService:
         except Exception as e:
             logger.error(f"Error retrieving collection names: {str(e)}")
             return []
+
+    def get_retriever(self, query: str) -> BaseRetriever:
+        return self.vectorstore.as_retriever()
