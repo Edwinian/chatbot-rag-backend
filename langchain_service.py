@@ -1,5 +1,8 @@
 import json
 import os
+import requests
+import re
+
 from typing import Any, Dict, List, Optional
 from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
 from langchain_core.output_parsers import StrOutputParser
@@ -7,17 +10,25 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains.history_aware_retriever import create_history_aware_retriever
 from langchain.chains.retrieval import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
-import requests
 
 from chroma_service import ChromaService
 from db_service import DBService
 from pydantic_models import ModelName
+from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
 load_dotenv()  # Loads the .env file
 
 
 class LangChainService:
+    VALID_LINK_PREFIXES = [
+        "http://",
+        "https://",
+        "www.",
+        "ftp://",
+        "file://",
+    ]
+
     def __init__(
         self,
         collection_name: Optional[str] = None,
@@ -127,7 +138,108 @@ class LangChainService:
 
         return answer
 
-    def retrieve_content(self, query: str) -> Optional[str]:
+    def get_urls_from_prompt(self, query: str) -> List[str]:
+        urls = []
+
+        if not query:
+            return urls
+
+        url_pattern = re.compile(
+            r"(?:(?:https?|ftp|file)://)"  # Protocol (http, https, ftp, file)
+            r"(?:[\w-]+\.)*[\w-]+"  # Domain (subdomains and main domain)
+            r"(?:\.[a-zA-Z]{2,63})"  # TLD
+            r"(?:/[\w\-./?%&=]*)?",  # Optional path/query
+            re.IGNORECASE,
+        )
+
+        potential_urls = re.findall(url_pattern, query)
+        urls = [
+            url
+            for url in potential_urls
+            if any(
+                url.lower().startswith(prefix) for prefix in self.VALID_LINK_PREFIXES
+            )
+        ]
+
+        print("Extracted URLs:", urls)
+        return urls
+
+    def summarize_content(
+        self, text: Optional[str] = None, max_length: int = 1000
+    ) -> str:
+        """Summarize content to fit within context limits"""
+        if not text or len(text) <= max_length:
+            return text
+
+        # Use LLM to summarize (or simpler method for demo)
+        summary_prompt = f"""
+        Summarize the following content in {max_length} characters or less,
+        preserving key information:
+        
+        {text}
+        """
+
+        try:
+            summary = self.chat_llm.invoke(summary_prompt)
+            return summary[:max_length]
+        except:
+            # Fallback to simple truncation
+            return text[:max_length] + "... [truncated]"
+
+    def get_html_content(self, query: str) -> Optional[str]:
+        MAX_HTML_LENGTH = 5000  # Limit to prevent excessive content
+        urls = self.get_urls_from_prompt(query)
+
+        if not urls:
+            return None
+
+        all_content = ""
+
+        for url in urls:
+            try:
+                headers = {"User-Agent": "Mozilla/5.0..."}
+                response = requests.get(url, headers=headers, timeout=10)
+
+                if "text/html" not in response.headers.get("content-type", ""):
+                    continue
+
+                soup = BeautifulSoup(response.text, "html.parser")
+
+                # Remove unwanted elements
+                for element in soup(["script", "style", "nav", "footer", "iframe"]):
+                    element.decompose()
+
+                # Get text from main content areas
+                main_content = ""
+
+                for tag in ["article", "main", "div.content", "section"]:
+                    elements = soup.find_all(tag)
+                    for element in elements:
+                        main_content += (
+                            element.get_text(separator="\n", strip=True) + "\n\n"
+                        )
+
+                # Fallback to body if no specific content found
+                if not main_content:
+                    main_content = (
+                        soup.body.get_text(separator="\n", strip=True)
+                        if soup.body
+                        else ""
+                    )
+
+                if len(main_content) > MAX_HTML_LENGTH:
+                    main_content = (
+                        main_content[:MAX_HTML_LENGTH] + "... [content truncated]"
+                    )
+
+                all_content += f"\n=== Content from {url} ===\n{main_content}\n"
+
+            except Exception as e:
+                print(f"Error processing {url}: {str(e)}")
+
+        return self.summarize_content(all_content)
+
+    def get_search_content(self, query: str) -> Optional[str]:
         try:
             api_url = "https://serpapi.com/search"
             headers = {"Content-Type": "application/json"}
@@ -295,25 +407,30 @@ class LangChainService:
             return ""
 
     def get_hybrid_answer(self, query: str, chat_history: List[Dict], rag_results: Any):
-        search_results = self.retrieve_content(query)
+        html_content = self.get_html_content(query)
+        search_content = self.get_search_content(query)
 
-        if not search_results:
+        if all([not search_content, not html_content]):
             return rag_results["answer"]
 
         # Combine both sources of information
         combined_context = f"""
-        Web Search Results (most authoritative source):
-        {search_results}
+        HTML Content:
+        {html_content}
+
+        Web Search Content (most authoritative source if Confidence is 1.0):
+        {search_content}
         
         Internal Knowledge (for reference only):
         {rag_results['context']}
         
         Instructions:
-        - You MUST use the web search results as the primary source
+        - You MUST use the web search content as the primary source
         - Always provide the most specific answer available
         - Never say you can't provide real-time information when it's available
-        - Remind user to fact check if web search results are used
-        - Remove confidence score or (Confidence: ) from the results
+        - Remind user to fact check if web search content is used
+        - Remove confidence score or (Confidence: ) from the content
+        - HTML content is used as context only and should not be used directly in the answer
         """
 
         hybrid_prompt = ChatPromptTemplate.from_messages(
@@ -363,6 +480,8 @@ class LangChainService:
                 "news",
                 "update",
                 "current",
+                "sorry",
+                "I cannot provide real-time information",
             ]
             return any(phrase in answer.lower() for phrase in low_confidence_phrases)
 
@@ -384,14 +503,10 @@ class LangChainService:
 
             return response.upper() == "YES"
 
-        def _has_external_source(query: str) -> bool:
-            valid_link_prefixes = ["http://", "https://", "www.", "ftp://", "file://"]
-            return any(prefix in query.lower() for prefix in valid_link_prefixes)
-
         return any(
             [
                 _is_low_confident(answer),
-                _llm_decides(query, answer),
-                _has_external_source(query),
+                # _llm_decides(query, answer),
+                len(self.get_urls_from_prompt(query)) > 0,
             ]
         )
