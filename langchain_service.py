@@ -1,3 +1,4 @@
+import json
 import os
 from typing import Any, Dict, List, Optional
 from langchain_huggingface import HuggingFaceEndpoint, ChatHuggingFace
@@ -122,10 +123,11 @@ class LangChainService:
                 answer = self.get_hybrid_answer(
                     query=query, chat_history=chat_history, rag_results=rag_results
                 )
+                print("need_hybrid answer", answer)
 
         return answer
 
-    def retrieve_content(self, query: str) -> str:
+    def retrieve_content(self, query: str) -> Optional[str]:
         try:
             api_url = "https://serpapi.com/search"
             headers = {"Content-Type": "application/json"}
@@ -133,26 +135,161 @@ class LangChainService:
                 "q": query,
                 "api_key": os.getenv("SERPAPI_KEY"),
                 "engine": "google",
-                "num": 10,
+                "num": 5,  # Reduced to focus on top results
             }
             response = requests.get(api_url, headers=headers, params=params)
             response.raise_for_status()
             data = response.json()
+            # Score and rank results
+            results = []
 
-            result = ""
-            if "answer_box" in data and "answer" in data["answer_box"]:
-                result = data["answer_box"]["answer"]
+            # 1. First check answer_box (highest priority)
+            if "answer_box" in data:
+                answer_box = data["answer_box"]
+                content = json.dumps(answer_box)
+                source_link = answer_box.get("link", "Direct Answer")
+                results.append(
+                    {
+                        "content": content,
+                        "source": source_link,
+                        "score": 1.0,  # Highest confidence for direct answers
+                    }
+                )
+            else:
+                # 2. Check knowledge_graph
+                if "knowledge_graph" in data:
+                    kg = data["knowledge_graph"]
+                    source_link = kg.get("source", {}).get("link", "Knowledge Graph")
 
-            if "organic_results" in data and len(data["organic_results"]) > 0:
-                snippets = [
-                    result.get("snippet", None)
-                    for result in data["organic_results"]
-                    if result.get("snippet")
-                ]
-                valid_snippets = [s for s in snippets if s]
-                result = ". ".join(valid_snippets) + (". " if valid_snippets else "")
+                    if "description" in kg:
+                        results.append(
+                            {
+                                "content": kg["description"],
+                                "source": source_link,
+                                "score": 0.7,
+                            }
+                        )
 
-            return result
+                    # For time-related info in knowledge_graph
+                    if kg.get("title", "").lower() in [
+                        "time in hong kong",
+                        "hong kong time",
+                    ]:
+                        if "description" in kg:
+                            results.append(
+                                {
+                                    "content": kg["description"],
+                                    "source": source_link,
+                                    "score": 0.8,
+                                }
+                            )
+
+                # 3. Check related_questions (often contains featured snippets)
+                if "related_questions" in data:
+                    for q in data["related_questions"]:
+                        source_link = q.get("link", "Related Question")
+                        if "snippet" in q:
+                            results.append(
+                                {
+                                    "content": q["snippet"],
+                                    "source": source_link,
+                                    "score": 0.6,
+                                }
+                            )
+                        elif "table" in q and isinstance(q["table"], list):
+                            # Flatten table data for time-related queries
+                            table_content = []
+                            for row in q["table"]:
+                                if isinstance(row, list):
+                                    table_content.append(", ".join(str(x) for x in row))
+                                elif isinstance(row, dict):
+                                    table_content.append(str(row))
+                            if table_content:
+                                results.append(
+                                    {
+                                        "content": "; ".join(table_content),
+                                        "source": source_link,
+                                        "score": 0.65,
+                                    }
+                                )
+
+                # 4. Process organic results
+                if "organic_results" in data:
+                    for idx, result in enumerate(
+                        data["organic_results"][:5]
+                    ):  # Top 5 only
+                        source_link = result.get("link", "Organic Result")
+                        source_domain = ""
+
+                        # Extract domain for display
+                        if "link" in result:
+                            try:
+                                source_domain = (
+                                    result["link"].split("//")[-1].split("/")[0]
+                                )
+                            except:
+                                source_domain = source_link
+
+                        # Calculate base score based on position
+                        position_score = 0.6 - (
+                            idx * 0.1
+                        )  # Higher score for top results
+                        content_score = 0.0
+
+                        # Boost score for authoritative domains
+                        if any(
+                            d in source_domain
+                            for d in ["wikipedia.org", "gov.hk", "timeanddate.com"]
+                        ):
+                            content_score += 0.2
+
+                        # Boost score for time/date mentions
+                        snippet = result.get("snippet", "")
+                        if "time" in snippet.lower() or "date" in snippet.lower():
+                            content_score += 0.1
+
+                        total_score = position_score + content_score
+
+                        if "snippet" in result:
+                            results.append(
+                                {
+                                    "content": result["snippet"],
+                                    "source": (
+                                        source_domain if source_domain else source_link
+                                    ),
+                                    "link": source_link,
+                                    "score": total_score,
+                                }
+                            )
+
+            # Sort all results by score (highest first)
+            results.sort(key=lambda x: x["score"], reverse=True)
+
+            # Format the final output with sources
+            if results:
+                formatted_results = []
+                seen_content = set()  # To avoid duplicates
+
+                for res in results[:3]:  # Take top 3 results
+                    # Skip duplicates
+                    content_hash = hash(res["content"])
+                    if content_hash in seen_content:
+                        continue
+                    seen_content.add(content_hash)
+
+                    # Format source display
+                    source_display = res["source"]
+                    if len(source_display) > 30:
+                        source_display = source_display[:27] + "..."
+
+                    # Format the result with source and confidence
+                    formatted_results.append(
+                        f"[Source: {source_display} | Confidence: {res['score']:.1f}]\n"
+                        f"{res['content']}\n"
+                    )
+
+                return "\n".join(formatted_results)
+
         except requests.exceptions.RequestException as e:
             print(f"Failed to retrieve content from web: {str(e)}")
             return ""
@@ -165,21 +302,32 @@ class LangChainService:
 
         # Combine both sources of information
         combined_context = f"""
-        Vector Database Results:
+        Web Search Results (most authoritative source):
+        {search_results}
+        
+        Internal Knowledge (for reference only):
         {rag_results['context']}
         
-        Web Search Results:
-        {search_results}
+        Instructions:
+        - You MUST use the web search results as the primary source
+        - Always provide the most specific answer available
+        - Never say you can't provide real-time information when it's available
+        - Remind user to fact check if web search results are used
+        - Remove confidence score or (Confidence: ) from the results
         """
 
-        # Create a prompt for the combined context
         hybrid_prompt = ChatPromptTemplate.from_messages(
             [
                 (
                     "system",
-                    "You are a helpful AI assistant. Use the following information to answer the user's question."
-                    "\n\n{context}\n\n"
-                    "If the information is conflicting, prioritize the most recent or authoritative source.",
+                    "You are a helpful AI assistant that provides accurate, up-to-date information. "
+                    "You have access to both internal knowledge and real-time web search results.\n\n"
+                    "Context:\n{context}\n\n"
+                    "Response Guidelines:\n"
+                    "2. Present the information clearly and directly\n"
+                    "3. Never claim you can't provide real-time info when it's available\n"
+                    "4. If web results provide a direct answer with confidence 1.0, use it verbatim\n"
+                    "5. Only reference internal knowledge if it supplements the web results\n",
                 ),
                 MessagesPlaceholder(variable_name="chat_history"),
                 ("human", "{input}"),
@@ -236,4 +384,14 @@ class LangChainService:
 
             return response.upper() == "YES"
 
-        return any([_is_low_confident(answer), _llm_decides(query, answer)])
+        def _has_external_source(query: str) -> bool:
+            valid_link_prefixes = ["http://", "https://", "www.", "ftp://", "file://"]
+            return any(prefix in query.lower() for prefix in valid_link_prefixes)
+
+        return any(
+            [
+                _is_low_confident(answer),
+                _llm_decides(query, answer),
+                _has_external_source(query),
+            ]
+        )
