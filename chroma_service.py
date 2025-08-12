@@ -10,7 +10,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
-from typing import List, Optional
+from typing import Dict, List, Optional
 import logging
 
 from pydantic_models import ModelName
@@ -39,12 +39,60 @@ class ChromaService:
             add_start_index=True,  # Preserve metadata for debugging
         )
 
-        self.collection_name = collection_name or self.DEFAULT_COLLECTION_NAME
+        self.collection_name = self.DEFAULT_COLLECTION_NAME
         self.vectorstore = Chroma(
             collection_name=self.format_collection_name(self.collection_name),
             persist_directory=self.PERSIST_DIRECTORY,
             embedding_function=self.embedding_function,
         )
+
+    def find_similar_documents(
+        self,
+        query: str,
+        k: int = 10,
+        filter: Optional[dict[str, str]] = None,  # noqa: A002
+        where_document: Optional[dict[str, str]] = None,
+    ) -> List[Document]:
+        documents = self.get_documents()
+        results = self.vectorstore.similarity_search_with_score(
+            query=query,
+            k=k or len(documents),
+            filter=filter,
+            where_document=where_document,
+        )
+        filtered_results = [doc for doc, score in results if score < 2.0]
+        return filtered_results
+
+    def get_documents(self, file_id: Optional[int] = None) -> List[Dict]:
+        """
+        Retrieve all document chunks from Chroma that match the given file_id.
+        Returns a list of dictionaries containing document content and metadata.
+        """
+        try:
+            results = (
+                self.vectorstore._collection.get(
+                    where={"file_id": file_id}, include=["documents", "metadatas"]
+                )
+                if file_id
+                else self.vectorstore._collection.get(
+                    include=["documents", "metadatas"]
+                )
+            )
+
+            documents = []
+            for i in range(len(results["ids"])):
+                documents.append(
+                    {
+                        "id": results["ids"][i],
+                        "content": results["documents"][i],
+                        "metadata": results["metadatas"][i],
+                    }
+                )
+
+            return documents
+        except Exception as e:
+            logger.error(f"Error retrieving documents for file_id {file_id}: {str(e)}")
+            return []
 
     def format_collection_name(self, name: str) -> str:
         if not name or not name.strip():
@@ -77,29 +125,32 @@ class ChromaService:
             ".html": UnstructuredHTMLLoader,
         }
         loader_class = file_loader_map.get(file_extension)
+
         if not loader_class:
             raise ValueError(f"Unsupported file type: {file_path}")
 
         try:
             loader = loader_class(file_path)
+            print("loader", loader)
             documents = loader.load()
-            logger.info(f"Loaded {len(documents)} documents from {file_path}")
+            print("documents", documents)
+            print(f"Loaded {len(documents)} documents from {file_path}")
             if not documents:
                 raise ValueError(f"No content extracted from {file_path}")
 
             # Log raw document content for debugging
             for i, doc in enumerate(documents):
-                logger.info(f"Document {i} content: {doc.page_content[:500]}...")
+                print(f"Document {i} content: {doc.page_content[:500]}...")
 
             splits = self.text_splitter.split_documents(documents)
             valid_splits = [split for split in splits if split.page_content.strip()]
 
             # Log split details
-            logger.info(
+            print(
                 f"Created {len(splits)} splits, {len(valid_splits)} valid from {file_path}"
             )
             for i, split in enumerate(valid_splits):
-                logger.info(f"Split {i} content: {split.page_content[:200]}...")
+                print(f"Split {i} content: {split.page_content[:200]}...")
 
             if not valid_splits:
                 raise ValueError(f"No valid text chunks extracted from {file_path}")
@@ -115,12 +166,12 @@ class ChromaService:
         """
         try:
             splits = self.split_document(file_path)
-            logger.info(f"Indexing {len(splits)} splits for file_id {file_id}")
+            print(f"Indexing {len(splits)} splits for file_id {file_id}")
             for split in splits:
                 split.metadata["file_id"] = file_id
             if splits:
                 self.vectorstore.add_documents(splits)
-                logger.info(f"Successfully indexed document with file_id {file_id}")
+                print(f"Successfully indexed document with file_id {file_id}")
                 return True
             else:
                 logger.warning(f"No valid splits to index for file_id {file_id}")
@@ -136,11 +187,9 @@ class ChromaService:
         """
         try:
             docs = self.vectorstore.get(where={"file_id": file_id})
-            logger.info(
-                f"Found {len(docs['ids'])} document chunks for file_id {file_id}"
-            )
+            print(f"Found {len(docs['ids'])} document chunks for file_id {file_id}")
             self.vectorstore._collection.delete(where={"file_id": file_id})
-            logger.info(f"Deleted all documents with file_id {file_id}")
+            print(f"Deleted all documents with file_id {file_id}")
             return True
         except Exception as e:
             logger.error(
@@ -148,8 +197,9 @@ class ChromaService:
             )
             return False
 
-    def get_retriever(self, search_kwargs: dict = {"k": 2}):
-        return self.vectorstore.as_retriever(search_kwargs=search_kwargs)
+    def get_retriever(self):
+        documents = self.get_documents()
+        return self.vectorstore.as_retriever(search_kwargs={"k": len(documents)})
 
     def get_all_collections(self) -> List[str]:
         """

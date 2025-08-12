@@ -99,7 +99,7 @@ class LangChainService:
         Returns:
             RAG chain for processing queries
         """
-        retriever = self.chroma_service.get_retriever(search_kwargs={"k": 2})
+        retriever = self.chroma_service.get_retriever()
         # A history-aware retriever that rephrases the question if it depends on past messages (e.g., if the user says “Tell me more,” it figures out what “more” means by looking at the history)
         history_aware_retriever = create_history_aware_retriever(
             self.chat_llm, retriever, self.contextualize_q_prompt
@@ -124,6 +124,7 @@ class LangChainService:
         )
         rag_chain = self.get_rag_chain()
         rag_results = rag_chain.invoke({"input": query, "chat_history": chat_history})
+        print("Retrieved documents:", rag_results["context"])
         answer = rag_results["answer"]
 
         if not skip_hybrid:
@@ -425,7 +426,6 @@ class LangChainService:
         {rag_results['context']}
         
         Instructions:
-        - You MUST use the web search content as the primary source
         - Always provide the most specific answer available
         - Never say you can't provide real-time information when it's available
         - Remind user to fact check if web search content is used

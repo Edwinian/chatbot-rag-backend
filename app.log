@@ -1760,3 +1760,753 @@ INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
 INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
 INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
 INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Found 0 document chunks for file_id 8
+INFO:chroma_service:Deleted all documents with file_id 8
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 9 documents from temp_MPF SCHEME - MEMBER INFORMATION CHANGE FORM_signed.pdf
+INFO:chroma_service:Document 0 content: 1 of 9
+MIC-25V3
+MPF SCHEME 每
+MEMBER INFORMATION CHANGE FORM 
+\u0f8c \xd1 \u08f8\u068c\u08d8
+Important Notes \u052b\u0db0 :
+1. Please read the following notes before completing this form. \u0e08\u052b\u0db0f
+(i) eMPF Platform Company Limited ( "eMPF Company" ), a wholly owned subsidiary of the Mandatory Provident Fund Schemes
+Authority ( "MPFA" ), will provide the scheme administration services to you through the eMPF Platform, subject to the "General
+Terms and Conditions of the eMPF Platform" which can be accessed from https://empf.org.hk/tnc...
+INFO:chroma_service:Document 1 content: 2 of 9
+MIC-25V3
+(2) Member Name 有\u1048 ( As shown on HKID Card / Passport 早)
+ 
+(3) Identi\ufb01cation \u05fc
+ HKID Card \u0ca5\u0512\u0385\u15c7   Passport \u1690\u0e6b ( Applicable ONLY for an individual without HKID Card \u0ca5\u0512\u0385\u15c7\u025b\u027b\u0dec\u1133 )
+Document No. \u15c7\u0381\u0eee\u11c1 
+  B. CHANGE OF MEMBER PARTICULARS 
+1
+ \u08d8 
+1
+ ( Complete only those details to be changed \u08d8) 
+1) Change of Contact Information \u08d8
+ i) New Address \u0e2d\u03ae\u0467  
+Please tick the appropriate type and provide the relevant information. f
+ Address Type
+ \u03ae\u0467\u15f3抄 (A) Residential Address 
+2 & 3
+妒\u03ae\u0467
+2 \u02bf 3 AND / OR...
+INFO:chroma_service:Document 2 content: 3 of 9
+MIC-25V3
+(5) Change / Correction of Name 
+3
+ and / or Signature Specimen 
+3
+ 有 
+3
+ \u15a6\u0ec7\u1175\u03cc 
+3
+ (i) Member Name 有\u1048 ( As shown on HKID Card / Passport 早 )
+Surname in English\u02e4  
+Given Name in English\u02d6有羊 
+Name in Chinese有 ( Surname\u02e4 ) ( Given Name 有羊 ) 
+(ii) New Signature Specimen \u0e2d\u15a6\u0ec7\u1175\u03cc
+ 
+1
+ For employee member, if you / your employer wish(es) to update member particulars in relation to your employment details ( including but not limited to date of employment ), the 
+employer is required to prov...
+INFO:chroma_service:Document 3 content: 4 of 9
+MIC-25V3
+  E.  CHANGE OF PAYMENT METHOD 
+5
+ \u04bb\u04b7\u02f9\u0c9b步\u03cc 
+5
+ \x80 For Self-Employed Person only \u0406\u0f87\u025b\u027b \x81
+If you would like to change the payment method in relation to direct debit 
+6
+, please download "Direct Debit Authorization" ( "DDA Form" ) 
+via visiting the website of the eMPF Platform ( https://empf.org.hk/forms/en ) or scanning the QR code to complete and return "DDA Form". 
+Method of payment will be defaulted as "by cheque" if direct debit is cancelled.\u0a9f\u03d4\u0a6e
+ 6
+ \u05f8\u0696
+\u082bhttps://empf.org.hk/forms )...
+INFO:chroma_service:Document 4 content: 5 of 9
+MIC-25V3
+Submission Channels \u08b0Enquiries \u0f14
+1. Post:  PO Box 98929 Tsim Sha Tsui Post O\ufb03ce
+ \u0d89\u0a54 :\u11cc 98929 \u0eee
+2. Drop-in Box in any one of the eMPF Service Centres below
+ \u04b3\u10c8\u11cc
+3. Email address * \u0f65\u0d89\u03ae\u0467 * : forms@support.empf.org.hk
+4. Fax * \u0dc2\u0946 * : 3197 2988
+1. eMPF Customer Service Hotline \u0a15\u11a0\u11de  : 183 2622
+2. Email address \u0f65\u0d89\u03ae\u0467 : enquiry@support.empf.org.hk
+3. Fax \u0dc2\u0946 : 3197 2922
+ Please do NOT submit duplicate copies to avoid duplication.
+ \u1217\u02b6\u120df 
+eMPF Service Centres Address & Service Hours \u0d9c
+Hong K...
+INFO:chroma_service:Document 5 content: 6 of 9
+MIC-25V3
+APPENDIX A: LIST OF "PERSONAL INFORMATION COLLECTION STATEMENT" ( "PICS" ) OF THE eMPF 
+PLATFORM AND THE ONBOARDED MPF SCHEMES
+\u137dA: \x91( \x99 ) \u068c
+Below are the PICS of the eMPF Platform and the onboarded MPF schemes. Please download and read the PICS of the eMPF Platform and the onboarded MPF 
+scheme(s) via visiting the website of the eMPF Platform or scanning respective QR code. Alternatively, you may also get a copy of the PICS by calling eMPF 
+Customer Service Hotline 183 2622 or vi...
+INFO:chroma_service:Document 6 content: 7 of 9
+MIC-25V3
+Personal Information Collection Statement of The Onboarded MPF Schemes
+\u05fc
+Scheme Name \u0f8c有\u1048 Trustee Name \u0561\u09c4\u025b有\u1048
+Scheme Onboarding Date
+\u0f8c\u1537\u0b45\u02da\u0c82
+( DD / MM / YYYY \u02da\u014a\u02dc\u014a\u03cb )
+Link / QR Code
+\u0bb9\u0d10\u014a\u025a\u106a\u11c1
+Principal MPF 每 Simple Plan
+\u0696 每 \u0c2c\u0298\u136f
+Principal Trust Company (Asia) Limited
+\u02ae\u0321 07 / 05 / 2025
+https://empf.org.hk/pics_prinsp
+Principal MPF 每 Smart Plan
+\u0696 每 \u0c7d\u0298\u136f
+https://empf.org.hk/pics_prinsm
+Principal MPF Scheme Series 800
+\u0f8c 800 \u04fb\u0390
+https://empf.org.hk/pics_prins8
+SHKP MPF Employer Sponsored Scheme
+...
+INFO:chroma_service:Document 7 content: 8 of 9
+MIC-25V3
+  APPENDIX B: LIST OF REQUIRED DOCUMENT(S) FOR MEMBER INFORMATION CHANGE 
+  \u137dB: \u068c
+Change Items \u04bb\u04b7\u0db0\u0366
+( Please refer to List of Required Documents table below for document code details \u1261\u02d6\u0381\u11dc\u0eee\u0f09\u0a8b )
+Scheme Name \u0f8c有\u1048 (1) Member Name 
+有\u1048
+(2) HKID Card /
+Passport No.
+\u0ca5\u0512\u0385\u15c7\u014a
+\u1690\u0e6b\u0eee\u11c1
+(3) Date of Birth 
+\u0308\u035b\u02da\u0c82
+(4) Nationality 
+\u0a37\u162c
+(5) Signature 
+Specimen 
+\u01b8
+\u15a6\u0ec7\u1175\u03cc 
+\u01b8
+AIA MPF - Prime Value Choice
+\u0f8c
+A1, A2, A3
+( if applicable
+糸\u1247\u035c )
+A1 A1 A1 Nil \u0ccc
+AMTD MPF Scheme
+AMTD \u0f8c
+A3, B1, B2
+( if applicable
+糸\u1247\u035c )
+A...
+INFO:chroma_service:Document 8 content: 9 of 9
+MIC-25V3
+List of Required Documents ^ \u068c^
+Document Types \u02d6\u0381\u15f3抄 Copy \u0a13\u0349 Certi\ufb01ed True Copy 
+\xbf
+ \u10a9\u15c7\u0a13\u0349 
+\xbf
+Identity Proof Document 
+\u02d6\u0381 
+( e.g. HKID Card / Passport \u0ca5\u0512\u0385\u15c7\u014a\u1690\u0e6b )
+A1 B1
+Deed Poll
+\u06f0A2 B2
+Marriage Certificate / Legal Documents issued by Family 
+Court ( for divorce case )
+\u014a \u02d6\u0381 ( \u08e9\u0848) 
+A3 B3
+Statutory Declaration of the Relevant Change
+\u05fcA4 B4
+^ Apart from the above required documents, additional documents may be requested on a case-by-case basis by the eMPF Platform. Failure in providing t...
+INFO:chroma_service:Created 51 splits, 51 valid from temp_MPF SCHEME - MEMBER INFORMATION CHANGE FORM_signed.pdf
+INFO:chroma_service:Split 0 content: 1 of 9
+MIC-25V3
+MPF SCHEME 每
+MEMBER INFORMATION CHANGE FORM 
+\u0f8c \xd1 \u08f8\u068c\u08d8
+Important Notes \u052b\u0db0 :
+1. Please read the following notes before completing this form. \u0e08\u052b\u0db0f
+(i) eMPF Platform Company Limited ( "eMPF...
+INFO:chroma_service:Split 1 content: Terms and Conditions of the eMPF Platform" which can be accessed from https://empf.org.hk/tnc/en. This form is only applicable
+to the MPF scheme(s) which has / have got onboard to the eMPF Platform. F...
+INFO:chroma_service:Split 2 content: \u02ae\u0321 (\u02ae\u0321\x99) \u0f8c\u104d\u0b23\u0485 (\u0485\x99) \x99
+( \u05f5https://empf.org.hk/tnc \u14ed\u168e )\u0f8cf
+\u137d A: \x91(\x99) f
+(ii) This form is applicable only if you have previously given your signature specimen to the eMPF Platform / the Trustee(s).
+ If not...
+INFO:chroma_service:Split 3 content: General Terms
+and Conditions of
+the eMPF Platform
+\u033b\u0328
+\u06c6
+\u0a15\u0295\u02d0\u02f8\u0c64\u0536局
+\u0fc1\u035c\u0bc4f
+(iii) The "Scheme(s)" refers to the MPF Scheme(s) which is / are listed in Part A of this form. For details, please refer to the App...
+INFO:chroma_service:Split 4 content: (v) The "Member" refers to the individual whose details are set out in Part A of this form.\u08f8\u068cA\u025b\u027bf
+2. The changes provided in this form will supersede any previous information which has been kept by th...
+INFO:chroma_service:Split 5 content: (Individual)" if there is any change in circumstances ( including but not limited to member name, identity document no., date of birth, residential address,
+correspondence address and jurisdiction of ...
+INFO:chroma_service:Split 6 content: inaccurate or incomplete. \u08d8( \u104d\u148d\u0a1c ) \u03de\u0382妍\u170a\u04bb
+\u0659\u071d30\u05fc ( \u025b )\u065d
+\u04bb\u04b7f
+4. Please complete this form in BLOCK LETTERS with black or blue pen and tick the appropriate box(es). Please countersign beside any amendment...
+INFO:chroma_service:Split 7 content: of the Important Notes ). \u15a6\u0ec7 ( \u030b\u15a6 ) \u0b4c(\u052b\u0db0\u0b4b 1(ii) \u14c3 )f
+6. The eMPF Platform will process this request upon receipt of this completed form and all relevant supporting document(s) ( if any ). If there are...
+INFO:chroma_service:Split 8 content: \u02d6\u0381 ( 糸\u03de )\u036af糸\u03de\u1372\u100d ( \u02d6\u0381\u0294\u1101\u038c )\u036af
+7. The information provided in this form will be used in accordance with the relevant MPF legislation and for the purposes mentioned in the PICS of the eMPF
+Platform and th...
+INFO:chroma_service:Split 9 content: \u033b\u0328\u02bf\u0268\u0390 A\u137d A\u1310
+\u136f\u12bf\u16c6f
+A. MEMBER PARTICULARS \u08d8
+1) Member Account(s) Required To Be Updated \u0a6e\u02d2 ( Please select option (i) OR (ii) and tick as appropriate. \u1217\u136f\u12bf (i) \u05d0ii)\u0eeef)
+(i) All my MPF accounts under the eM...
+INFO:chroma_service:Split 10 content: \u02f8\u136c\u0b23\u04bb\u04b7)
+a. Scheme Name \u0f8c有\u1048  ( Please refer to the Appendix A \u137dA )
+b. Member Account No. \u0a6e\u02d2\u0eee\u11c1
+ 
+MIC
+Internal use only
+\u02ab\u0bc5\u0a59\u035c
+eMPF
+Received Date:
+MIC
+Go Green with
+E-Submission
+for E\ufb03ciency
+\u0b1f
+\u08f8\u068c
+eMPF Web P...
+INFO:chroma_service:Split 11 content: 2 of 9
+MIC-25V3
+(2) Member Name 有\u1048 ( As shown on HKID Card / Passport 早)
+ 
+(3) Identi\ufb01cation \u05fc
+ HKID Card \u0ca5\u0512\u0385\u15c7   Passport \u1690\u0e6b ( Applicable ONLY for an individual without HKID Card \u0ca5\u0512\u0385\u15c7\u025b\u027b\u0dec\u1133 )
+Document N...
+INFO:chroma_service:Split 12 content: Address Type
+ \u03ae\u0467\u15f3抄 (A) Residential Address 
+2 & 3
+妒\u03ae\u0467
+2 \u02bf 3 AND / OR
+\u05d0B) Correspondence Address \u0bb7\u09c3\u03ae\u0467
+Please provide either English OR Chinese Address. If the space provided below is insu\ufb03cient, please...
+INFO:chroma_service:Split 13 content: \u0a1c\u0a39
+ Hong Kong
+ \u0ca5
+ Kowloon
+ \u0258\u13b2
+ New Territories
+ \u07a2
+City 
+\xbc
+\u0339 
+\xbc
+Country 
+\xbc
+ / Region 
+\xbc
+\u0895 
+\xbc
+\u014a\u03ae\u0a1c 
+\xbc
+Postal code 
+\xbc
+\u11dc\u0eee 
+\xbc
+\xbc
+ Applicable to address outside Hong Kong only \u0ca5\u02f8\u032e\u03ae\u0467
+ (ii) New Telephone Nos. \u0e2d...
+INFO:chroma_service:Split 14 content: \u0789
+\u0ca5( 852 )\x99f
+( Country / Area Code 
+#
+\u014a\u03ae\u0a1c\u11dc\u0eee 
+#
+ )
+Secondary Telephone No.  \u0b4b\u025a\u144c\u0d16\u0f65\u0f11\u0eee\u11c1
+( Country / Area Code 
+#
+\u014a\u03ae\u0a1c\u11dc\u0eee 
+#
+ )
+ (iii) New Email Address \u0e2d\u0f65\u0d89\u03ae\u0467
+   
+(2) Correction of Date of Birth 
+3 & 4
+ \u04bb\u034d\u0308\u035b...
+INFO:chroma_service:Split 15 content: 3 of 9
+MIC-25V3
+(5) Change / Correction of Name 
+3
+ and / or Signature Specimen 
+3
+ 有 
+3
+ \u15a6\u0ec7\u1175\u03cc 
+3
+ (i) Member Name 有\u1048 ( As shown on HKID Card / Passport 早 )
+Surname in English\u02e4  
+Given Name in English...
+INFO:chroma_service:Split 16 content: employer is required to provide a written request to the eMPF Platform. \u08d8 (\u0561\u0f87\u02da\u0c82 )\u033b\u0328f
+2
+ P.O. Box address is not accepted. \u11cc\u03ae\u0467f
+3
+ Please refer to Appendix B for the required document(s) for informatio...
+INFO:chroma_service:Split 17 content: subsequent MPF related services. \u137d B\u0a15f
+4
+ If you have invested in the Default Investment Strategy, according to the automatic de-risking mechanism, it may trigger an automatic de-risking after your da...
+INFO:chroma_service:Split 18 content: \u02d6\u0381f
+  C. CHANGE OF COMMUNICATION MEANS OF THE SCHEME \u08b0
+I hereby withdraw the consent to receive, inter alia, notices or other documents by electronic means previously given by me for the 
+purpose of s...
+INFO:chroma_service:Split 19 content: such withdrawal (i) will be irrevocable; (ii) (
+ applicable if I have registered with the eMPF Platform ) will not have any impact on my 
+e-communication arrangements on the eMPF Platform such that I ...
+INFO:chroma_service:Split 20 content: consent given to eMPF Platform Company is revoked; and (iii) will not have any impact on communication which is not given for the 
+purposes of the Mandatory Provident Fund Schemes Ordinance such that ...
+INFO:chroma_service:Split 21 content: \u0f08\u0d03\u0bb7\u09c3f
+Terms and Conditions 
+for Receiving Notices, 
+Documents and Other 
+Communications by 
+Electronic Means
+e
+\u0659
+\u06c6
+D. DIRECT MARKETING CONSENT OF THE SCHEME \u1256\u0e08曳
+You agree to (i) provide your consent f...
+INFO:chroma_service:Split 22 content: in accordance with (a) the Personal Information Collection Statement of eMPF Platform Company Limited; and (b) the Personal Information Collection Statement 
+of such Trustee. 局早\u0e08 (a) \u0bc5\u02b1 (i) \u05d4
+\u0561\u09c4\u025bd\u02bf (i...
+INFO:chroma_service:Split 23 content: 4 of 9
+MIC-25V3
+  E.  CHANGE OF PAYMENT METHOD 
+5
+ \u04bb\u04b7\u02f9\u0c9b步\u03cc 
+5
+ \x80 For Self-Employed Person only \u0406\u0f87\u025b\u027b \x81
+If you would like to change the payment method in relation to direct debit 
+6
+, please download "Di...
+INFO:chroma_service:Split 24 content: Method of payment will be defaulted as "by cheque" if direct debit is cancelled.\u0a9f\u03d4\u0a6e
+ 6
+ \u05f8\u0696
+\u082bhttps://empf.org.hk/forms ) \u0a9f\u02f9\u0c9b\u0aac\u16c6\x99(\x99)\u0a9f\u03d4\u0a6ed\u02f9\u0c9b步
+\x98\u02d5\u0b43\x99f
+5
+ This part is not applicable for SHKP MPF Employer Spon...
+INFO:chroma_service:Split 25 content: confirmation notifying you the success of direct debit setup / change. Please settle contribution by other payment means before direct debit setup / change 
+is completed. \u0ba3\u036d / \u0a9f\u03d4\u0a6e\u0361\u1217\u03d3
+\u02f9\u0c9bf
+Form Centre
+\u0295...
+INFO:chroma_service:Split 26 content: the Scheme(s) and undertake to be bound by it.\u04bcf
+2. I have read and understood the Important Notes of this form. I confirm that the information provided by me to the eMPF Platform / the Trustee(s) in ...
+INFO:chroma_service:Split 27 content: the eMPF Platform / the Trustee(s) as a result of any inaccuracy and / or incompleteness of the information provided by me and / or upon execution of any 
+such request by the eMPF Platform / the Trust...
+INFO:chroma_service:Split 28 content: Centres. \u0a15\u0295\u02d0f
+\u2726 Warning \u1646\u0453:
+Pursuant to section 43E of the Mandatory Provident Fund Schemes Ordinance ( Cap. 485 ), a person who, in any document given to (i) the MPFA, (ii) a system operator of the e...
+INFO:chroma_service:Split 29 content: penalty of a HKD100,000 fine and 12 months' imprisonment on the first conviction and a HKD200,000 fine and two years' imprisonment on each subsequent conviction. A person who 
+knowingly and wilfully m...
+INFO:chroma_service:Split 30 content: d\u0bf0\u09f7\u0319\u0b88\u106e\u0c9b\u0ca5\u0fc6100,000\u0ec6d\u0bf0\u09f7\u0319\u0b88
+\u106e\u0c9b\u0ca5\u0fc6200,000\u12bd\x90式\u052b\u0ec6坎\u0ae2\u0537\x91( \u0b4b 200 \u0bdd ) \u0b4b 36\u0ec6d\u0319\u0b88\u1039\u0eab\u0547
+\u03cb\u02bf\u106e\u0c9bf
+1...
+INFO:chroma_service:Split 31 content: 5 of 9
+MIC-25V3
+Submission Channels \u08b0Enquiries \u0f14
+1. Post:  PO Box 98929 Tsim Sha Tsui Post O\ufb03ce
+ \u0d89\u0a54 :\u11cc 98929 \u0eee
+2. Drop-in Box in any one of the eMPF Service Centres below
+ \u04b3\u10c8\u11cc
+3. Email address * \u0f65\u0d89\u03ae\u0467 ...
+INFO:chroma_service:Split 32 content: \u1217\u02b6\u120df 
+eMPF Service Centres Address & Service Hours \u0d9c
+Hong Kong Island \u08a5
+Unit 601B, 6/F, Dah Sing Financial Centre,
+No. 248 Queen's Road East, Wanchai, Hong Kong
+\u0607248\u1344\u0295\u02d0 6 \u117d 601B\u0703
+Kowloon \u0258\u13b2
+Suites 120...
+INFO:chroma_service:Split 33 content: \u0f38 8 \u0eee糸\u02d0\u113f\u0c19\u0b4b 2\u08ad18 \u117d 1802A\u0703
+Service Hours \u0d9c:
+ Monday to Friday \u0c82\u0253\u0407\u029e
+ Saturday \u0c82\u02ac
+ Sunday & Public Holiday \u0c82\u02da\u02bf\u02ae\u0b3a\u09ff\u0c82
+9:00 am 每 6:00 pm \u026a\u02b9 9\u08db \u0407 \u0268\u02b9 6\u08db
+9:00 am 每 1:00 pm \u026a\u02b9 9\u08db \u0407 \u0268\u02b9 1\u08db
+Closed \u08b9
+eMPF Customer Se...
+INFO:chroma_service:Split 34 content: 6 of 9
+MIC-25V3
+APPENDIX A: LIST OF "PERSONAL INFORMATION COLLECTION STATEMENT" ( "PICS" ) OF THE eMPF 
+PLATFORM AND THE ONBOARDED MPF SCHEMES
+\u137dA: \x91( \x99 ) \u068c
+Below are the PICS of the eMPF Platform and ...
+INFO:chroma_service:Split 35 content: Customer Service Hotline 183 2622 or visiting any one of the eMPF Service Centres. \x99f\u1217\u14ed\u168e\u1310
+\u0a15\u11a0\u11de 183 2622 \u0551\u0b9e\u0382妍\u0253\u0d9c
+\x99\u0a13\u0349f
+Personal Information Collection Statement of The eMPF Platform \u05fcLink / QR Code
+\u0bb9\u0d10\u014a\u025a\u106a\u11c1...
+INFO:chroma_service:Split 36 content: Link / QR Code
+\u0bb9\u0d10\u014a\u025a\u106a\u11c1
+AIA MPF - Prime Value Choice 
+\u0f8c
+AIA Company (Trustee) Limited
+\u02ae\u0321 03 / 09 / 2025 
+https://empf.org.hk/pics_aia
+AMTD MPF Scheme
+AMTD \u0f8c
+Bank Consortium Trust Company Limited 
+\u02ae\u0321 03 ...
+INFO:chroma_service:Split 37 content: BCT \u0298\u136f
+Bank Consortium Trust Company Limited 
+\u02ae\u0321
+01 / 08 / 2025
+https://empf.org.hk/pics_bctpc
+BCT Strategic MPF Scheme 
+BCT \u0f8c 03 / 07 / 2025
+https://empf.org.hk/pics_bctsg
+BEA (MPF) Master Trust Sche...
+INFO:chroma_service:Split 38 content: Provident Fund Scheme
+\u0f8c
+BOCI-Prudential Trustee Limited
+\u02ae\u0321 05 / 06 / 2025
+https://empf.org.hk/pics_bociec
+China Life MPF Master Trust Scheme
+\u0f8c
+China Life Trustees Limited
+\u02ae\u0321 29 / 07 / 2024
+https://emp...
+INFO:chroma_service:Split 39 content: \u0f8c
+YF Life Trustees Limited
+\u02ae\u0321 26 / 06 / 2024
+https://empf.org.hk/pics_y\ufb02ife
+My Choice Mandatory Provident Fund Scheme 
+\u0f8c
+BOCI-Prudential Trustee Limited
+\u02ae\u0321 05 / 06 / 2025
+https://empf.org.hk/pics_boci...
+INFO:chroma_service:Split 40 content: 7 of 9
+MIC-25V3
+Personal Information Collection Statement of The Onboarded MPF Schemes
+\u05fc
+Scheme Name \u0f8c有\u1048 Trustee Name \u0561\u09c4\u025b有\u1048
+Scheme Onboarding Date
+\u0f8c\u1537\u0b45\u02da\u0c82
+( DD / MM / YYYY \u02da\u014a\u02dc\u014a\u03cb )
+Link / QR Code
+\u0bb9\u0d10\u014a\u025a\u106a\u11c1
+...
+INFO:chroma_service:Split 41 content: \u0f8c 800 \u04fb\u0390
+https://empf.org.hk/pics_prins8
+SHKP MPF Employer Sponsored Scheme
+\u0f8c
+Standard Chartered Trustee (Hong Kong) Limited
+\u09c4 ( \u0ca5 ) \u02ae\u0321 02 / 10 / 2024
+https://empf.org.hk/pics_sc
+1...
+INFO:chroma_service:Split 42 content: 8 of 9
+MIC-25V3
+  APPENDIX B: LIST OF REQUIRED DOCUMENT(S) FOR MEMBER INFORMATION CHANGE 
+  \u137dB: \u068c
+Change Items \u04bb\u04b7\u0db0\u0366
+( Please refer to List of Required Documents table below for document code details \u1261...
+INFO:chroma_service:Split 43 content: ( if applicable
+糸\u1247\u035c )
+A1 A1 A1 Nil \u0ccc
+AMTD MPF Scheme
+AMTD \u0f8c
+A3, B1, B2
+( if applicable
+糸\u1247\u035c )
+A1 A1 A1 Nil \u0ccc
+BCOM Joyful Retirement MPF Scheme
+\u0f8c A1, A2 A1 A1 A1 A1
+BCT (MPF) Pro Choice
+BCT \u0298\u136f A3, B1, B...
+INFO:chroma_service:Split 44 content: \u0f8c
+BOC-Prudential Easy-Choice
+Mandatory Provident Fund
+Scheme
+\u0f8c
+A1, A2, A3
+( if applicable
+糸\u1247\u035c )
+A1
+\xdc
+ , B4 A1, B4 A1 Nil \u0ccc
+China Life MPF Master Trust Scheme
+\u0f8c A1, A2 A1 A1 Nil \u0ccc Nil \u0ccc
+Manulife Retire...
+INFO:chroma_service:Split 45 content: ( if applicable
+糸\u1247\u035c )
+A1
+\xdc
+ , B4 A1, B4 A1 Nil \u0ccc
+Principal MPF 每 Simple Plan
+\u0696 每 \u0c2c\u0298\u136f
+A1, A2, A3
+( if applicable
+糸\u1247\u035c )
+A1 A1 A1 A1Principal MPF 每 Smart Plan
+\u0696 每 \u0c7d\u0298\u136f
+Principal MPF Scheme Series 800
+\u0f8c 80...
+INFO:chroma_service:Split 46 content: \u0f8c
+(i) A1 and \u02bf ,
+(ii) A2 and / or \u02bf\u014a
+\u05d0A3
+( if applicable
+糸\u1247\u035c )
+A1
+㊣
+ OR \u05d0A4 A1, A4 Nil \u0ccc Nil \u0ccc
+\u01b8 
+If member fails to provide the signature that matches with the signature specimen of the eMPF Platform...
+INFO:chroma_service:Split 47 content: \xdc 
+Please provide the old identity document used during enrolment as supporting document ( if available ). \u02d6\u0381 ( 糸\u03de )f
+㊣ 
+Please provide a copy of new and old passport if member does not have HKID Card...
+INFO:chroma_service:Split 48 content: 9 of 9
+MIC-25V3
+List of Required Documents ^ \u068c^
+Document Types \u02d6\u0381\u15f3抄 Copy \u0a13\u0349 Certi\ufb01ed True Copy 
+\xbf
+ \u10a9\u15c7\u0a13\u0349 
+\xbf
+Identity Proof Document 
+\u02d6\u0381 
+( e.g. HKID Card / Passport \u0ca5\u0512\u0385\u15c7\u014a\u1690\u0e6b )
+A1 B1
+Deed Poll
+\u06f0A2 B2
+Mar...
+INFO:chroma_service:Split 49 content: Court ( for divorce case )
+\u014a \u02d6\u0381 ( \u08e9\u0848) 
+A3 B3
+Statutory Declaration of the Relevant Change
+\u05fcA4 B4
+^ Apart from the above required documents, additional documents may be requested on a case-by-case basi...
+INFO:chroma_service:Split 50 content: \u0a15f
+\xbf
+ Certified true copies should be certified by any of the following personnel: \u10a9\u15c7\u0a13\u0349\u0340\u0db2\u0ebe\u035f\u0268\u0390\u025b\u027b\u10a9\u15c7j
+ (i) a certified public accountant / lawyer / notary public / professional company secretary acceptab...
+INFO:chroma_service:Indexing 51 splits for file_id 31
+INFO:chroma_service:Successfully indexed document with file_id 31
+INFO:root:File MPF SCHEME - MEMBER INFORMATION CHANGE FORM_signed.pdf uploaded and indexed with file_id 31
+INFO:chroma_service:Found 0 document chunks for file_id 23
+INFO:chroma_service:Deleted all documents with file_id 23
+INFO:chroma_service:Found 0 document chunks for file_id 31
+INFO:chroma_service:Deleted all documents with file_id 31
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Chan Pak Yeung-AL-0820PM.pdf
+INFO:chroma_service:Document 0 content: CHAN PAK YEUNG EDW I N
+AP,  R5
+Manpower Services (Hong Kong) Limited
+20 Aug, 2025 (pm)
+0.5
+21 Aug, 2025
+12 Aug, 2025...
+INFO:chroma_service:Created 1 splits, 1 valid from temp_Chan Pak Yeung-AL-0820PM.pdf
+INFO:chroma_service:Split 0 content: CHAN PAK YEUNG EDW I N
+AP,  R5
+Manpower Services (Hong Kong) Limited
+20 Aug, 2025 (pm)
+0.5
+21 Aug, 2025
+12 Aug, 2025...
+INFO:chroma_service:Indexing 1 splits for file_id 32
+INFO:chroma_service:Successfully indexed document with file_id 32
+INFO:root:File Chan Pak Yeung-AL-0820PM.pdf uploaded and indexed with file_id 32
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Chan Pak Yeung-AL-0904-0905-signed.pdf
+INFO:chroma_service:Document 0 content: ...
+INFO:chroma_service:Created 0 splits, 0 valid from temp_Chan Pak Yeung-AL-0904-0905-signed.pdf
+ERROR:chroma_service:Failed to load or split document temp_Chan Pak Yeung-AL-0904-0905-signed.pdf: No valid text chunks extracted from temp_Chan Pak Yeung-AL-0904-0905-signed.pdf
+ERROR:chroma_service:Error indexing document with file_id 33: Failed to load or split document temp_Chan Pak Yeung-AL-0904-0905-signed.pdf: No valid text chunks extracted from temp_Chan Pak Yeung-AL-0904-0905-signed.pdf
+ERROR:root:Error processing Chan Pak Yeung-AL-0904-0905-signed.pdf: 500: Failed to index Chan Pak Yeung-AL-0904-0905-signed.pdf. The document may be empty, contain no extractable text, or have unsupported formatting.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Chan Pak Yeung-AL-0904-0905-signed.pdf
+INFO:chroma_service:Document 0 content: ...
+INFO:chroma_service:Created 0 splits, 0 valid from temp_Chan Pak Yeung-AL-0904-0905-signed.pdf
+ERROR:chroma_service:Failed to load or split document temp_Chan Pak Yeung-AL-0904-0905-signed.pdf: No valid text chunks extracted from temp_Chan Pak Yeung-AL-0904-0905-signed.pdf
+ERROR:chroma_service:Error indexing document with file_id 34: Failed to load or split document temp_Chan Pak Yeung-AL-0904-0905-signed.pdf: No valid text chunks extracted from temp_Chan Pak Yeung-AL-0904-0905-signed.pdf
+ERROR:root:Error processing Chan Pak Yeung-AL-0904-0905-signed.pdf: 500: Failed to index Chan Pak Yeung-AL-0904-0905-signed.pdf. The document may be empty, contain no extractable text, or have unsupported formatting.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Chan Pak Yeung-AL-0904-0905-signed.pdf
+INFO:chroma_service:Document 0 content: ...
+INFO:chroma_service:Created 0 splits, 0 valid from temp_Chan Pak Yeung-AL-0904-0905-signed.pdf
+ERROR:chroma_service:Failed to load or split document temp_Chan Pak Yeung-AL-0904-0905-signed.pdf: No valid text chunks extracted from temp_Chan Pak Yeung-AL-0904-0905-signed.pdf
+ERROR:chroma_service:Error indexing document with file_id 35: Failed to load or split document temp_Chan Pak Yeung-AL-0904-0905-signed.pdf: No valid text chunks extracted from temp_Chan Pak Yeung-AL-0904-0905-signed.pdf
+ERROR:root:Error processing Chan Pak Yeung-AL-0904-0905-signed.pdf: 500: Failed to index Chan Pak Yeung-AL-0904-0905-signed.pdf. The document may be empty, contain no extractable text, or have unsupported formatting.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Chan Pak Yeung-AL-0904-0905-signed.pdf
+INFO:chroma_service:Document 0 content: ...
+INFO:chroma_service:Created 0 splits, 0 valid from temp_Chan Pak Yeung-AL-0904-0905-signed.pdf
+ERROR:chroma_service:Failed to load or split document temp_Chan Pak Yeung-AL-0904-0905-signed.pdf: No valid text chunks extracted from temp_Chan Pak Yeung-AL-0904-0905-signed.pdf
+ERROR:chroma_service:Error indexing document with file_id 36: Failed to load or split document temp_Chan Pak Yeung-AL-0904-0905-signed.pdf: No valid text chunks extracted from temp_Chan Pak Yeung-AL-0904-0905-signed.pdf
+ERROR:root:Error processing Chan Pak Yeung-AL-0904-0905-signed.pdf: 500: Failed to index Chan Pak Yeung-AL-0904-0905-signed.pdf. The document may be empty, contain no extractable text, or have unsupported formatting.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chroma_service:Loaded 1 documents from temp_Chan Pak Yeung-AL-0904-0905.pdf
+INFO:chroma_service:Document 0 content: CHAN PAK YEUNG EDW I N
+AP,  R5
+Manpower Services (Hong Kong) Limited
+September 4th-5th, 2025
+2
+September 8th, 2025
+August 4th, 2025
+James Li. HR
+7 Aug 2025...
+INFO:chroma_service:Created 1 splits, 1 valid from temp_Chan Pak Yeung-AL-0904-0905.pdf
+INFO:chroma_service:Split 0 content: CHAN PAK YEUNG EDW I N
+AP,  R5
+Manpower Services (Hong Kong) Limited
+September 4th-5th, 2025
+2
+September 8th, 2025
+August 4th, 2025
+James Li. HR
+7 Aug 2025...
+INFO:chroma_service:Indexing 1 splits for file_id 37
+INFO:chroma_service:Successfully indexed document with file_id 37
+INFO:root:File Chan Pak Yeung-AL-0904-0905.pdf uploaded and indexed with file_id 37
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2

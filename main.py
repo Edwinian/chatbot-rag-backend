@@ -50,6 +50,18 @@ chroma_service = ChromaService()
 langchain_service = LangChainService()
 
 
+@app.get("/find-docs")
+def get_documents(file_id: Optional[int] = None):
+    documents = chroma_service.get_documents(file_id)
+
+    if not documents:
+        raise HTTPException(
+            status_code=404, detail=f"No documents found with file_id {file_id}"
+        )
+
+    return documents
+
+
 @app.post("/delete-doc")
 def delete_document(request: DeleteFileRequest):
     chroma_delete_success = chroma_service.delete_document(request.file_id)
@@ -102,7 +114,9 @@ async def upload_doc(
     try:
         with open(temp_file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
+
         file_id = db_service.insert_document_record(file.filename)
+        print("file_id", file_id)
         success = chroma_service.index_document(temp_file_path, file_id)
         if success:
             logging.info(
