@@ -205,13 +205,44 @@ class ChromaService:
     ) -> tuple[List[Document], list[str]]:
         valid_splits = []
         pii_content = []
-
-        # Common PII patterns (simplified - consider using a proper PII detection library)
+        presidio_patterns = {
+            # Personal Identifiers
+            "PERSON": r"\b([A-Z][a-z]+(?: [A-Z][a-z]+){1,3})\b",  # Names (simple pattern)
+            "US_SSN": r"\b\d{3}-\d{2}-\d{4}\b",
+            "NRIC": r"\b[STFG]\d{7}[A-Z]\b",  # Singapore ID
+            "PASSPORT": r"\b[A-Z]{1,2}\d{6,9}\b",
+            # Contact Information
+            "EMAIL": r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
+            "PHONE": r"\b(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b",
+            "IP_ADDRESS": r"\b(?:\d{1,3}\.){3}\d{1,3}\b",
+            # Financial
+            "CREDIT_CARD": r"\b(?:\d[ -]*?){13,16}\b",
+            "SWIFT_CODE": r"\b[A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?\b",
+            # Medical
+            "MEDICAL_LICENSE": r"\b[A-Z]{2,3}\d{5,8}\b",
+            # Location (simple patterns)
+            "ADDRESS": r"\b\d{1,5} [A-Za-z]+(?: [A-Za-z]+){1,3},? [A-Z]{2} \d{5}\b",
+            "COORDINATES": r"\b-?\d{1,3}\.\d{4,}, -?\d{1,3}\.\d{4,}\b",
+        }
+        iam_smart_patterns = {
+            # Name Identifiers
+            "CHINESE_NAME": r"[\u4e00-\u9fff]{2,4}",  # 2-4 Chinese characters
+            "ENGLISH_NAME": r"\b([A-Z][a-z]+(?: [A-Z][a-z]+){1,3})\b",
+            # Government IDs
+            "HKID": r"\b[A-Z]{1,2}[0-9]{6}\([0-9A]\)\b",  # Official HKID format
+            "PASSPORT": r"\b[A-Z]{1,3}\d{6,9}\b",
+            # Contact Information
+            "PRIMARY_EMAIL": r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
+            "MOBILE_PHONE": r"\b(852)?[ -]?\d{4}[ -]?\d{4}\b",  # HK mobile format
+            # Address Information (Hong Kong specific)
+            "RESIDENTIAL_ADDRESS": r"\b(Flat|Floor|Room|Unit|Villa)[\sA-Z0-9-#]+,?\s[\w\s]+(Hong Kong|HK|H\.K\.|New Territories|NT|Kowloon|KLN)\b",
+            "POSTAL_ADDRESS": r"\b(P\.O\. Box|G\.P\.O\. Box|Post Office Box)\s\d+\b",
+            # Financial
+            "BANK_ACCOUNT": r"\b\d{10,12}\b",  # Simplified HK bank account
+        }
         pii_patterns = {
-            "email": r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
-            "phone": r"\b(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b",
-            "ssn": r"\b\d{3}-\d{2}-\d{4}\b",
-            "credit_card": r"\b(?:\d[ -]*?){13,16}\b",
+            **presidio_patterns,
+            **iam_smart_patterns,
         }
 
         for split in splits:
