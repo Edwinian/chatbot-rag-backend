@@ -1,6 +1,7 @@
 import os
 import re
 from fastapi import HTTPException
+from langchain_community.vectorstores.utils import filter_complex_metadata
 from langchain_community.document_loaders import (
     UnstructuredPDFLoader,
     UnstructuredWordDocumentLoader,
@@ -237,7 +238,8 @@ class ChromaService:
 
             if valid_splits:
                 try:
-                    self.vectorstore.add_documents(valid_splits)
+                    filtered_splits = filter_complex_metadata(valid_splits)
+                    self.vectorstore.add_documents(filtered_splits)
                     print(f"Successfully indexed document with file_id {file_id}")
                     return True
                 except Exception as e:

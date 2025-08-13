@@ -2772,3 +2772,54 @@ INFO:root:File pilot_programme_uc.docx uploaded and indexed with file_id 50
 INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
 INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
 INFO:root:File access_application.docx uploaded and indexed with file_id 51
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:pikepdf._core:pikepdf C++ to Python logger bridge initialized
+WARNING:pdfminer.pdffont:Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+WARNING:pdfminer.pdffont:Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+WARNING:pdfminer.pdffont:Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+WARNING:pdfminer.pdffont:Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+INFO:unstructured_inference:Reading PDF for file: temp_Chan Pak Yeung-AL-0820PM.pdf ...
+ERROR:chroma_service:Failed to load or split document temp_Chan Pak Yeung-AL-0820PM.pdf: Unable to get page count. Is poppler installed and in PATH?
+ERROR:chroma_service:Error indexing document with file_id 54: Failed to load or split document temp_Chan Pak Yeung-AL-0820PM.pdf: Unable to get page count. Is poppler installed and in PATH?
+ERROR:root:Error processing Chan Pak Yeung-AL-0820PM.pdf: 500: Failed to index temp_Chan Pak Yeung-AL-0820PM.pdf: Failed to load or split document temp_Chan Pak Yeung-AL-0820PM.pdf: Unable to get page count. Is poppler installed and in PATH?
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:pikepdf._core:pikepdf C++ to Python logger bridge initialized
+WARNING:pdfminer.pdffont:Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+WARNING:pdfminer.pdffont:Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+WARNING:pdfminer.pdffont:Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+WARNING:pdfminer.pdffont:Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+INFO:unstructured_inference:Reading PDF for file: temp_Chan Pak Yeung-AL-0820PM.pdf ...
+ERROR:chroma_service:Failed to load or split document temp_Chan Pak Yeung-AL-0820PM.pdf: Unable to get page count. Is poppler installed and in PATH?
+ERROR:chroma_service:Error indexing document with file_id 55: Failed to load or split document temp_Chan Pak Yeung-AL-0820PM.pdf: Unable to get page count. Is poppler installed and in PATH?
+ERROR:root:Error processing Chan Pak Yeung-AL-0820PM.pdf: 500: Failed to index temp_Chan Pak Yeung-AL-0820PM.pdf: Failed to load or split document temp_Chan Pak Yeung-AL-0820PM.pdf: Unable to get page count. Is poppler installed and in PATH?
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:chromadb.telemetry.product.posthog:Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:pikepdf._core:pikepdf C++ to Python logger bridge initialized
+WARNING:pdfminer.pdffont:Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+WARNING:pdfminer.pdffont:Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+WARNING:pdfminer.pdffont:Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+WARNING:pdfminer.pdffont:Could get FontBBox from font descriptor because None cannot be parsed as 4 floats
+INFO:root:File Chan Pak Yeung-AL-0820PM.pdf uploaded and indexed with file_id 56
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: sentence-transformers/all-MiniLM-L6-v2

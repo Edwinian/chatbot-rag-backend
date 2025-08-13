@@ -2,9 +2,9 @@ langchain
 langchain-huggingface
 langchain-core
 langchain_community
+langchain_chroma
 docx2txt
 pypdf
-langchain_chroma
 python-multipart
 fastapi
 uvicorn
@@ -15,8 +15,7 @@ huggingface_hub
 bs4
 unstructured # core dependency for UnstructuredPDFLoader
 unstructured[pdf] # for PDF processing
-# pytesseract  # processing scanned or image-based PDFs with OCR
-# poppler-utils # processing scanned or image-based PDFs for image conversion.
-python-docx
+pytesseract  # processing scanned or image-based PDFs with OCR
 unstructured[doc] # for .doc file processing
 python-magic-bin # for .doc file processing
+PyPDF2
