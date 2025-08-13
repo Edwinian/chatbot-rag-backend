@@ -32,7 +32,7 @@ class LangChainService:
     def __init__(
         self,
         collection_name: Optional[str] = None,
-        model_name: Optional[str] = ModelName.Mixtral_v0_1.value,
+        model_name: Optional[str] = ModelName.DeepSeek_R1_Distill_Qwen_32B.value,
         max_length: int = 512,
     ):
         """
@@ -83,8 +83,8 @@ class LangChainService:
                 repo_id=self.model_name,
                 huggingfacehub_api_token=os.getenv("HUGGINGFACE_TOKEN"),
                 max_new_tokens=self.max_length,
-                temperature=0.7,  # Controls response randomness
-                top_p=0.9,  # Controls response diversity
+                temperature=0.6,  # Controls response randomness
+                top_p=0.95,  # Controls response diversity
                 return_full_text=False,
             )
             # Wrap with ChatHuggingFace since HuggingFaceEndpoint always defaults to text-generation task, which is not supported by all models
@@ -120,7 +120,11 @@ class LangChainService:
         )
         rag_chain = self.get_rag_chain(query)
         rag_results = rag_chain.invoke({"input": query, "chat_history": chat_history})
-        print("Retrieved documents:", rag_results["context"])
+        print(
+            "Retrieved documents:",
+            [doc.metadata["source"] for doc in rag_results["context"]],
+        )
+
         answer = rag_results["answer"]
 
         if not skip_hybrid:

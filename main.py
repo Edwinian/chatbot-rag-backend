@@ -116,7 +116,6 @@ async def upload_doc(
             shutil.copyfileobj(file.file, buffer)
 
         file_id = db_service.insert_document_record(file.filename)
-        print("file_id", file_id)
         success = chroma_service.index_document(temp_file_path, file_id)
         if success:
             logging.info(
@@ -236,8 +235,7 @@ async def websocket_chat(websocket: WebSocket):
                 model_name=model, collection_name=collection_name
             )
             answer = langchain_service.get_model_answer(
-                session_id=session_id,
-                query=message,
+                session_id=session_id, query=message
             )
 
             # Log interaction
