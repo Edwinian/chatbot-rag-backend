@@ -92,9 +92,9 @@ class LangChainService:
         except Exception as e:
             raise Exception(f"Failed to initialize LLM {self.model_name}: {str(e)}")
 
-    def get_rag_chain(self, query: str):
+    def get_rag_chain(self):
         try:
-            retriever = self.chroma_service.get_retriever(query)
+            retriever = self.chroma_service.get_retriever()
             history_aware_retriever = create_history_aware_retriever(
                 self.chat_llm, retriever, self.contextualize_q_prompt
             )
@@ -118,7 +118,7 @@ class LangChainService:
         chat_history = (
             self.db_service.get_chat_history(session_id) if session_id else []
         )
-        rag_chain = self.get_rag_chain(query)
+        rag_chain = self.get_rag_chain()
         rag_results = rag_chain.invoke({"input": query, "chat_history": chat_history})
         print(
             "Retrieved documents:",
@@ -511,7 +511,7 @@ class LangChainService:
             ]
         )
 
-    def parse_llm_response(response: str) -> list[StructuredChunk]:
+    def parse_llm_response(self, response: str) -> list[StructuredChunk]:
         """
         Parse plain LLM response into structured chunks with formatting metadata.
         Example: Convert the provided LLM response into sections with headings and bullet points.

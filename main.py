@@ -262,7 +262,7 @@ async def websocket_chat(websocket: WebSocket):
                 await websocket.send_json(
                     {
                         "status": "streaming",
-                        "chunk": chunk.dict(),  # Send structured chunk
+                        "chunk": chunk.model_dump(),  # Send structured chunk
                         "session_id": session_id,
                     }
                 )
