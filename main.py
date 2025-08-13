@@ -126,9 +126,7 @@ async def upload_doc(
             )
 
             if pii_content:
-                base_message += (
-                    f" PII content detected and redacted: {', '.join(pii_content)}"
-                )
+                base_message += f" PII content detected and redacted"
 
             return {
                 "message": base_message,
