@@ -435,6 +435,8 @@ class LangChainService:
         - Add {self.MODEL_ANSWER['bullet_prefix']} in front of bullet points or lists
         - Add {self.MODEL_ANSWER['heading_prefix']} in front of headings
         - Wrap keywords with <b> and </b> to make them bold
+        - Paraphrase user's prompt in the beginning to ensure your understanding
+        - Give conclusion om the end to conclude your response
         """
 
         hybrid_prompt = ChatPromptTemplate.from_messages(

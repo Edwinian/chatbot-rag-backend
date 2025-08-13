@@ -83,7 +83,7 @@ def delete_document(request: DeleteFileRequest):
 
 @app.post("/retrieve-content", response_model=str)
 def retrieve_content(query_input: QueryInput):
-    return langchain_service.retrieve_content(query_input.question)
+    return langchain_service.get_search_content(query_input.question)
 
 
 @app.get("/list-collections", response_model=list[str])
@@ -115,13 +115,23 @@ async def upload_doc(
             shutil.copyfileobj(file.file, buffer)
 
         file_id = db_service.insert_document_record(file.filename)
-        success = chroma_service.index_document(temp_file_path, file_id)
+        success, pii_content = chroma_service.index_document(temp_file_path, file_id)
+
         if success:
             logging.info(
                 f"File {file.filename} uploaded and indexed with file_id {file_id}"
             )
+            base_message = (
+                f"File {file.filename} has been successfully uploaded and indexed."
+            )
+
+            if pii_content:
+                base_message += (
+                    f" PII content detected and redacted: {', '.join(pii_content)}"
+                )
+
             return {
-                "message": f"File {file.filename} has been successfully uploaded and indexed.",
+                "message": base_message,
                 "file_id": file_id,
             }
         else:

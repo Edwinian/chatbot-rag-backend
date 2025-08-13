@@ -122,7 +122,7 @@ class ChromaService:
 
         return formatted_name
 
-    def process_image(self, file_path: str) -> List[Document]:
+    def get_image_document(self, file_path: str) -> List[Document]:
         try:
             with open(file_path, "rb") as image_file:
                 image_data = image_file.read()
@@ -143,11 +143,11 @@ class ChromaService:
             logger.error(f"Failed to process image {file_path}: {str(e)}")
             raise ValueError(f"Failed to process image {file_path}: {str(e)}")
 
-    def split_document(self, file_path: str) -> List[Document]:
+    def get_split_documents(self, file_path: str) -> List[Document]:
         file_extension = os.path.splitext(file_path)[1].lower()
 
         if file_extension in self.IMAGE_EXTENSIONS:
-            return self.process_image(file_path)
+            return self.get_image_document(file_path)
 
         file_loader_map = {
             ".pdf": UnstructuredPDFLoader,
@@ -170,6 +170,7 @@ class ChromaService:
 
             processed_docs = []
             current_content = ""
+
             for doc in documents:
                 content = doc.page_content.strip()
                 if len(content) < 10:
@@ -184,6 +185,7 @@ class ChromaService:
                         )
                         current_content = ""
                     processed_docs.append(doc)
+
             if current_content:
                 processed_docs.append(
                     Document(
@@ -193,49 +195,87 @@ class ChromaService:
                 )
 
             splits = self.text_splitter.split_documents(processed_docs)
-            valid_splits = [
-                split
-                for split in splits
-                if split.page_content.strip() and len(split.page_content) >= 5
-            ]
-
-            if not valid_splits:
-                raise ValueError(f"No valid text chunks extracted from {file_path}")
-            return valid_splits
+            return splits
         except Exception as e:
             logger.error(f"Failed to load or split document {file_path}: {str(e)}")
             raise ValueError(f"Failed to load or split document {file_path}: {str(e)}")
 
-    def index_document(self, file_path: str, file_id: int) -> bool:
-        try:
-            splits = self.split_document(file_path)
-            valid_splits = []
+    def get_valid_splits(
+        self, splits: List[Document]
+    ) -> tuple[List[Document], list[str]]:
+        valid_splits = []
+        pii_content = []
 
-            for split in splits:
+        # Common PII patterns (simplified - consider using a proper PII detection library)
+        pii_patterns = {
+            "email": r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
+            "phone": r"\b(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b",
+            "ssn": r"\b\d{3}-\d{2}-\d{4}\b",
+            "credit_card": r"\b(?:\d[ -]*?){13,16}\b",
+        }
+
+        for split in splits:
+            if split.page_content.startswith("IMAGE_CONTENT:"):
+                valid_splits.append(split)
+                continue
+
+            try:
+                content = split.page_content
+                redacted_content = content
+                split_pii_detected = False
+
+                # Check for PII patterns
+                for pii_type, pattern in pii_patterns.items():
+                    matches = re.finditer(pattern, content, re.IGNORECASE)
+
+                    for match in matches:
+                        split_pii_detected = True
+                        redacted_content = redacted_content.replace(
+                            match.group(), f"[REDACTED_{pii_type.upper()}]"
+                        )
+
+                # Update the content if PII was found
+                if split_pii_detected:
+                    split.page_content = redacted_content
+                    pii_content.append(redacted_content)
+                    logger.info(
+                        f"PII detected and redacted in document split: {content[:100]}..."
+                    )
+
+                # Basic validation checks
+                len_check = split.page_content.strip() and len(split.page_content) >= 5
+                embedding = self.embedding_function.embed_query(split.page_content)
+
+                if all([len_check, embedding is not None, any(embedding)]):
+                    valid_splits.append(split)
+
+            except Exception as e:
+                logger.error(f"Failed to process split: {str(e)}")
+                continue
+
+        return valid_splits, pii_content
+
+    def index_document(self, file_path: str, file_id: int) -> tuple[bool, list[str]]:
+        try:
+            splits = self.get_split_documents(file_path)
+            valid_splits, pii_content = self.get_valid_splits(splits)
+            pii_detected = len(pii_content) > 0
+
+            for split in valid_splits:
                 split.metadata["file_id"] = file_id
                 split.metadata = {
                     k: str(v) if v is not None else ""
                     for k, v in split.metadata.items()
                 }
-
-                if split.page_content.startswith("IMAGE_CONTENT:"):
-                    valid_splits.append(split)
-                    continue
-
-                try:
-                    embedding = self.embedding_function.embed_query(split.page_content)
-                    if not embedding or not any(embedding):
-                        continue
-                    valid_splits.append(split)
-                except Exception as e:
-                    logger.error(f"Failed to embed split: {str(e)}")
-                    continue
+                # Add PII detection flag to metadata
+                split.metadata["pii_detected"] = str(pii_detected)
 
             if valid_splits:
                 filtered_splits = filter_complex_metadata(valid_splits)
                 self.vectorstore.add_documents(filtered_splits)
-                return True
-            return False
+                return True, pii_content
+
+            return False, pii_content
         except Exception as e:
             logger.error(f"Error indexing document with file_id {file_id}: {str(e)}")
             raise HTTPException(
