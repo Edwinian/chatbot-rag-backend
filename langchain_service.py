@@ -13,7 +13,7 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 
 from chroma_service import ChromaService
 from db_service import DBService
-from pydantic_models import ModelName, StructuredChunk
+from pydantic_models import ModelName, StructuredChunk, StructuredChunkType
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
@@ -21,6 +21,7 @@ load_dotenv()  # Loads the .env file
 
 
 class LangChainService:
+    MODEL_ANSWER = {"heading_prefix": "<b>", "bullet_prefix": "-"}
     VALID_LINK_PREFIXES = [
         "http://",
         "https://",
@@ -431,6 +432,9 @@ class LangChainService:
         - Remind user to fact check if web search content is used
         - Remove confidence score or (Confidence: ) from the content
         - HTML content is used as context only and should not be used directly in the answer
+        - Add {self.MODEL_ANSWER['bullet_prefix']} in front of bullet points or lists
+        - Add {self.MODEL_ANSWER['heading_prefix']} in front of headings
+        - Wrap keywords with <b> and </b> to make them bold
         """
 
         hybrid_prompt = ChatPromptTemplate.from_messages(
@@ -451,6 +455,9 @@ class LangChainService:
             ]
         )
 
+        # The hybrid_prompt formats the input (query, chat history, and context) into a structure the language model can understand.
+        # The self.chat_llm processes this input to generate a response.
+        # The self.output_parser takes the model's output and converts it into a string.
         hybrid_chain = hybrid_prompt | self.chat_llm | self.output_parser
         answer = hybrid_chain.invoke(
             {"input": query, "chat_history": chat_history, "context": combined_context}
@@ -511,7 +518,7 @@ class LangChainService:
             ]
         )
 
-    def parse_llm_response(self, response: str) -> list[StructuredChunk]:
+    def format_llm_response(self, response: str) -> list[StructuredChunk]:
         """
         Parse plain LLM response into structured chunks with formatting metadata.
         Example: Convert the provided LLM response into sections with headings and bullet points.
@@ -529,15 +536,22 @@ class LangChainService:
             if i == len(lines) - 1:
                 line += "."  # Ensure last line ends with a period
 
-            # Detect headings (e.g., lines starting with "Based on" or ending with ":")
-            if line.startswith("Based on") or line.endswith(":"):
+            if line.startswith(self.MODEL_ANSWER["heading_prefix"]):
+                line = line.replace(self.MODEL_ANSWER["heading_prefix"], "").strip()
                 chunks.append(
-                    StructuredChunk(type="heading", content=line, is_bold=True)
+                    StructuredChunk(
+                        type=StructuredChunkType.HEADING, content=line.strip()
+                    )
                 )
-            # Detect bullet points (e.g., lines starting with "-")
-            elif line.startswith("-"):
-                chunks.append(StructuredChunk(type="bullet", content=line[1:].strip()))
+            elif line.startswith(self.MODEL_ANSWER["bullet_prefix"]):
+                chunks.append(
+                    StructuredChunk(
+                        type=StructuredChunkType.BULLET, content=line[1:].strip()
+                    )
+                )
             else:
-                chunks.append(StructuredChunk(type="paragraph", content=line))
+                chunks.append(
+                    StructuredChunk(type=StructuredChunkType.PARAGRAPH, content=line)
+                )
 
         return chunks

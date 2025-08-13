@@ -235,7 +235,7 @@ async def websocket_chat(websocket: WebSocket):
             )
 
             # Parse the LLM response into structured chunks
-            structured_chunks = langchain_service.parse_llm_response(answer)
+            structured_chunks = langchain_service.format_llm_response(answer)
 
             # Stream structured chunks
             for i, chunk in enumerate(structured_chunks):

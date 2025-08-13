@@ -32,7 +32,12 @@ class DeleteFileRequest(BaseModel):
     file_id: int
 
 
+class StructuredChunkType(str, Enum):
+    HEADING = "heading"
+    BULLET = "bullet"
+    PARAGRAPH = "paragraph"
+
+
 class StructuredChunk(BaseModel):
-    type: str  # e.g., "heading", "bullet", "paragraph"
+    type: StructuredChunkType
     content: str
-    is_bold: bool = False
