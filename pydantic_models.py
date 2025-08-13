@@ -30,3 +30,9 @@ class DocumentInfo(BaseModel):
 
 class DeleteFileRequest(BaseModel):
     file_id: int
+
+
+class StructuredChunk(BaseModel):
+    type: str  # e.g., "heading", "bullet", "paragraph"
+    content: str
+    is_bold: bool = False

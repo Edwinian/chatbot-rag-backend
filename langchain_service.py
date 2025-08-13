@@ -13,7 +13,7 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 
 from chroma_service import ChromaService
 from db_service import DBService
-from pydantic_models import ModelName
+from pydantic_models import ModelName, StructuredChunk
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
@@ -510,3 +510,34 @@ class LangChainService:
                 len(self.get_urls_from_prompt(query)) > 0,
             ]
         )
+
+    def parse_llm_response(response: str) -> list[StructuredChunk]:
+        """
+        Parse plain LLM response into structured chunks with formatting metadata.
+        Example: Convert the provided LLM response into sections with headings and bullet points.
+        """
+        chunks = []
+
+        # Example parsing logic (this can be customized based on LLM output patterns)
+        lines = response.split("\n")
+        for i, line in enumerate(lines):
+            line = line.strip()
+
+            if not line:
+                continue
+
+            if i == len(lines) - 1:
+                line += "."  # Ensure last line ends with a period
+
+            # Detect headings (e.g., lines starting with "Based on" or ending with ":")
+            if line.startswith("Based on") or line.endswith(":"):
+                chunks.append(
+                    StructuredChunk(type="heading", content=line, is_bold=True)
+                )
+            # Detect bullet points (e.g., lines starting with "-")
+            elif line.startswith("-"):
+                chunks.append(StructuredChunk(type="bullet", content=line[1:].strip()))
+            else:
+                chunks.append(StructuredChunk(type="paragraph", content=line))
+
+        return chunks

@@ -101,13 +101,12 @@ async def upload_doc(
     file: UploadFile = File(...), collection_name: Optional[str] = None
 ):
     chroma_service = ChromaService(collection_name=collection_name)
-    allowed_extensions = [".pdf", ".docx", ".html"]
     file_extension = os.path.splitext(file.filename)[1].lower()
 
-    if file_extension not in allowed_extensions:
+    if file_extension not in chroma_service.ALLOWED_EXTENSIONS:
         raise HTTPException(
             status_code=400,
-            detail=f"Unsupported file type. Allowed types are: {', '.join(allowed_extensions)}",
+            detail=f"Unsupported file type. Allowed types are: {', '.join(chroma_service.ALLOWED_EXTENSIONS)}",
         )
     temp_file_path = f"temp_{file.filename}"
 
@@ -179,20 +178,16 @@ async def websocket_chat(websocket: WebSocket):
     session_id = str(uuid.uuid4())
 
     try:
-        # Idle timeout (5 minutes)
-        idle_timeout = 300  # seconds
-        #  manages the timeout internally
+        idle_timeout = 300
         last_active = asyncio.get_event_loop().time()
 
         while True:
-            # Receive client message with timeout
             try:
                 data = await asyncio.wait_for(
                     websocket.receive_json(), timeout=idle_timeout
                 )
-                last_active = asyncio.get_event_loop().time()  # Reset activity timer
+                last_active = asyncio.get_event_loop().time()
             except asyncio.TimeoutError:
-                # Close idle connection
                 if websocket.client_state == WebSocketState.CONNECTED:
                     await websocket.send_json(
                         {
@@ -205,23 +200,18 @@ async def websocket_chat(websocket: WebSocket):
             except WebSocketDisconnect:
                 break
 
-            # Handle client actions
             action = data.get("action", "open")
             session_id = data.get("session_id", None) or session_id
 
             if action == "close":
-                # Client-initiated closure
                 await close_websocket(websocket=websocket, session_id=session_id)
                 return
-
             if action == "stop":
-                # Stop current interaction
                 await websocket.send_json(
                     {"status": "stopped", "session_id": session_id}
                 )
                 continue
 
-            # Process chat message
             message = data.get("message")
             if not message:
                 await websocket.send_json({"error": "No message provided"})
@@ -230,7 +220,6 @@ async def websocket_chat(websocket: WebSocket):
             model = data.get("model", ModelName.Mixtral_v0_1.value)
             collection_name = data.get("collection_name", None)
 
-            # Initialize services and generate answer
             langchain_service = LangChainService(
                 model_name=model, collection_name=collection_name
             )
@@ -238,7 +227,6 @@ async def websocket_chat(websocket: WebSocket):
                 session_id=session_id, query=message
             )
 
-            # Log interaction
             db_service.insert_application_logs(
                 session_id=session_id,
                 user_query=message,
@@ -246,44 +234,40 @@ async def websocket_chat(websocket: WebSocket):
                 model=model,
             )
 
-            # Stream answer in chunks
-            chunks = answer.split(". ")
-            for i, chunk in enumerate(chunks):
+            # Parse the LLM response into structured chunks
+            structured_chunks = langchain_service.parse_llm_response(answer)
+
+            # Stream structured chunks
+            for i, chunk in enumerate(structured_chunks):
                 if websocket.client_state != WebSocketState.CONNECTED:
                     break
-                # Check for stop or close signal
                 try:
                     stop_data = await asyncio.wait_for(
                         websocket.receive_json(), timeout=0.1
                     )
                     stop_data_action = stop_data.get("action", "open")
-
                     if stop_data_action == "stop":
                         await websocket.send_json(
                             {"status": "stopped", "session_id": session_id}
                         )
                         break
-
                     if stop_data_action == "close":
                         await close_websocket(
                             websocket=websocket, session_id=session_id
                         )
                         return
                 except asyncio.TimeoutError:
-                    pass  # No stop/close message, continue streaming
+                    pass
 
-                is_last_chunk = i == len(chunks) - 1
                 await websocket.send_json(
                     {
                         "status": "streaming",
-                        "chunk": chunk + (". " if not is_last_chunk else ""),
+                        "chunk": chunk.dict(),  # Send structured chunk
                         "session_id": session_id,
-                        "is_last_chunk": is_last_chunk,
                     }
                 )
                 await asyncio.sleep(0.5)
 
-            # Send completion status
             if websocket.client_state == WebSocketState.CONNECTED:
                 await websocket.send_json(
                     {"status": "completed", "session_id": session_id}
