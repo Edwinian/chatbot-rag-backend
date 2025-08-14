@@ -16,6 +16,7 @@ from db_service import DBService
 from pydantic_models import ModelName, StructuredChunk, StructuredChunkType
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
+from transformers import AutoTokenizer
 
 load_dotenv()  # Loads the .env file
 
@@ -29,12 +30,17 @@ class LangChainService:
         "ftp://",
         "file://",
     ]
+    DEFAULT_CONTEXT_LENGTH = 30000
+    MAX_CONTEXT_LENGTH_MAP = {
+        ModelName.DeepSeek_R1_Distill_Qwen_32B.value: DEFAULT_CONTEXT_LENGTH,
+        ModelName.All_mini_l6_v2.value: 512,
+    }
 
     def __init__(
         self,
         collection_name: Optional[str] = None,
         model_name: Optional[str] = ModelName.DeepSeek_R1_Distill_Qwen_32B.value,
-        max_length: int = 512,
+        max_output_length: int = 512,
     ):
         """
         Initialize LangChainService with a ChromaService instance and LLM configuration.
@@ -42,13 +48,20 @@ class LangChainService:
         Args:
             chroma_service: ChromaService instance for retrieval
             model_name: Hugging Face model name (e.g., mistralai/Mistral-7B-Instruct-v0.3)
-            max_length: Maximum length for generated text
+            max_output_length: Maximum length for generated text
         """
         self.chroma_service = ChromaService(collection_name=collection_name)
         self.db_service = DBService()
         self.output_parser = StrOutputParser()
         self.model_name = model_name
-        self.max_length = max_length
+        self.max_output_length = max_output_length
+        self.max_context_length = self.MAX_CONTEXT_LENGTH_MAP.get(
+            model_name, self.DEFAULT_CONTEXT_LENGTH
+        )
+        self.max_input_tokens = self.max_context_length - self.max_output_length
+        self.tokenizer = AutoTokenizer.from_pretrained(
+            model_name, token=os.getenv("HUGGINGFACE_TOKEN")
+        )
 
         # Initialize prompt templates
         self.contextualize_q_system_prompt = (
@@ -77,13 +90,70 @@ class LangChainService:
         )
         self.chat_llm = self._initialize_chat_llm()
 
+    def _count_tokens(self, text: str) -> int:
+        """Count tokens in text using tokenizer or fallback to character-based estimation."""
+        if self.tokenizer:
+            return len(self.tokenizer.encode(text, add_special_tokens=True))
+        return len(text) // 4 + 1
+
+    def _truncate_to_fit_context(
+        self,
+        query: str,
+        chat_history: List[Dict],
+        context: str,
+    ) -> tuple[str, List[Dict], str]:
+        """Truncate query, chat history, and context to fit within max_input_tokens."""
+        # Estimate token counts
+        query_tokens = self._count_tokens(query)
+        context_tokens = self._count_tokens(context)
+        history_tokens = sum(self._count_tokens(str(msg)) for msg in chat_history)
+
+        # Calculate total tokens
+        total_tokens = query_tokens + context_tokens + history_tokens
+
+        if total_tokens <= self.max_input_tokens:
+            return query, chat_history, context
+
+        # Truncate context first (least critical)
+        if context_tokens > self.max_input_tokens // 3:
+            target_chars = (
+                self.max_input_tokens // 3
+            ) * 4  # Convert tokens to chars for fallback
+            context = self.summarize_content(context, max_length=target_chars)
+            context_tokens = self._count_tokens(context)
+
+        # Recalculate total tokens
+        total_tokens = query_tokens + context_tokens + history_tokens
+
+        # Truncate chat history if still over limit
+        if total_tokens > self.max_input_tokens:
+            remaining_tokens = self.max_input_tokens - query_tokens - context_tokens
+            if remaining_tokens < 0:
+                # Truncate query as last resort
+                query_chars = (self.max_input_tokens - context_tokens) * 4
+                query = self.summarize_content(query, max_length=query_chars)
+            else:
+                # Keep recent messages in history
+                kept_history = []
+                current_tokens = 0
+                for msg in reversed(chat_history):
+                    msg_tokens = self._count_tokens(str(msg))
+                    if current_tokens + msg_tokens <= remaining_tokens:
+                        kept_history.append(msg)
+                        current_tokens += msg_tokens
+                    else:
+                        break
+                chat_history = list(reversed(kept_history))
+
+        return query, chat_history, context
+
     def _initialize_chat_llm(self):
         """Initialize and return the ChatHuggingFace LLM."""
         try:
             endpoint = HuggingFaceEndpoint(
                 repo_id=self.model_name,
                 huggingfacehub_api_token=os.getenv("HUGGINGFACE_TOKEN"),
-                max_new_tokens=self.max_length,
+                max_new_tokens=self.max_output_length,
                 temperature=0.6,  # Controls response randomness
                 top_p=0.95,  # Controls response diversity
                 return_full_text=False,
@@ -120,7 +190,21 @@ class LangChainService:
             self.db_service.get_chat_history(session_id) if session_id else []
         )
         rag_chain = self.get_rag_chain()
-        rag_results = rag_chain.invoke({"input": query, "chat_history": chat_history})
+
+        # Get context from ChromaService retriever
+        retriever = self.chroma_service.get_retriever()
+        context_docs = retriever.invoke(query)
+        context = "\n".join(doc.page_content for doc in context_docs)
+
+        # Truncate inputs to fit context length
+        query, chat_history, context = self._truncate_to_fit_context(
+            query, chat_history, context
+        )
+
+        # Update context in rag_results
+        rag_results = rag_chain.invoke(
+            {"input": query, "chat_history": chat_history, "context": context}
+        )
         print(
             "Retrieved documents:",
             [doc.metadata["source"] for doc in rag_results["context"]],
@@ -415,13 +499,13 @@ class LangChainService:
         if all([not search_content, not html_content]):
             return rag_results["answer"]
 
-        # Combine both sources of information
+        # Combine context
         combined_context = f"""
         HTML Content:
-        {html_content}
+        {html_content or ''}
 
         Web Search Content (most authoritative source if Confidence is 1.0):
-        {search_content}
+        {search_content or ''}
         
         Internal Knowledge (for reference only):
         {rag_results['context']}
@@ -430,7 +514,7 @@ class LangChainService:
         - Always provide the most specific answer available
         - Never say you can't provide real-time information when it's available
         - Remind user to fact check if web search content is used
-        - Remove confidence score or (Confidence: ) from the content
+        - Do not include confidence score or (Confidence: ) in the response
         - HTML content is used as context only and should not be used directly in the answer
         - Add {self.MODEL_ANSWER['bullet_prefix']} in front of bullet points or lists
         - Add {self.MODEL_ANSWER['heading_prefix']} in front of headings
@@ -438,6 +522,11 @@ class LangChainService:
         - Paraphrase user's prompt in the beginning to ensure your understanding
         - Give conclusion om the end to conclude your response
         """
+
+        # Truncate inputs
+        query, chat_history, combined_context = self._truncate_to_fit_context(
+            query, chat_history, combined_context
+        )
 
         hybrid_prompt = ChatPromptTemplate.from_messages(
             [
@@ -457,9 +546,6 @@ class LangChainService:
             ]
         )
 
-        # The hybrid_prompt formats the input (query, chat history, and context) into a structure the language model can understand.
-        # The self.chat_llm processes this input to generate a response.
-        # The self.output_parser takes the model's output and converts it into a string.
         hybrid_chain = hybrid_prompt | self.chat_llm | self.output_parser
         answer = hybrid_chain.invoke(
             {"input": query, "chat_history": chat_history, "context": combined_context}
