@@ -16,6 +16,7 @@ from langchain_core.documents import Document
 from langchain_core.retrievers import BaseRetriever
 import logging
 from pydantic_models import ModelName
+import easyocr
 
 # Configure logging
 logging.basicConfig(filename="app.log", level=logging.INFO)
@@ -122,6 +123,51 @@ class ChromaService:
 
         return formatted_name
 
+    def get_image_documents(self, file_path: str) -> List[Document]:
+        """
+        Extracts text from an image using EasyOCR and returns LangChain Documents.
+
+        Args:
+            file_path: Path to the image file
+
+        Returns:
+            List of Document objects containing extracted text and metadata
+
+        Raises:
+            ValueError: If image processing fails
+        """
+        try:
+            # Initialize EasyOCR reader (English by default)
+            reader = easyocr.Reader(["en"])
+
+            # Extract text from image
+            results = reader.readtext(file_path, detail=0)  # Returns list of strings
+            print("results", results)
+
+            if not results:
+                return []
+
+            # Combine all detected text into a single string
+            extracted_text = "\n".join(results)
+
+            # Create a Document for the extracted text
+            doc = Document(
+                page_content=extracted_text,
+                metadata={
+                    "file_path": file_path,
+                    "content_type": "image",
+                    "file_id": os.path.basename(file_path),
+                    "file_extension": os.path.splitext(file_path)[1].lower(),
+                    "source": "easyocr",
+                },
+            )
+
+            return [doc]
+
+        except Exception as e:
+            logger.error(f"Failed to process image {file_path}: {str(e)}")
+            raise ValueError(f"Failed to process image {file_path}: {str(e)}")
+
     def get_image_document(self, file_path: str) -> List[Document]:
         try:
             with open(file_path, "rb") as image_file:
@@ -147,7 +193,7 @@ class ChromaService:
         file_extension = os.path.splitext(file_path)[1].lower()
 
         if file_extension in self.IMAGE_EXTENSIONS:
-            return self.get_image_document(file_path)
+            return self.get_image_documents(file_path)
 
         file_loader_map = {
             ".pdf": UnstructuredPDFLoader,
@@ -286,10 +332,20 @@ class ChromaService:
 
         return valid_splits, pii_content
 
-    def index_document(self, file_path: str, file_id: int) -> tuple[bool, list[str]]:
+    def index_document(self, file_path: str, file_id: int) -> dict[str, str]:
         try:
             splits = self.get_split_documents(file_path)
             valid_splits, pii_content = self.get_valid_splits(splits)
+            response = {
+                "success": "0",
+                "error": "",
+                "pii_content": "".join(pii_content),
+            }
+
+            if not valid_splits:
+                response["error"] = "No valid document splits found."
+                return response
+
             pii_detected = len(pii_content) > 0
 
             for split in valid_splits:
@@ -304,9 +360,9 @@ class ChromaService:
             if valid_splits:
                 filtered_splits = filter_complex_metadata(valid_splits)
                 self.vectorstore.add_documents(filtered_splits)
-                return True, pii_content
+                response["success"] = "1"
 
-            return False, pii_content
+            return response
         except Exception as e:
             logger.error(f"Error indexing document with file_id {file_id}: {str(e)}")
             raise HTTPException(

@@ -124,17 +124,19 @@ async def upload_doc(
             shutil.copyfileobj(file.file, buffer)
 
         file_id = db_service.insert_document_record(file.filename)
-        success, pii_content = chroma_service.index_document(temp_file_path, file_id)
+        response = chroma_service.index_document(temp_file_path, file_id)
 
-        if success:
+        if response["success"] == "1":
             logging.info(
                 f"File {file.filename} uploaded and indexed with file_id {file_id}"
             )
             base_message = (
                 f"File {file.filename} has been successfully uploaded and indexed."
             )
-            if pii_content:
+
+            if response["pii_content"]:
                 base_message += f" PII content detected and redacted"
+
             return {
                 "message": base_message,
                 "file_id": file_id,
@@ -143,13 +145,14 @@ async def upload_doc(
             db_service.delete_document_record(file_id)
             raise HTTPException(
                 status_code=500,
-                detail=f"Failed to index {file.filename}. The document may be empty, contain no extractable text, or have unsupported formatting.",
+                detail=response["error"],
             )
     except Exception as e:
         db_service.delete_document_record(file_id)
         logging.error(f"Error processing {file.filename}: {str(e)}")
         raise HTTPException(
-            status_code=500, detail=f"Error processing {file.filename}: {str(e)}"
+            status_code=500,
+            detail=f"Error processing {file.filename.replace('temp_', '')}: {str(e)}",
         )
     finally:
         if os.path.exists(temp_file_path):
