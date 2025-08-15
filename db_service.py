@@ -72,6 +72,17 @@ class DBService:
                 )
             return messages
 
+    def get_application_logs(self, session_id: str) -> List[Dict]:
+        """Retrieve all application log entries for a given session_id."""
+        with self._get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                "SELECT id, session_id, user_query, model_response, model, created_at FROM application_logs WHERE session_id = ? ORDER BY created_at",
+                (session_id,),
+            )
+            logs = [dict(row) for row in cursor.fetchall()]
+            return logs
+
     def delete_application_logs(self, session_id: str) -> bool:
         """
         Delete all application log entries for a given session_id.

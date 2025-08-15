@@ -41,3 +41,12 @@ class StructuredChunkType(str, Enum):
 class StructuredChunk(BaseModel):
     type: StructuredChunkType
     content: str
+
+
+class ApplicationLog(BaseModel):
+    id: int
+    session_id: str
+    user_query: str
+    model_response: list[StructuredChunk]
+    model: str
+    created_at: datetime

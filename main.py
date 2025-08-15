@@ -14,37 +14,34 @@ from fastapi import (
     WebSocket,
     WebSocketDisconnect,
 )
-from fastapi.middleware.cors import CORSMiddleware  # Import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic_models import (
     ModelName,
     QueryInput,
     QueryResponse,
     DocumentInfo,
     DeleteFileRequest,
+    ApplicationLog,  # Add the new model
 )
 from langchain_service import LangChainService
 from db_service import DBService
 from chroma_service import ChromaService
 from dotenv import load_dotenv
 
-load_dotenv()  # Loads the .env file
+load_dotenv()
 
-# Set up logging
 logging.basicConfig(filename="app.log", level=logging.INFO)
 
-# Initialize FastAPI app
 app = FastAPI()
 
-# Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[os.getenv("FRONTEND_URL")],  # Allow frontend origin
+    allow_origins=[os.getenv("FRONTEND_URL")],
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, etc.)
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
-# Initialize services
 db_service = DBService()
 chroma_service = ChromaService()
 langchain_service = LangChainService()
@@ -53,12 +50,10 @@ langchain_service = LangChainService()
 @app.get("/find-docs")
 def get_documents(file_id: Optional[int] = None):
     documents = chroma_service.get_documents(file_id)
-
     if not documents:
         raise HTTPException(
             status_code=404, detail=f"No documents found with file_id {file_id}"
         )
-
     return documents
 
 
@@ -96,6 +91,20 @@ def list_documents():
     return db_service.get_all_documents()
 
 
+@app.get("/get-application-logs", response_model=list[ApplicationLog])
+def get_application_logs(session_id: str):
+    """Retrieve all application logs for a given session_id."""
+    logs = db_service.get_application_logs(session_id)
+    if not logs:
+        return []
+
+    for log in logs:
+        log["model_response"] = langchain_service.format_llm_response(
+            log["model_response"]
+        )
+    return logs
+
+
 @app.post("/upload-doc")
 async def upload_doc(
     file: UploadFile = File(...), collection_name: Optional[str] = None
@@ -124,10 +133,8 @@ async def upload_doc(
             base_message = (
                 f"File {file.filename} has been successfully uploaded and indexed."
             )
-
             if pii_content:
                 base_message += f" PII content detected and redacted"
-
             return {
                 "message": base_message,
                 "file_id": file_id,
@@ -234,6 +241,7 @@ async def websocket_chat(websocket: WebSocket):
             answer = langchain_service.get_model_answer(
                 session_id=session_id, query=message
             )
+            structured_chunks = langchain_service.format_llm_response(answer)
 
             db_service.insert_application_logs(
                 session_id=session_id,
@@ -242,10 +250,6 @@ async def websocket_chat(websocket: WebSocket):
                 model=model,
             )
 
-            # Parse the LLM response into structured chunks
-            structured_chunks = langchain_service.format_llm_response(answer)
-
-            # Stream structured chunks
             for i, chunk in enumerate(structured_chunks):
                 if websocket.client_state != WebSocketState.CONNECTED:
                     break
@@ -270,7 +274,7 @@ async def websocket_chat(websocket: WebSocket):
                 await websocket.send_json(
                     {
                         "status": "streaming",
-                        "chunk": chunk.model_dump(),  # Send structured chunk
+                        "chunk": chunk.model_dump(),
                         "session_id": session_id,
                     }
                 )
