@@ -17,6 +17,8 @@ from langchain_core.retrievers import BaseRetriever
 import logging
 from pydantic_models import ModelName
 import easyocr
+import fitz  # PyMuPDF
+import tempfile
 
 # Configure logging
 logging.basicConfig(filename="app.log", level=logging.INFO)
@@ -123,6 +125,45 @@ class ChromaService:
 
         return formatted_name
 
+    def convert_pdf_to_image(self, pdf_path: str) -> List[str]:
+        try:
+            doc = fitz.open(pdf_path)
+            temp_dir = tempfile.mkdtemp()
+            image_paths = []
+
+            for i, page in enumerate(doc):
+                pix = page.get_pixmap(dpi=200)  # Adjust DPI as needed
+                img_path = os.path.join(temp_dir, f"page_{i}.png")
+                pix.save(img_path)
+                image_paths.append(img_path)
+
+            return image_paths
+        except Exception as e:
+            logger.error(f"PDF to image conversion failed: {str(e)}")
+            raise ValueError(f"PDF to image conversion failed: {str(e)}")
+
+    def get_pdf_image_documents(self, pdf_path: str) -> List[Document]:
+        try:
+            image_paths = self.convert_pdf_to_image(pdf_path)
+            print("PDF image_paths", image_paths)
+            documents = []
+
+            for image_path in image_paths:
+                try:
+                    documents = self.get_image_documents(image_path)
+                    documents.extend(documents)
+                except ValueError as e:
+                    logger.error(f"Failed to process image {image_path}: {str(e)}")
+                    continue
+                finally:
+                    if os.path.exists(image_path):
+                        os.remove(image_path)
+
+            return documents
+        except Exception as e:
+            print(f"Failed to process PDF {pdf_path}: {str(e)}")
+            return []
+
     def get_image_documents(self, file_path: str) -> List[Document]:
         """
         Extracts text from an image using EasyOCR and returns LangChain Documents.
@@ -142,7 +183,7 @@ class ChromaService:
 
             # Extract text from image
             results = reader.readtext(file_path, detail=0)  # Returns list of strings
-            print("results", results)
+            print("texts from images", results)
 
             if not results:
                 return []
@@ -191,10 +232,6 @@ class ChromaService:
 
     def get_split_documents(self, file_path: str) -> List[Document]:
         file_extension = os.path.splitext(file_path)[1].lower()
-
-        if file_extension in self.IMAGE_EXTENSIONS:
-            return self.get_image_documents(file_path)
-
         file_loader_map = {
             ".pdf": UnstructuredPDFLoader,
             ".docx": UnstructuredWordDocumentLoader,
@@ -210,9 +247,17 @@ class ChromaService:
         try:
             if file_extension == ".txt":
                 documents = loader_class(file_path)
+            elif file_extension in self.IMAGE_EXTENSIONS:
+                documents = self.get_image_documents(file_path)
             else:
                 loader = loader_class(file_path, mode="elements")
                 documents = loader.load()
+
+            if file_extension == ".pdf":
+                # Get documents from images as PDF loader only gets documents from texts
+                img_documents = self.get_pdf_image_documents(file_path)
+                print("PDF img document count", len(img_documents))
+                documents += img_documents
 
             processed_docs = []
             current_content = ""

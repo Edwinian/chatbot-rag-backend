@@ -21,5 +21,6 @@ unstructured[doc] # for .doc file processing
 PyPDF2
 docx
 easyocr
-
+pdf2image
+PyMuPDF  # pdf2image dependency
 

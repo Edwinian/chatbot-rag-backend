@@ -117,6 +117,7 @@ async def upload_doc(
             status_code=400,
             detail=f"Unsupported file type. Allowed types are: {', '.join(chroma_service.ALLOWED_EXTENSIONS)}",
         )
+
     temp_file_path = f"temp_{file.filename}"
 
     try:
