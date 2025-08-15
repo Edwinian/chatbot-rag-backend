@@ -23,4 +23,5 @@ docx
 easyocr
 pdf2image
 PyMuPDF  # pdf2image dependency
-
+olefile
+docx2pdf

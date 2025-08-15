@@ -124,16 +124,27 @@ class ChromaService:
 
         return formatted_name
 
-    def get_pdf_image_documents(self, pdf_path: str) -> List[Document]:
+    def get_docx_image_documents(self, file_path: str) -> List[Document]:
         try:
-            image_paths = self.utils_service.convert_pdf_to_image(pdf_path)
+            file_path = self.utils_service.convert_docx_to_pdf(file_path)
+            return self.get_pdf_image_documents(file_path)
+        except Exception as e:
+            print(f"Failed to process PDF {file_path}: {str(e)}")
+            return []
+
+    def get_pdf_image_documents(self, file_path: str) -> List[Document]:
+        try:
+            image_paths = self.utils_service.convert_pdf_to_image(file_path)
             print("PDF image_paths", image_paths)
-            documents = []
+            all_docs = []
 
             for image_path in image_paths:
                 try:
-                    documents = self.get_image_documents(image_path)
-                    documents.extend(documents)
+                    img_docs = self.get_image_documents(image_path)
+                    print("img_docs", img_docs)
+
+                    if img_docs:
+                        all_docs.extend(img_docs)
                 except ValueError as e:
                     logger.error(f"Failed to process image {image_path}: {str(e)}")
                     continue
@@ -141,14 +152,14 @@ class ChromaService:
                     if os.path.exists(image_path):
                         os.remove(image_path)
 
-            return documents
+            return all_docs
         except Exception as e:
-            print(f"Failed to process PDF {pdf_path}: {str(e)}")
+            print(f"Failed to process PDF {file_path}: {str(e)}")
             return []
 
-    def get_image_documents(self, img_path: str) -> List[Document]:
+    def get_image_documents(self, file_path: str) -> List[Document]:
         try:
-            results = self.utils_service.extract_texts_from_image(img_path)
+            results = self.utils_service.extract_texts_from_image(file_path)
             print("texts from images", results)
 
             if not results:
@@ -161,10 +172,10 @@ class ChromaService:
             doc = Document(
                 page_content=extracted_text,
                 metadata={
-                    "file_path": img_path,
+                    "file_path": file_path,
                     "content_type": "image",
-                    "file_id": os.path.basename(img_path),
-                    "file_extension": os.path.splitext(img_path)[1].lower(),
+                    "file_id": os.path.basename(file_path),
+                    "file_extension": os.path.splitext(file_path)[1].lower(),
                     "source": "easyocr",
                 },
             )
@@ -172,7 +183,7 @@ class ChromaService:
             return [doc]
 
         except Exception as e:
-            logger.error(f"Failed to process image {file_path}: {str(e)}")
+            print(f"Failed to process image {file_path}: {str(e)}")
             raise ValueError(f"Failed to process image {file_path}: {str(e)}")
 
     def get_image_document(self, file_path: str) -> List[Document]:
@@ -219,10 +230,17 @@ class ChromaService:
                 loader = loader_class(file_path, mode="elements")
                 documents = loader.load()
 
+            # Get documents from images as loader only gets documents from texts
             if file_extension == ".pdf":
-                # Get documents from images as PDF loader only gets documents from texts
+                print("file_extension", file_extension)
                 img_documents = self.get_pdf_image_documents(file_path)
-                print("PDF img document count", len(img_documents))
+                print(f"{file_extension} img document count", len(img_documents))
+                documents += img_documents
+
+            if file_extension == ".docx":
+                print("file_extension", file_extension)
+                img_documents = self.get_docx_image_documents(file_path)
+                print(f"{file_extension} img document count", len(img_documents))
                 documents += img_documents
 
             processed_docs = []

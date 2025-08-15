@@ -1,20 +1,31 @@
 import os
-import logging
-
-from typing import List
-import easyocr
-import fitz  # PyMuPDF
 import tempfile
+from typing import List
 
-# Configure logging
-logging.basicConfig(filename="app.log", level=logging.INFO)
-logger = logging.getLogger(__name__)
+import fitz  # PyMuPDF
+import easyocr
+from docx2pdf import convert
 
 
 class UtilsService:
-    def convert_pdf_to_image(self, pdf_path: str) -> List[str]:
+    def convert_docx_to_pdf(self, file_path: str) -> str:
         try:
-            doc = fitz.open(pdf_path)
+            temp_dir = tempfile.mkdtemp()
+            pdf_path = os.path.join(temp_dir, "converted.pdf")
+
+            # Convert the docx to pdf
+            convert(file_path, pdf_path)
+
+            print(f"Successfully converted DOCX to PDF: {pdf_path}")
+            return pdf_path
+        except Exception as e:
+            print(f"Failed to convert DOCX to PDF: {str(e)}")
+            raise ValueError(f"DOCX to PDF conversion failed: {str(e)}")
+
+    def convert_pdf_to_image(self, file_path: str) -> List[str]:
+        """Existing method from your code"""
+        try:
+            doc = fitz.open(file_path)
             temp_dir = tempfile.mkdtemp()
             image_paths = []
 
@@ -24,20 +35,26 @@ class UtilsService:
                 pix.save(img_path)
                 image_paths.append(img_path)
 
+            print("convert_pdf_to_image image_paths", image_paths)
             return image_paths
         except Exception as e:
-            logger.error(f"PDF to image conversion failed: {str(e)}")
+            print(f"PDF to image conversion failed: {str(e)}")
             raise ValueError(f"PDF to image conversion failed: {str(e)}")
 
-    def extract_texts_from_image(
-        image_path: str, languages: list[str] = []
-    ) -> List[str]:
-        try:
-            # All supported languages: https://www.jaided.ai/easyocr/
-            target_languages = set(["en", "ch_sim", "ch_tra"] + languages)
-            reader = easyocr.Reader(target_languages)
+    def extract_texts_from_image(self, image_path: str) -> List[str]:
+
+        def _get_results(image_path: str, languages: list[str]) -> List[str]:
+            reader = easyocr.Reader(languages)
+            # Perform OCR
             results = reader.readtext(image_path)
             return results
+
+        try:
+            # All supported languages: https://www.jaided.ai/easyocr/
+            # easyocr cannot parse both simplified and traditional Chinese at the same time
+            results = _get_results(image_path, ["en", "ch_tra"])
+            # results += _get_results(image_path, ["ch_sim"])
+            return results
         except Exception as e:
-            logger.error(f"Image text extraction failed: {str(e)}")
+            print(f"Image text extraction failed: {str(e)}")
             raise ValueError(f"Image text extraction failed: {str(e)}")
