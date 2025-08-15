@@ -1,7 +1,7 @@
 import os
 import re
 import base64
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional
 from fastapi import HTTPException
 from langchain_community.vectorstores.utils import filter_complex_metadata
 from langchain_community.document_loaders import (
@@ -16,9 +16,7 @@ from langchain_core.documents import Document
 from langchain_core.retrievers import BaseRetriever
 import logging
 from pydantic_models import ModelName
-import easyocr
-import fitz  # PyMuPDF
-import tempfile
+from utils_service import UtilsService
 
 # Configure logging
 logging.basicConfig(filename="app.log", level=logging.INFO)
@@ -38,6 +36,7 @@ class ChromaService:
         chunk_size: int = 500,
         chunk_overlap: int = 100,
     ):
+        self.utils_service = UtilsService()
         self.embedding_function = HuggingFaceEmbeddings(model_name=embedding_model)
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size,
@@ -125,26 +124,9 @@ class ChromaService:
 
         return formatted_name
 
-    def convert_pdf_to_image(self, pdf_path: str) -> List[str]:
-        try:
-            doc = fitz.open(pdf_path)
-            temp_dir = tempfile.mkdtemp()
-            image_paths = []
-
-            for i, page in enumerate(doc):
-                pix = page.get_pixmap(dpi=200)  # Adjust DPI as needed
-                img_path = os.path.join(temp_dir, f"page_{i}.png")
-                pix.save(img_path)
-                image_paths.append(img_path)
-
-            return image_paths
-        except Exception as e:
-            logger.error(f"PDF to image conversion failed: {str(e)}")
-            raise ValueError(f"PDF to image conversion failed: {str(e)}")
-
     def get_pdf_image_documents(self, pdf_path: str) -> List[Document]:
         try:
-            image_paths = self.convert_pdf_to_image(pdf_path)
+            image_paths = self.utils_service.convert_pdf_to_image(pdf_path)
             print("PDF image_paths", image_paths)
             documents = []
 
@@ -164,25 +146,9 @@ class ChromaService:
             print(f"Failed to process PDF {pdf_path}: {str(e)}")
             return []
 
-    def get_image_documents(self, file_path: str) -> List[Document]:
-        """
-        Extracts text from an image using EasyOCR and returns LangChain Documents.
-
-        Args:
-            file_path: Path to the image file
-
-        Returns:
-            List of Document objects containing extracted text and metadata
-
-        Raises:
-            ValueError: If image processing fails
-        """
+    def get_image_documents(self, img_path: str) -> List[Document]:
         try:
-            # Initialize EasyOCR reader (English by default)
-            reader = easyocr.Reader(["en"])
-
-            # Extract text from image
-            results = reader.readtext(file_path, detail=0)  # Returns list of strings
+            results = self.utils_service.extract_texts_from_image(img_path)
             print("texts from images", results)
 
             if not results:
@@ -195,10 +161,10 @@ class ChromaService:
             doc = Document(
                 page_content=extracted_text,
                 metadata={
-                    "file_path": file_path,
+                    "file_path": img_path,
                     "content_type": "image",
-                    "file_id": os.path.basename(file_path),
-                    "file_extension": os.path.splitext(file_path)[1].lower(),
+                    "file_id": os.path.basename(img_path),
+                    "file_extension": os.path.splitext(img_path)[1].lower(),
                     "source": "easyocr",
                 },
             )
