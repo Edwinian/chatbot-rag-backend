@@ -26,8 +26,14 @@ logger = logging.getLogger(__name__)
 class ChromaService:
     DEFAULT_COLLECTION_NAME = "default_collection"
     PERSIST_DIRECTORY = "./chroma_db"
-    IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".webp"]
-    ALLOWED_EXTENSIONS = [".pdf", ".doc", ".docx", ".html", ".txt"] + IMAGE_EXTENSIONS
+    IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif"]
+    FILE_EXTENSIONS = [
+        ".pdf",
+        ".doc",
+        ".docx",
+        ".html",
+        ".txt",
+    ]
 
     def __init__(
         self,
@@ -159,7 +165,7 @@ class ChromaService:
 
     def get_image_documents(self, file_path: str) -> List[Document]:
         try:
-            results = self.utils_srevice.extract_texts_from_image(file_path)
+            results = self.utils_service.extract_texts_from_image(file_path)
             print("texts from images", results)
 
             if not results:
@@ -209,6 +215,10 @@ class ChromaService:
 
     def get_split_documents(self, file_path: str) -> List[Document]:
         file_extension = os.path.splitext(file_path)[1].lower()
+
+        if file_extension in self.IMAGE_EXTENSIONS:
+            return self.get_image_documents(file_path)
+
         file_loader_map = {
             ".pdf": UnstructuredPDFLoader,
             ".docx": UnstructuredWordDocumentLoader,
@@ -217,17 +227,13 @@ class ChromaService:
             ".txt": lambda x: [Document(page_content=open(x, "r").read())],
         }
         loader_class = file_loader_map.get(file_extension)
-        documents = []
 
         if not loader_class:
-            raise ValueError(f"Unsupported file type: {file_path}")
+            raise ValueError(f"File loader not found: {file_path}")
 
         try:
             if file_extension == ".txt":
                 documents = loader_class(file_path)
-
-            if file_extension in self.IMAGE_EXTENSIONS:
-                documents = self.get_image_documents(file_path)
             else:
                 loader = loader_class(file_path, mode="elements")
                 documents = loader.load()

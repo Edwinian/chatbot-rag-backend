@@ -52,7 +52,7 @@ class UtilsService:
             # All supported languages: https://www.jaided.ai/easyocr/
             # easyocr cannot parse both simplified and traditional Chinese at the same time
             results = _get_results(image_path, ["en", "ch_tra"])
-            # results += _get_results(image_path, ["ch_sim"])
+            results += _get_results(image_path, ["ch_sim"])
             return results
         except Exception as e:
             print(f"Image text extraction failed: {str(e)}")
