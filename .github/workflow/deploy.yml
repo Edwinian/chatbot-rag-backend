@@ -1,0 +1,32 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.EC2_SSH_KEY }}
+          known_hosts: "just-a-placeholder-so-we-dont-get-errors"
+
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
+            cd chatbot-rag-backend &&
+            git pull origin main &&
+            docker build -t fastapi-app . &&
+            docker stop fastapi-app || true &&
+            docker rm fastapi-app || true &&
+            docker run -d --name fastapi-app \
+              -p 8000:8000 \
+              -e HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }} \
+              -e SERPAPI_KEY=${{ secrets.SERPAPI_KEY }} \
+              fastapi-app
+          "
