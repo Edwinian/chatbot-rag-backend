@@ -1,6 +1,7 @@
-fastapi==0.115.2
-uvicorn==0.32.0
-gunicorn==23.0.0
+--index-url https://download.pytorch.org/whl/cpu
+torch==2.8.0+cpu
+fastapi
+uvicorn
 langchain
 langchain-huggingface
 langchain-core
@@ -12,7 +13,6 @@ python-multipart
 fastapi
 uvicorn
 transformers
-torch
 sentence_transformers
 huggingface_hub
 bs4

@@ -1,8 +1,12 @@
-name: Deploy FastAPI to EC2
+name: Docker Deploy FastAPI to EC2
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+
+env:
+  DOCKER_IMAGE: fastapi-app
+  EC2_DOCKER_DIR: /home/ubuntu/chatbot-rag-backend
 
 jobs:
   deploy:
@@ -15,32 +19,42 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.EC2_SSH_KEY }}
-          known_hosts: "just-a-placeholder-so-we-dont-get-errors"
+          known_hosts: "optional"
 
-      - name: Add EC2 host to known_hosts
-        run: |
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+      - name: Add EC2 to known_hosts
+        run: ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy to EC2
+      - name: Deploy via Docker
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
-            # Navigate to project directory
-            cd /home/ubuntu/chatbot-rag-backend &&
-            # Pull latest code
-            git pull origin main &&
-            # Activate virtual environment
-            source venv/bin/activate &&
-            # Clean up pip cache to avoid storage issues
-            rm -rf ~/.cache/pip &&
-            # Install dependencies
-            pip install --no-cache-dir -r requirements.txt &&
-            # Update .env file with secrets
-            echo 'HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}' > .env &&
-            echo 'SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}' >> .env &&
-            echo 'FRONTEND_URL=http://${{ secrets.EC2_HOST }}:3001' >> .env &&
-            chmod 600 .env &&
-            # Restart the systemd service
-            sudo systemctl restart fastapi-app &&
-            # Ensure service is running
-            sudo systemctl status fastapi-app
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
+            # 1. Navigate to project directory
+            cd $EC2_DOCKER_DIR
+            
+            # 2. Pull latest code
+            git pull origin main
+            
+            # 3. Build Docker image (with build cache)
+            docker build -t $DOCKER_IMAGE .
+            
+            # 4. Stop and remove old container
+            docker stop $DOCKER_IMAGE || true
+            docker rm $DOCKER_IMAGE || true
+            
+            # 5. Run new container with:
+            #    - Auto-restart on crash
+            #    - Cleanup on stop
+            #    - Environment variables
+            #    - Network binding
+            docker run -d \
+              --name $DOCKER_IMAGE \
+              --restart unless-stopped \
+              --rm \
+              -p 8000:8000 \
+              -e HUGGINGFACE_TOKEN='${{ secrets.HUGGINGFACE_TOKEN }}' \
+              -e SERPAPI_KEY='${{ secrets.SERPAPI_KEY }}' \
+              -e FRONTEND_URL='http://${{ secrets.EC2_HOST }}:3001' \
+              $DOCKER_IMAGE
+              
+            # 6. Cleanup unused images
+            docker image prune -f
           "
