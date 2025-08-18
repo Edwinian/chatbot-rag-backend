@@ -35,7 +35,6 @@ class UtilsService:
                 pix.save(img_path)
                 image_paths.append(img_path)
 
-            print("convert_pdf_to_image image_paths", image_paths)
             return image_paths
         except Exception as e:
             print(f"PDF to image conversion failed: {str(e)}")

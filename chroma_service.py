@@ -159,7 +159,7 @@ class ChromaService:
 
     def get_image_documents(self, file_path: str) -> List[Document]:
         try:
-            results = self.utils_service.extract_texts_from_image(file_path)
+            results = self.utils_srevice.extract_texts_from_image(file_path)
             print("texts from images", results)
 
             if not results:
@@ -217,6 +217,7 @@ class ChromaService:
             ".txt": lambda x: [Document(page_content=open(x, "r").read())],
         }
         loader_class = file_loader_map.get(file_extension)
+        documents = []
 
         if not loader_class:
             raise ValueError(f"Unsupported file type: {file_path}")
@@ -224,24 +225,26 @@ class ChromaService:
         try:
             if file_extension == ".txt":
                 documents = loader_class(file_path)
-            elif file_extension in self.IMAGE_EXTENSIONS:
+
+            if file_extension in self.IMAGE_EXTENSIONS:
                 documents = self.get_image_documents(file_path)
             else:
                 loader = loader_class(file_path, mode="elements")
                 documents = loader.load()
 
             # Get documents from images as loader only gets documents from texts
-            if file_extension == ".pdf":
-                print("file_extension", file_extension)
-                img_documents = self.get_pdf_image_documents(file_path)
-                print(f"{file_extension} img document count", len(img_documents))
-                documents += img_documents
+            # Comment out due to performance issues
+            # if file_extension == ".pdf":
+            #     print("file_extension", file_extension)
+            #     img_documents = self.get_pdf_image_documents(file_path)
+            #     print(f"{file_extension} img document count", len(img_documents))
+            #     documents += img_documents
 
-            if file_extension == ".docx":
-                print("file_extension", file_extension)
-                img_documents = self.get_docx_image_documents(file_path)
-                print(f"{file_extension} img document count", len(img_documents))
-                documents += img_documents
+            # if file_extension == ".docx":
+            #     print("file_extension", file_extension)
+            #     img_documents = self.get_docx_image_documents(file_path)
+            #     print(f"{file_extension} img document count", len(img_documents))
+            #     documents += img_documents
 
             processed_docs = []
             current_content = ""
