@@ -15,7 +15,6 @@ huggingface_hub
 bs4
 unstructured # core dependency for UnstructuredPDFLoader
 unstructured[pdf] # for PDF processing
-pytesseract  # processing scanned or image-based PDFs with OCR
 unstructured[doc] # for .doc file processing
 # python-magic-bin # for .doc file processing
 PyPDF2
