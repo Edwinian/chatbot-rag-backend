@@ -26,12 +26,11 @@ logger = logging.getLogger(__name__)
 class ChromaService:
     DEFAULT_COLLECTION_NAME = "default_collection"
     PERSIST_DIRECTORY = "./chroma_db"
-    IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".gif"]
+    IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png"]
     FILE_EXTENSIONS = [
         ".pdf",
         ".doc",
         ".docx",
-        ".html",
         ".txt",
     ]
 
