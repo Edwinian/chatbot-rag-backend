@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: Deploy FastAPI to EC2
 
 on:
   push:
@@ -8,7 +8,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Install SSH Key
         uses: shimataro/ssh-key-action@v2
@@ -16,17 +17,30 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           known_hosts: "just-a-placeholder-so-we-dont-get-errors"
 
+      - name: Add EC2 host to known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
       - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
-            cd chatbot-rag-backend &&
+            # Navigate to project directory
+            cd /home/ubuntu/chatbot-rag-backend &&
+            # Pull latest code
             git pull origin main &&
-            docker build -t fastapi-app . &&
-            docker stop fastapi-app || true &&
-            docker rm fastapi-app || true &&
-            docker run -d --name fastapi-app \
-              -p 8000:8000 \
-              -e HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }} \
-              -e SERPAPI_KEY=${{ secrets.SERPAPI_KEY }} \
-              fastapi-app
+            # Activate virtual environment
+            source venv/bin/activate &&
+            # Clean up pip cache to avoid storage issues
+            rm -rf ~/.cache/pip &&
+            # Install dependencies
+            pip install --no-cache-dir -r requirements.txt &&
+            # Update .env file with secrets
+            echo 'HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}' > .env &&
+            echo 'SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}' >> .env &&
+            echo 'FRONTEND_URL=http://${{ secrets.EC2_HOST }}:3001' >> .env &&
+            chmod 600 .env &&
+            # Restart the systemd service
+            sudo systemctl restart fastapi-app &&
+            # Ensure service is running
+            sudo systemctl status fastapi-app
           "
