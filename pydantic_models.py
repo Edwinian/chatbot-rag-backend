@@ -16,6 +16,10 @@ class QueryInput(BaseModel):
     collection_name: str = Field(default=None)
 
 
+class DeleteResponse(BaseModel):
+    message: str
+
+
 class QueryResponse(BaseModel):
     answer: str
     session_id: str

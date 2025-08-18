@@ -1,5 +1,5 @@
 import sqlite3
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 
 class DBService:
@@ -72,23 +72,28 @@ class DBService:
                 )
             return messages
 
-    def get_application_logs(self, session_id: str) -> List[Dict]:
-        """Retrieve all application log entries for a given session_id."""
+    def get_application_logs(self, session_id: Optional[str] = None) -> List[Dict]:
+        """Retrieve all application log entries, optionally filtered by session_id."""
         with self._get_db_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute(
-                "SELECT id, session_id, user_query, model_response, model, created_at FROM application_logs WHERE session_id = ? ORDER BY created_at",
-                (session_id,),
-            )
+            if session_id is None:
+                cursor.execute(
+                    "SELECT id, session_id, user_query, model_response, model, created_at FROM application_logs ORDER BY created_at"
+                )
+            else:
+                cursor.execute(
+                    "SELECT id, session_id, user_query, model_response, model, created_at FROM application_logs WHERE session_id = ? ORDER BY created_at",
+                    (session_id,),
+                )
             logs = [dict(row) for row in cursor.fetchall()]
             return logs
 
-    def delete_application_logs(self, session_id: str) -> bool:
+    def delete_application_logs(self, session_id: Optional[str] = None) -> bool:
         """
-        Delete all application log entries for a given session_id.
+        Delete application log entries for a given session_id or all logs if session_id is None.
 
         Args:
-            session_id: The session ID to delete logs for.
+            session_id: The session ID to delete logs for, or None to delete all logs.
 
         Returns:
             bool: True if deletion was successful or no logs existed, False on failure.
@@ -96,15 +101,21 @@ class DBService:
         try:
             with self._get_db_connection() as conn:
                 cursor = conn.cursor()
-                cursor.execute(
-                    "DELETE FROM application_logs WHERE session_id = ?", (session_id,)
-                )
+                if session_id is None:
+                    cursor.execute("DELETE FROM application_logs")
+                else:
+                    cursor.execute(
+                        "DELETE FROM application_logs WHERE session_id = ?",
+                        (session_id,),
+                    )
                 conn.commit()
-                print(f"Deleted application logs for session_id '{session_id}'")
+                print(
+                    f"Deleted application logs for session_id '{session_id or 'all'}'"
+                )
                 return True
         except Exception as e:
             print(
-                f"Error deleting application logs for session_id '{session_id}': {str(e)}"
+                f"Error deleting application logs for session_id '{session_id or 'all'}': {str(e)}"
             )
             return False
 

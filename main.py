@@ -9,6 +9,7 @@ import asyncio
 from fastapi import (
     FastAPI,
     File,
+    Query,
     UploadFile,
     HTTPException,
     WebSocket,
@@ -16,6 +17,7 @@ from fastapi import (
 )
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic_models import (
+    DeleteResponse,
     ModelName,
     QueryInput,
     QueryResponse,
@@ -92,9 +94,12 @@ def list_documents():
 
 
 @app.get("/get-application-logs", response_model=list[ApplicationLog])
-def get_application_logs(session_id: str):
-    """Retrieve all application logs for a given session_id."""
+def get_application_logs(
+    session_id: Optional[str] = Query(None),
+) -> list[ApplicationLog]:
+    """Retrieve all application logs, optionally filtered by session_id."""
     logs = db_service.get_application_logs(session_id)
+
     if not logs:
         return []
 
@@ -184,6 +189,14 @@ def chat(query_input: QueryInput):
     )
     logging.info(f"Session ID: {session_id}, Model Response: {answer}")
     return QueryResponse(answer=answer, session_id=session_id, model=query_input.model)
+
+
+@app.post("/delete-application-logs", response_model=DeleteResponse)
+def delete_application_logs(
+    session_id: Optional[str] = Query(None),
+):
+    db_service.delete_application_logs(session_id)
+    return {"message": "Application logs deleted successfully."}
 
 
 @app.websocket("/ws/chat")
