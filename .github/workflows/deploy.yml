@@ -35,8 +35,8 @@ jobs:
             set -e  # Exit on error
             set -x  # Enable command tracing for debugging
 
-            echo "Starting Git repository setup in $EC2_DOCKER_DIR"
-            cd "$EC2_DOCKER_DIR"
+            echo "Starting Git repository setup in ${{ env.EC2_DOCKER_DIR }}"
+            cd "${{ env.EC2_DOCKER_DIR }}"
             echo "Changed to directory: $(pwd)"
 
             if [ ! -d .git ]; then
@@ -64,8 +64,8 @@ jobs:
             set -e  # Exit on error
             set -x  # Enable command tracing for debugging
 
-            echo "Creating .env file in $EC2_DOCKER_DIR"
-            cd "$EC2_DOCKER_DIR"
+            echo "Creating .env file in ${{ env.EC2_DOCKER_DIR }}"
+            cd "${{ env.EC2_DOCKER_DIR }}"
             echo "Changed to directory: $(pwd)"
 
             echo "HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}" > .env
@@ -89,36 +89,35 @@ jobs:
             set -e  # Exit on error
             set -x  # Enable command tracing for debugging
 
-            echo "Starting Docker deployment in $EC2_DOCKER_DIR"
-            cd "$EC2_DOCKER_DIR"
+            echo "Starting Docker deployment in ${{ env.EC2_DOCKER_DIR }}"
+            cd "${{ env.EC2_DOCKER_DIR }}"
             echo "Changed to directory: $(pwd)"
 
-            echo "Setting up Docker Buildx"
-            docker buildx create --use || true
-            docker buildx inspect --bootstrap
+            echo "Checking Docker version"
+            docker --version
             if [ $? -ne 0 ]; then
-              echo "Docker Buildx setup failed"
+              echo "Docker not installed or inaccessible"
               exit 1
             fi
 
-            echo "Building Docker image: $DOCKER_IMAGE"
-            docker build -t "$DOCKER_IMAGE" .
+            echo "Building Docker image: ${{ env.DOCKER_IMAGE }}"
+            docker build -t "${{ env.DOCKER_IMAGE }}" .
             if [ $? -ne 0 ]; then
               echo "Docker build failed"
               exit 1
             fi
 
             echo "Stopping and removing old container"
-            docker stop "$DOCKER_IMAGE" || true
-            docker rm "$DOCKER_IMAGE" || true
+            docker stop "${{ env.DOCKER_IMAGE }}" || true
+            docker rm "${{ env.DOCKER_IMAGE }}" || true
 
             echo "Running new container"
             docker run -d \
-              --name "$DOCKER_IMAGE" \
+              --name "${{ env.DOCKER_IMAGE }}" \
               --restart unless-stopped \
               -p 8000:8000 \
               --env-file .env \
-              "$DOCKER_IMAGE"
+              "${{ env.DOCKER_IMAGE }}"
             if [ $? -ne 0 ]; then
               echo "Failed to run Docker container"
               exit 1
