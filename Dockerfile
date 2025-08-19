@@ -37,7 +37,7 @@ RUN mkdir -p /app/chroma_db && \
 EXPOSE 8000
 
 # Health check for the application
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=1 \
     CMD curl -f http://localhost:8000/get-application-logs || exit 1
 
 CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "--timeout", "120", "--log-level", "debug", "main:app", "--bind", "0.0.0.0:8000"]
