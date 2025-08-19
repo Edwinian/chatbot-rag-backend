@@ -6,7 +6,8 @@ RUN apt-get update && \
     libgl1 \
     libglib2.0-0 \
     poppler-utils \
-    && rm -rf /var/lib/apt/lists/*
+    curl && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -14,18 +15,19 @@ WORKDIR /app
 RUN python -m venv /app/venv
 ENV PATH="/app/venv/bin:$PATH"
 
-# Install typing-extensions from PyPI to avoid metadata issue
-RUN pip install --no-cache-dir typing-extensions>=4.10.0
+# Upgrade pip and install wheel
+RUN pip install --upgrade pip wheel
 
-# Install torch (CPU-only version) from PyTorch index
-RUN pip install --no-cache-dir torch==2.8.0+cpu --index-url https://download.pytorch.org/whl/cpu
-
-# Install gunicorn explicitly
-RUN pip install --no-cache-dir gunicorn==22.0.0
+# Install typing-extensions, torch, and gunicorn
+RUN pip install \
+    typing-extensions>=4.10.0 \
+    gunicorn==22.0.0 \
+    torch==2.8.0+cpu \
+    --index-url https://download.pytorch.org/whl/cpu
 
 # Install other requirements
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
 COPY . .
 
@@ -34,4 +36,9 @@ RUN mkdir -p /app/chroma_db && \
     chmod -R 777 /app/chroma_db
 
 EXPOSE 8000
-CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "main:app", "--bind", "0.0.0.0:8000"]
+
+# Health check for the application
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/get-application-logs || exit 1
+
+CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "--timeout", "120", "--log-level", "debug", "main:app", "--bind", "0.0.0.0:8000"]

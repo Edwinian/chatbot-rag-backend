@@ -107,62 +107,89 @@ jobs:
             '
 
       - name: Deploy Docker Container
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
-            set -e  # Exit on error
-            set -x  # Enable command tracing for debugging
-
-            echo "Starting Docker deployment in ${{ env.EC2_DOCKER_DIR }}"
-            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd"
-            echo "Changed to directory: $(sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd")"
-
-            echo "Checking disk space before build"
-            sudo -n df -h
-
-            echo "Cleaning up Docker to free space"
-            sudo -n docker system prune -a -f --volumes
-            if [ $? -ne 0 ]; then
-              echo "Docker cleanup failed"
-              exit 1
-            fi
-
-            echo "Checking Docker version"
-            sudo -n docker --version
-            if [ $? -ne 0 ]; then
-              echo "Docker not installed or inaccessible"
-              exit 1
-            fi
-
-            echo "Building Docker image: ${{ env.DOCKER_IMAGE }}"
-            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && docker build -t ${{ env.DOCKER_IMAGE }} ."
-            if [ $? -ne 0 ]; then
-              echo "Docker build failed"
-              exit 1
-            fi
-
-            echo "Stopping and removing old container"
-            sudo -n docker stop "${{ env.DOCKER_IMAGE }}" || true
-            sudo -n docker rm "${{ env.DOCKER_IMAGE }}" || true
-
-            echo "Running new container"
-            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && docker run -d \
-              --name ${{ env.DOCKER_IMAGE }} \
-              --restart unless-stopped \
-              -p 8000:8000 \
-              --env-file .env \
-              ${{ env.DOCKER_IMAGE }}"
-            if [ $? -ne 0 ]; then
-              echo "Failed to run Docker container"
-              exit 1
-            fi
-
-            echo "Cleaning up unused Docker images"
-            sudo -n docker image prune -f
-            if [ $? -ne 0 ]; then
-              echo "Docker image cleanup failed"
-              exit 1
-            fi
-
-            echo "Docker deployment completed successfully"
-          '
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 30
+          max_attempts: 3
+          command: |
+            ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=5 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+              set -e
+              set -x
+              echo "Starting Docker deployment in ${{ env.EC2_DOCKER_DIR }}"
+              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd"
+              echo "Checking disk space before build"
+              if ! sudo -n df -h / | grep -q '[0-9]G'; then
+                echo "Insufficient disk space"
+                exit 1
+              fi
+              echo "Checking for port conflicts on 8000"
+              if sudo -n lsof -i :8000; then
+                echo "Port 8000 is in use"
+                sudo -n lsof -i :8000
+                exit 1
+              fi
+              echo "Cleaning up Docker to free space"
+              sudo -n docker system prune -a -f --volumes
+              if [ $? -ne 0 ]; then
+                echo "Docker cleanup failed"
+                exit 1
+              fi
+              echo "Checking Docker version"
+              sudo -n docker --version
+              if [ $? -ne 0 ]; then
+                echo "Docker not installed or inaccessible"
+                exit 1
+              fi
+              echo "Building Docker image: ${{ env.DOCKER_IMAGE }}"
+              echo "Build started at $(date)"
+              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && docker build -t ${{ env.DOCKER_IMAGE }} ."
+              if [ $? -ne 0 ]; then
+                echo "Docker build failed"
+                exit 1
+              fi
+              echo "Build finished at $(date)"
+              echo "Stopping and removing old container"
+              if sudo -n docker ps -a -q -f name=${{ env.DOCKER_IMAGE }} | grep -q .; then
+                sudo -n docker stop ${{ env.DOCKER_IMAGE }}
+                sudo -n docker rm ${{ env.DOCKER_IMAGE }}
+              else
+                echo "No existing container found"
+              fi
+              echo "Running new container"
+              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && docker run -d \
+                --name ${{ env.DOCKER_IMAGE }} \
+                --restart unless-stopped \
+                -p 8000:8000 \
+                --env-file .env \
+                ${{ env.DOCKER_IMAGE }}"
+              if [ $? -ne 0 ]; then
+                echo "Failed to run Docker container"
+                exit 1
+              fi
+              echo "Waiting for container to stabilize"
+              sleep 10
+              echo "Verifying container status"
+              sudo -n docker ps -f name=${{ env.DOCKER_IMAGE }}
+              if [ $? -ne 0 ]; then
+                echo "Container not running"
+                sudo -n docker logs ${{ env.DOCKER_IMAGE }}
+                exit 1
+              fi
+              echo "Testing endpoint"
+              sudo -n curl -f -v http://localhost:8000/get-application-logs || {
+                echo "Endpoint test failed"
+                sudo -n docker logs ${{ env.DOCKER_IMAGE }}
+                exit 1
+              }
+              echo "Cleaning up unused Docker images and pip cache"
+              sudo -n docker image prune -f
+              sudo -n rm -rf ~/.cache/pip
+              if [ $? -ne 0 ]; then
+                echo "Cleanup failed"
+                exit 1
+              fi
+              echo "Displaying container logs"
+              sudo -n docker logs ${{ env.DOCKER_IMAGE }}
+              echo "Docker deployment completed successfully"
+            '
         if: success()
