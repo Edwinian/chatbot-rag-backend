@@ -50,12 +50,13 @@ jobs:
               exit 1
             fi
 
-            if [ ! -d ${{ env.EC2_DOCKER_DIR }}/.git ]; then
+            # Check if .git directory exists
+            if sudo -n bash -c "[ -d ${{ env.EC2_DOCKER_DIR }}/.git ]"; then
+              echo "Pulling latest changes"
+              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && git fetch origin && git checkout master && git pull origin master"
+            else
               echo "Initializing new Git repository"
               sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && git init && git remote add origin \"https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com/${{ secrets.REPO_URL }}\" && git fetch origin && git checkout master"
-            else
-              echo "Pulling latest changes"
-              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && git pull origin master"
             fi
             if [ $? -ne 0 ]; then
               echo "Git operations failed"
