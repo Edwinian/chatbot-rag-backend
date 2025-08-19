@@ -36,14 +36,19 @@ jobs:
             set -x  # Enable command tracing for debugging
 
             echo "Starting Git repository setup in $EC2_DOCKER_DIR"
-            mkdir -p $EC2_DOCKER_DIR
-            cd $EC2_DOCKER_DIR
+            echo "Creating directory: $EC2_DOCKER_DIR"
+            mkdir -p "$EC2_DOCKER_DIR"
+            if [ $? -ne 0 ]; then
+              echo "Failed to create directory $EC2_DOCKER_DIR"
+              exit 1
+            fi
+            cd "$EC2_DOCKER_DIR"
             echo "Changed to directory: $(pwd)"
 
             if [ ! -d .git ]; then
               echo "Initializing new Git repository"
               git init
-              git remote add origin ${{ secrets.REPO_URL }}
+              git remote add origin "${{ secrets.REPO_URL }}"
               git fetch origin
               git checkout master
             else
@@ -66,7 +71,7 @@ jobs:
             set -x  # Enable command tracing for debugging
 
             echo "Creating .env file in $EC2_DOCKER_DIR"
-            cd $EC2_DOCKER_DIR
+            cd "$EC2_DOCKER_DIR"
             echo "Changed to directory: $(pwd)"
 
             echo "HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}" > .env
@@ -91,7 +96,7 @@ jobs:
             set -x  # Enable command tracing for debugging
 
             echo "Starting Docker deployment in $EC2_DOCKER_DIR"
-            cd $EC2_DOCKER_DIR
+            cd "$EC2_DOCKER_DIR"
             echo "Changed to directory: $(pwd)"
 
             echo "Setting up Docker Buildx"
@@ -103,23 +108,23 @@ jobs:
             fi
 
             echo "Building Docker image: $DOCKER_IMAGE"
-            docker build -t $DOCKER_IMAGE .
+            docker build -t "$DOCKER_IMAGE" .
             if [ $? -ne 0 ]; then
               echo "Docker build failed"
               exit 1
             fi
 
             echo "Stopping and removing old container"
-            docker stop $DOCKER_IMAGE || true
-            docker rm $DOCKER_IMAGE || true
+            docker stop "$DOCKER_IMAGE" || true
+            docker rm "$DOCKER_IMAGE" || true
 
             echo "Running new container"
             docker run -d \
-              --name $DOCKER_IMAGE \
+              --name "$DOCKER_IMAGE" \
               --restart unless-stopped \
               -p 8000:8000 \
               --env-file .env \
-              $DOCKER_IMAGE
+              "$DOCKER_IMAGE"
             if [ $? -ne 0 ]; then
               echo "Failed to run Docker container"
               exit 1
