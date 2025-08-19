@@ -140,13 +140,13 @@ jobs:
             fi
 
             echo "Checking pip version and configuration"
-            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && . venv/bin/activate && pip --version && pip config list"
+            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pip --version && pip config list"
 
             echo "Listing requirements.txt for debugging"
             sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && cat requirements.txt"
 
             echo "Testing pip install before Docker build"
-            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && . venv/bin/activate && pip install --no-cache-dir torch==2.8.0+cpu --index-url https://download.pytorch.org/whl/cpu && pip install --no-cache-dir -r requirements.txt"
+            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pip install --no-cache-dir torch==2.8.0+cpu --index-url https://download.pytorch.org/whl/cpu && pip install --no-cache-dir -r requirements.txt"
             if [ $? -ne 0 ]; then
               echo "pip install test failed"
               exit 1
