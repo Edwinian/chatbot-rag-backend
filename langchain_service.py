@@ -16,7 +16,11 @@ from db_service import DBService
 from pydantic_models import ModelName, StructuredChunk, StructuredChunkType
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
-from transformers import AutoTokenizer
+
+try:
+    import tiktoken
+except ImportError:
+    tiktoken = None
 
 load_dotenv()  # Loads the .env file
 
@@ -59,9 +63,7 @@ class LangChainService:
             model_name, self.DEFAULT_CONTEXT_LENGTH
         )
         self.max_input_tokens = self.max_context_length - self.max_output_length
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            model_name, token=os.getenv("HUGGINGFACE_TOKEN")
-        )
+        self.tokenizer = tiktoken.get_encoding("cl100k_base")
 
         # Initialize prompt templates
         self.contextualize_q_system_prompt = (
@@ -91,9 +93,9 @@ class LangChainService:
         self.chat_llm = self._initialize_chat_llm()
 
     def _count_tokens(self, text: str) -> int:
-        """Count tokens in text using tokenizer or fallback to character-based estimation."""
         if self.tokenizer:
-            return len(self.tokenizer.encode(text, add_special_tokens=True))
+            return len(self.tokenizer.encode(text))
+        # Fallback to character-based estimation (approx. 4 chars per token)
         return len(text) // 4 + 1
 
     def _truncate_to_fit_context(

@@ -8,7 +8,7 @@ python-multipart
 fastapi
 uvicorn
 gunicorn
-transformers
+tiktoken
 sentence-transformers
 huggingface-hub
 beautifulsoup4
