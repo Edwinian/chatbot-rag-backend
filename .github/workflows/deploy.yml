@@ -33,28 +33,31 @@ jobs:
             # 2. Pull latest code
             git pull origin master
             
-            # 3. Build Docker image (with build cache)
+            # 3. Create .env file with secrets
+            echo 'HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}' > .env
+            echo 'SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}' >> .env
+            echo 'FRONTEND_URL=http://${{ secrets.EC2_HOST }}:3001' >> .env
+            
+            # 4. Build Docker image (with build cache)
             docker build -t $DOCKER_IMAGE .
             
-            # 4. Stop and remove old container
+            # 5. Stop and remove old container
             docker stop $DOCKER_IMAGE || true
             docker rm $DOCKER_IMAGE || true
             
-            # 5. Run new container with:
+            # 6. Run new container with:
             #    - Auto-restart on crash
             #    - Cleanup on stop
-            #    - Environment variables
+            #    - Environment file
             #    - Network binding
             docker run -d \
               --name $DOCKER_IMAGE \
               --restart unless-stopped \
               --rm \
               -p 8000:8000 \
-              -e HUGGINGFACE_TOKEN='${{ secrets.HUGGINGFACE_TOKEN }}' \
-              -e SERPAPI_KEY='${{ secrets.SERPAPI_KEY }}' \
-              -e FRONTEND_URL='http://${{ secrets.EC2_HOST }}:3001' \
+              --env-file .env \
               $DOCKER_IMAGE
               
-            # 6. Cleanup unused images
+            # 7. Cleanup unused images
             docker image prune -f
           "
