@@ -110,8 +110,14 @@ jobs:
                 echo "Insufficient disk space"
                 exit 1
               fi
-              echo "Checking for containers using port 8000"
-              sudo -n docker ps -q -f "publish=8000" | while read -r cid; do
+              echo "Cleaning up existing fastapi-app container"
+              if sudo -n docker ps -a -q -f name=${{ env.DOCKER_IMAGE }} | grep -q .; then
+                echo "Stopping and removing container ${{ env.DOCKER_IMAGE }}"
+                sudo -n docker stop ${{ env.DOCKER_IMAGE }} || true
+                sudo -n docker rm ${{ env.DOCKER_IMAGE }} || true
+              fi
+              echo "Cleaning up containers using port 8000"
+              sudo -n docker ps -a -q -f "publish=8000" | while read -r cid; do
                 echo "Stopping and removing container $cid"
                 sudo -n docker stop "$cid" || true
                 sudo -n docker rm "$cid" || true
