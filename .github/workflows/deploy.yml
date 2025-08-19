@@ -6,7 +6,7 @@ on:
 
 env:
   DOCKER_IMAGE: fastapi-app
-  EC2_DOCKER_DIR: /home/ubuntu/chatbot-rag-backend
+  EC2_DOCKER_DIR: /root/chatbot-rag-backend
 
 jobs:
   deploy:
@@ -19,45 +19,119 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.EC2_SSH_KEY }}
-          known_hosts: "optional"
+          known_hosts: ${{ secrets.EC2_HOST }}
 
       - name: Add EC2 to known_hosts
-        run: ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Deploy via Docker
         run: |
-          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "
-            # 1. Navigate to project directory
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          if [ $? -ne 0 ]; then
+            echo "Failed to scan EC2 host key"
+            exit 1
+          fi
+
+      - name: Initialize or Update Git Repository
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+            set -e  # Exit on error
+            set -x  # Enable command tracing for debugging
+
+            echo "Starting Git repository setup in $EC2_DOCKER_DIR"
+            mkdir -p $EC2_DOCKER_DIR
             cd $EC2_DOCKER_DIR
-            
-            # 2. Pull latest code
-            git pull origin master
-            
-            # 3. Create .env file with secrets
-            echo 'HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}' > .env
-            echo 'SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}' >> .env
-            echo 'FRONTEND_URL=http://${{ secrets.EC2_HOST }}:3001' >> .env
-            
-            # 4. Build Docker image (with build cache)
+            echo "Changed to directory: $(pwd)"
+
+            if [ ! -d .git ]; then
+              echo "Initializing new Git repository"
+              git init
+              git remote add origin ${{ secrets.REPO_URL }}
+              git fetch origin
+              git checkout master
+            else
+              echo "Pulling latest changes"
+              git pull origin master
+            fi
+            if [ $? -ne 0 ]; then
+              echo "Git operations failed"
+              exit 1
+            fi
+
+            echo "Git repository setup completed"
+          '
+        if: success()
+
+      - name: Create and Secure .env File
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+            set -e  # Exit on error
+            set -x  # Enable command tracing for debugging
+
+            echo "Creating .env file in $EC2_DOCKER_DIR"
+            cd $EC2_DOCKER_DIR
+            echo "Changed to directory: $(pwd)"
+
+            echo "HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}" > .env
+            echo "SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}" >> .env
+            echo "FRONTEND_URL=http://${{ secrets.EC2_HOST }}:3001" >> .env
+
+            echo "Setting permissions for .env file"
+            chmod 600 .env
+            if [ $? -ne 0 ]; then
+              echo "Failed to set .env permissions"
+              exit 1
+            fi
+
+            echo ".env file creation and permissions set"
+          '
+        if: success()
+
+      - name: Deploy Docker Container
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+            set -e  # Exit on error
+            set -x  # Enable command tracing for debugging
+
+            echo "Starting Docker deployment in $EC2_DOCKER_DIR"
+            cd $EC2_DOCKER_DIR
+            echo "Changed to directory: $(pwd)"
+
+            echo "Setting up Docker Buildx"
+            docker buildx create --use || true
+            docker buildx inspect --bootstrap
+            if [ $? -ne 0 ]; then
+              echo "Docker Buildx setup failed"
+              exit 1
+            fi
+
+            echo "Building Docker image: $DOCKER_IMAGE"
             docker build -t $DOCKER_IMAGE .
-            
-            # 5. Stop and remove old container
+            if [ $? -ne 0 ]; then
+              echo "Docker build failed"
+              exit 1
+            fi
+
+            echo "Stopping and removing old container"
             docker stop $DOCKER_IMAGE || true
             docker rm $DOCKER_IMAGE || true
-            
-            # 6. Run new container with:
-            #    - Auto-restart on crash
-            #    - Cleanup on stop
-            #    - Environment file
-            #    - Network binding
+
+            echo "Running new container"
             docker run -d \
               --name $DOCKER_IMAGE \
               --restart unless-stopped \
-              --rm \
               -p 8000:8000 \
               --env-file .env \
               $DOCKER_IMAGE
-              
-            # 7. Cleanup unused images
+            if [ $? -ne 0 ]; then
+              echo "Failed to run Docker container"
+              exit 1
+            fi
+
+            echo "Cleaning up unused Docker images"
             docker image prune -f
-          "
+            if [ $? -ne 0 ]; then
+              echo "Docker image cleanup failed"
+              exit 1
+            fi
+
+            echo "Docker deployment completed successfully"
+          '
+        if: success()
