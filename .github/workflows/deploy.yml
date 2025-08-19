@@ -6,7 +6,7 @@ on:
 
 env:
   DOCKER_IMAGE: fastapi-app
-  EC2_DOCKER_DIR: /root/chatbot-rag-backend
+  EC2_DOCKER_DIR: /home/${{ secrets.EC2_USER }}/chatbot-rag-backend
 
 jobs:
   deploy:
