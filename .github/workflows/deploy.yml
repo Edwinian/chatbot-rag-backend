@@ -41,8 +41,14 @@ jobs:
 
             # Configure Git credentials
             sudo -n git config --global credential.helper store
-            sudo -n bash -c "echo \"https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com\" > ~/.git-credentials"
-            sudo -n chmod 600 ~/.git-credentials
+            set +x  # Disable tracing to avoid logging sensitive data
+            sudo -n bash -c "echo \"https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com\" > /root/.git-credentials"
+            set -x  # Re-enable tracing
+            sudo -n chmod 600 /root/.git-credentials
+            if [ $? -ne 0 ]; then
+              echo "Failed to set permissions on /root/.git-credentials"
+              exit 1
+            fi
 
             if [ ! -d ${{ env.EC2_DOCKER_DIR }}/.git ]; then
               echo "Initializing new Git repository"
@@ -57,7 +63,7 @@ jobs:
             fi
 
             # Clean up credentials
-            sudo -n rm -f ~/.git-credentials
+            sudo -n rm -f /root/.git-credentials
 
             echo "Git repository setup completed"
           '
@@ -73,8 +79,10 @@ jobs:
             sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd"
             echo "Changed to directory: $(sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd")"
 
+            set +x  # Disable tracing to avoid logging sensitive data
             sudo -n bash -c "echo \"HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}\" > ${{ env.EC2_DOCKER_DIR }}/.env"
             sudo -n bash -c "echo \"SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}\" >> ${{ env.EC2_DOCKER_DIR }}/.env"
+            set -x  # Re-enable tracing
             sudo -n bash -c "echo \"FRONTEND_URL=http://${{ secrets.EC2_HOST }}:3001\" >> ${{ env.EC2_DOCKER_DIR }}/.env"
 
             echo "Setting permissions for .env file"
