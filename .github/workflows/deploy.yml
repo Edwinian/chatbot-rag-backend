@@ -21,87 +21,84 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           known_hosts: ${{ secrets.EC2_HOST }}
 
-      # - name: Add EC2 to known_hosts
-      #   run: |
-      #     ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-      #     if [ $? -ne 0 ]; then
-      #       echo "Failed to scan EC2 host key"
-      #       exit 1
-      #     fi
-
       - name: Initialize or Update Git Repository
-        run: |
-          ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=5 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
-            set -e
-            set -x
-            echo "Starting Git repository setup in ${{ env.EC2_DOCKER_DIR }}"
-            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd"
-            sudo -n git config --global credential.helper store
-            set +x
-            sudo -n bash -c "echo \"https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com\" > /root/.git-credentials"
-            set -x
-            sudo -n chmod 600 /root/.git-credentials
-            if [ $? -ne 0 ]; then
-              echo "Failed to set permissions on /root/.git-credentials"
-              exit 1
-            fi
-            if sudo -n bash -c "[ -d ${{ env.EC2_DOCKER_DIR }}/.git ]"; then
-              echo "Resetting to latest origin/master"
-              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && git fetch origin && git checkout master && git reset --hard origin/master"
-            else
-              echo "Initializing new Git repository"
-              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && git init && git remote add origin \"https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com/${{ secrets.REPO_URL }}\" && git fetch origin && git checkout master"
-            fi
-            if [ $? -ne 0 ]; then
-              echo "Git operations failed"
-              exit 1
-            fi
-            sudo -n rm -f /root/.git-credentials
-            echo "Git repository setup completed"
-          '
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 1
+          command: |
+            ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=5 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+              set -e
+              set -x
+              echo "Starting Git repository setup in ${{ env.EC2_DOCKER_DIR }}"
+              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd"
+              sudo -n git config --global credential.helper store
+              set +x
+              sudo -n bash -c "echo \"https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com\" > /root/.git-credentials"
+              set -x
+              sudo -n chmod 600 /root/.git-credentials
+              if [ $? -ne 0 ]; then
+                echo "Failed to set permissions on /root/.git-credentials"
+                exit 1
+              fi
+              if sudo -n bash -c "[ -d ${{ env.EC2_DOCKER_DIR }}/.git ]"; then
+                echo "Resetting to latest origin/master"
+                sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && git fetch origin && git checkout master && git reset --hard origin/master"
+              else
+                echo "Initializing new Git repository"
+                sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && git init && git remote add origin \"https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com/${{ secrets.REPO_URL }}\" && git fetch origin && git checkout master"
+              fi
+              if [ $? -ne 0 ]; then
+                echo "Git operations failed"
+                exit 1
+              fi
+              sudo -n rm -f /root/.git-credentials
+              echo "Git repository setup completed"
+            '
         if: success()
 
       - name: Create and Secure .env File
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
-            set -e  # Exit on error
-            set -x  # Enable command tracing for debugging
-
-            echo "Creating .env file in ${{ env.EC2_DOCKER_DIR }}"
-            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd"
-            echo "Changed to directory: $(sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd")"
-
-            set +x  # Disable tracing to avoid logging sensitive data
-            sudo -n bash -c "echo \"HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}\" > ${{ env.EC2_DOCKER_DIR }}/.env"
-            sudo -n bash -c "echo \"SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}\" >> ${{ env.EC2_DOCKER_DIR }}/.env"
-            set -x  # Re-enable tracing
-            sudo -n bash -c "echo \"FRONTEND_URL=http://${{ secrets.EC2_HOST }}:3001\" >> ${{ env.EC2_DOCKER_DIR }}/.env"
-
-            echo "Setting permissions for .env file"
-            sudo -n chmod 600 ${{ env.EC2_DOCKER_DIR }}/.env
-            if [ $? -ne 0 ]; then
-              echo "Failed to set .env permissions"
-              exit 1
-            fi
-
-            echo ".env file creation and permissions set"
-          '
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 5
+          max_attempts: 1
+          command: |
+            ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=5 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+              set -e
+              set -x
+              echo "Creating .env file in ${{ env.EC2_DOCKER_DIR }}"
+              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd"
+              set +x
+              sudo -n bash -c "echo \"HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}\" > ${{ env.EC2_DOCKER_DIR }}/.env"
+              sudo -n bash -c "echo \"SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}\" >> ${{ env.EC2_DOCKER_DIR }}/.env"
+              sudo -n bash -c "echo \"FRONTEND_URL=http://${{ secrets.EC2_HOST }}:3001\" >> ${{ env.EC2_DOCKER_DIR }}/.env"
+              set -x
+              sudo -n chmod 600 ${{ env.EC2_DOCKER_DIR }}/.env
+              if [ $? -ne 0 ]; then
+                echo "Failed to set .env permissions"
+                exit 1
+              fi
+              echo ".env file creation and permissions set"
+            '
         if: success()
 
       - name: Free Disk Space
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+          ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=5 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+            set -e
+            set -x
             sudo -n apt-get clean
-            sudo -n docker system prune -a -f
+            sudo -n docker system prune -a -f --volumes
             sudo -n rm -rf /var/lib/apt/lists/*
             sudo -n journalctl --vacuum-size=50M
-            '
+          '
+        if: success()
 
       - name: Deploy Docker Container
         uses: nick-fields/retry@v3
         with:
           timeout_minutes: 30
-          max_attempts: 3
+          max_attempts: 1
           command: |
             ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=5 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
               set -e
@@ -113,9 +110,21 @@ jobs:
                 echo "Insufficient disk space"
                 exit 1
               fi
-              echo "Checking for port conflicts on 8000"
+              echo "Checking for containers using port 8000"
+              sudo -n docker ps -q -f "publish=8000" | while read -r cid; do
+                echo "Stopping and removing container $cid"
+                sudo -n docker stop "$cid" || true
+                sudo -n docker rm "$cid" || true
+              done
+              echo "Checking for lingering processes on port 8000"
               if sudo -n lsof -i :8000; then
-                echo "Port 8000 is in use"
+                echo "Killing processes on port 8000"
+                sudo -n lsof -i :8000 | grep LISTEN | awk "{print \$2}" | xargs -r sudo kill -9
+                sleep 2
+              fi
+              echo "Verifying port 8000 is free"
+              if sudo -n lsof -i :8000; then
+                echo "Port 8000 is still in use"
                 sudo -n lsof -i :8000
                 exit 1
               fi
@@ -139,13 +148,6 @@ jobs:
                 exit 1
               fi
               echo "Build finished at $(date)"
-              echo "Stopping and removing old container"
-              if sudo -n docker ps -a -q -f name=${{ env.DOCKER_IMAGE }} | grep -q .; then
-                sudo -n docker stop ${{ env.DOCKER_IMAGE }}
-                sudo -n docker rm ${{ env.DOCKER_IMAGE }}
-              else
-                echo "No existing container found"
-              fi
               echo "Running new container"
               sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && docker run -d \
                 --name ${{ env.DOCKER_IMAGE }} \
@@ -172,11 +174,10 @@ jobs:
                 sudo -n docker logs ${{ env.DOCKER_IMAGE }}
                 exit 1
               }
-              echo "Cleaning up unused Docker images and pip cache"
+              echo "Cleaning up unused Docker images"
               sudo -n docker image prune -f
-              sudo -n rm -rf ~/.cache/pip
               if [ $? -ne 0 ]; then
-                echo "Cleanup failed"
+                echo "Docker image cleanup failed"
                 exit 1
               fi
               echo "Displaying container logs"
