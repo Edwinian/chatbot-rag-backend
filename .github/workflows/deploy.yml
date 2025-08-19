@@ -36,12 +36,6 @@ jobs:
             set -x  # Enable command tracing for debugging
 
             echo "Starting Git repository setup in $EC2_DOCKER_DIR"
-            echo "Creating directory: $EC2_DOCKER_DIR"
-            mkdir -p "$EC2_DOCKER_DIR"
-            if [ $? -ne 0 ]; then
-              echo "Failed to create directory $EC2_DOCKER_DIR"
-              exit 1
-            fi
             cd "$EC2_DOCKER_DIR"
             echo "Changed to directory: $(pwd)"
 
