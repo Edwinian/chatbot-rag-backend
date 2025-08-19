@@ -21,13 +21,13 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           known_hosts: ${{ secrets.EC2_HOST }}
 
-      - name: Add EC2 to known_hosts
-        run: |
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-          if [ $? -ne 0 ]; then
-            echo "Failed to scan EC2 host key"
-            exit 1
-          fi
+      # - name: Add EC2 to known_hosts
+      #   run: |
+      #     ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+      #     if [ $? -ne 0 ]; then
+      #       echo "Failed to scan EC2 host key"
+      #       exit 1
+      #     fi
 
       - name: Initialize or Update Git Repository
         run: |
