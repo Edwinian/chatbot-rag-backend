@@ -106,15 +106,6 @@ jobs:
             sudo -n journalctl --vacuum-size=50M
             '
 
-      - name: Enable Swap for additional memory
-        run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
-            sudo -n fallocate -l 2G /swapfile
-            sudo -n chmod 600 /swapfile
-            sudo -n mkswap /swapfile
-            sudo -n swapon /swapfile
-          '
-
       - name: Deploy Docker Container
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
