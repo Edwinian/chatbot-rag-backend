@@ -36,23 +36,20 @@ jobs:
             set -x  # Enable command tracing for debugging
 
             echo "Starting Git repository setup in ${{ env.EC2_DOCKER_DIR }}"
-            cd "${{ env.EC2_DOCKER_DIR }}"
-            echo "Changed to directory: $(pwd)"
+            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd"
+            echo "Changed to directory: $(sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd")"
 
             # Configure Git credentials
-            git config --global credential.helper store
-            echo "https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com" > ~/.git-credentials
-            chmod 600 ~/.git-credentials
+            sudo -n git config --global credential.helper store
+            sudo -n bash -c "echo \"https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com\" > ~/.git-credentials"
+            sudo -n chmod 600 ~/.git-credentials
 
-            if [ ! -d .git ]; then
+            if [ ! -d ${{ env.EC2_DOCKER_DIR }}/.git ]; then
               echo "Initializing new Git repository"
-              git init
-              git remote add origin "https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com/${{ secrets.REPO_URL }}"
-              git fetch origin
-              git checkout master
+              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && git init && git remote add origin \"https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com/${{ secrets.REPO_URL }}\" && git fetch origin && git checkout master"
             else
               echo "Pulling latest changes"
-              git pull origin master
+              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && git pull origin master"
             fi
             if [ $? -ne 0 ]; then
               echo "Git operations failed"
@@ -60,7 +57,7 @@ jobs:
             fi
 
             # Clean up credentials
-            rm -f ~/.git-credentials
+            sudo -n rm -f ~/.git-credentials
 
             echo "Git repository setup completed"
           '
@@ -73,15 +70,15 @@ jobs:
             set -x  # Enable command tracing for debugging
 
             echo "Creating .env file in ${{ env.EC2_DOCKER_DIR }}"
-            cd "${{ env.EC2_DOCKER_DIR }}"
-            echo "Changed to directory: $(pwd)"
+            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd"
+            echo "Changed to directory: $(sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd")"
 
-            echo "HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}" > .env
-            echo "SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}" >> .env
-            echo "FRONTEND_URL=http://${{ secrets.EC2_HOST }}:3001" >> .env
+            sudo -n bash -c "echo \"HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}\" > ${{ env.EC2_DOCKER_DIR }}/.env"
+            sudo -n bash -c "echo \"SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}\" >> ${{ env.EC2_DOCKER_DIR }}/.env"
+            sudo -n bash -c "echo \"FRONTEND_URL=http://${{ secrets.EC2_HOST }}:3001\" >> ${{ env.EC2_DOCKER_DIR }}/.env"
 
             echo "Setting permissions for .env file"
-            chmod 600 .env
+            sudo -n chmod 600 ${{ env.EC2_DOCKER_DIR }}/.env
             if [ $? -ne 0 ]; then
               echo "Failed to set .env permissions"
               exit 1
@@ -98,41 +95,41 @@ jobs:
             set -x  # Enable command tracing for debugging
 
             echo "Starting Docker deployment in ${{ env.EC2_DOCKER_DIR }}"
-            cd "${{ env.EC2_DOCKER_DIR }}"
-            echo "Changed to directory: $(pwd)"
+            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd"
+            echo "Changed to directory: $(sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd")"
 
             echo "Checking Docker version"
-            docker --version
+            sudo -n docker --version
             if [ $? -ne 0 ]; then
               echo "Docker not installed or inaccessible"
               exit 1
             fi
 
             echo "Building Docker image: ${{ env.DOCKER_IMAGE }}"
-            docker build -t "${{ env.DOCKER_IMAGE }}" .
+            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && docker build -t ${{ env.DOCKER_IMAGE }} ."
             if [ $? -ne 0 ]; then
               echo "Docker build failed"
               exit 1
             fi
 
             echo "Stopping and removing old container"
-            docker stop "${{ env.DOCKER_IMAGE }}" || true
-            docker rm "${{ env.DOCKER_IMAGE }}" || true
+            sudo -n docker stop "${{ env.DOCKER_IMAGE }}" || true
+            sudo -n docker rm "${{ env.DOCKER_IMAGE }}" || true
 
             echo "Running new container"
-            docker run -d \
-              --name "${{ env.DOCKER_IMAGE }}" \
+            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && docker run -d \
+              --name ${{ env.DOCKER_IMAGE }} \
               --restart unless-stopped \
               -p 8000:8000 \
               --env-file .env \
-              "${{ env.DOCKER_IMAGE }}"
+              ${{ env.DOCKER_IMAGE }}"
             if [ $? -ne 0 ]; then
               echo "Failed to run Docker container"
               exit 1
             fi
 
             echo "Cleaning up unused Docker images"
-            docker image prune -f
+            sudo -n docker image prune -f
             if [ $? -ne 0 ]; then
               echo "Docker image cleanup failed"
               exit 1
