@@ -15,3 +15,5 @@ beautifulsoup4==4.12.3
 unstructured[pdf,docx]==0.15.0
 pdf2image==1.17.0
 olefile==0.47
+
+gunicorn

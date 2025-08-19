@@ -21,7 +21,6 @@ RUN pip install --upgrade pip wheel
 # Install typing-extensions, torch, and gunicorn
 RUN pip install \
     typing-extensions>=4.10.0 \
-    gunicorn \
     torch==2.8.0+cpu \
     --index-url https://download.pytorch.org/whl/cpu
 
