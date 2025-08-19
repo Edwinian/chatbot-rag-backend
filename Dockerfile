@@ -1,4 +1,4 @@
-FROM python:3.9-slim  
+FROM python:3.13-slim  
 
 # Install only essential dependencies for EasyOCR/OpenCV
 RUN apt-get update && \
@@ -8,6 +8,9 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
+
+# Install typing-extensions from PyPI explicitly to avoid metadata issue
+RUN pip install --no-cache-dir typing-extensions>=4.10.0
 
 # Install torch first (specify CPU-only version to save space)
 RUN pip install --no-cache-dir torch==2.8.0+cpu --index-url https://download.pytorch.org/whl/cpu
