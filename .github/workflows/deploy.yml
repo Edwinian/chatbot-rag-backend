@@ -107,6 +107,16 @@ jobs:
             sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd"
             echo "Changed to directory: $(sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd")"
 
+            echo "Checking disk space before build"
+            sudo -n df -h
+
+            echo "Cleaning up Docker to free space"
+            sudo -n docker system prune -a -f --volumes
+            if [ $? -ne 0 ]; then
+              echo "Docker cleanup failed"
+              exit 1
+            fi
+
             echo "Checking Docker version"
             sudo -n docker --version
             if [ $? -ne 0 ]; then
@@ -114,14 +124,29 @@ jobs:
               exit 1
             fi
 
+            echo "Installing Python 3.13 to match Dockerfile"
+            sudo -n apt-get update
+            sudo -n apt-get install -y python3.13 python3.13-venv
+            if [ $? -ne 0 ]; then
+              echo "Failed to install Python 3.13"
+              exit 1
+            fi
+
+            echo "Creating and activating virtual environment with Python 3.13"
+            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && python3.13 -m venv venv && . venv/bin/activate && pip install --upgrade pip"
+            if [ $? -ne 0 ]; then
+              echo "Failed to set up virtual environment"
+              exit 1
+            fi
+
             echo "Checking pip version and configuration"
-            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pip --version && pip config list"
+            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && . venv/bin/activate && pip --version && pip config list"
 
             echo "Listing requirements.txt for debugging"
             sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && cat requirements.txt"
 
             echo "Testing pip install before Docker build"
-            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pip install --no-cache-dir torch==2.8.0+cpu --index-url https://download.pytorch.org/whl/cpu && pip install --no-cache-dir -r requirements.txt"
+            sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && . venv/bin/activate && pip install --no-cache-dir torch==2.8.0+cpu --index-url https://download.pytorch.org/whl/cpu && pip install --no-cache-dir -r requirements.txt"
             if [ $? -ne 0 ]; then
               echo "pip install test failed"
               exit 1
