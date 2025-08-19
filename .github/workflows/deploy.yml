@@ -31,29 +31,23 @@ jobs:
 
       - name: Initialize or Update Git Repository
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
-            set -e  # Exit on error
-            set -x  # Enable command tracing for debugging
-
+          ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=5 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+            set -e
+            set -x
             echo "Starting Git repository setup in ${{ env.EC2_DOCKER_DIR }}"
             sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd"
-            echo "Changed to directory: $(sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd")"
-
-            # Configure Git credentials
             sudo -n git config --global credential.helper store
-            set +x  # Disable tracing to avoid logging sensitive data
+            set +x
             sudo -n bash -c "echo \"https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com\" > /root/.git-credentials"
-            set -x  # Re-enable tracing
+            set -x
             sudo -n chmod 600 /root/.git-credentials
             if [ $? -ne 0 ]; then
               echo "Failed to set permissions on /root/.git-credentials"
               exit 1
             fi
-
-            # Check if .git directory exists
             if sudo -n bash -c "[ -d ${{ env.EC2_DOCKER_DIR }}/.git ]"; then
-              echo "Pulling latest changes"
-              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && git fetch origin && git checkout master && git pull origin master"
+              echo "Resetting to latest origin/master"
+              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && git fetch origin && git checkout master && git reset --hard origin/master"
             else
               echo "Initializing new Git repository"
               sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && git init && git remote add origin \"https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com/${{ secrets.REPO_URL }}\" && git fetch origin && git checkout master"
@@ -62,10 +56,7 @@ jobs:
               echo "Git operations failed"
               exit 1
             fi
-
-            # Clean up credentials
             sudo -n rm -f /root/.git-credentials
-
             echo "Git repository setup completed"
           '
         if: success()
