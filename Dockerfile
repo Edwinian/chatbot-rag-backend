@@ -18,11 +18,11 @@ ENV PATH="/app/venv/bin:$PATH"
 # Upgrade pip and install wheel
 RUN pip install --upgrade pip wheel
 
-# Install typing-extensions, torch, and gunicorn
-RUN pip install \
-    typing-extensions>=4.10.0 \
-    torch==2.8.0+cpu \
-    --index-url https://download.pytorch.org/whl/cpu
+# # Install typing-extensions, torch, and gunicorn
+# RUN pip install \
+#     typing-extensions>=4.10.0 \
+#     torch==2.8.0+cpu \
+#     --index-url https://download.pytorch.org/whl/cpu
 
 # Install other requirements
 COPY requirements.txt .
