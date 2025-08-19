@@ -39,10 +39,15 @@ jobs:
             cd "${{ env.EC2_DOCKER_DIR }}"
             echo "Changed to directory: $(pwd)"
 
+            # Configure Git credentials
+            git config --global credential.helper store
+            echo "https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com" > ~/.git-credentials
+            chmod 600 ~/.git-credentials
+
             if [ ! -d .git ]; then
               echo "Initializing new Git repository"
               git init
-              git remote add origin "${{ secrets.REPO_URL }}"
+              git remote add origin "https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com/${{ secrets.REPO_URL }}"
               git fetch origin
               git checkout master
             else
@@ -53,6 +58,9 @@ jobs:
               echo "Git operations failed"
               exit 1
             fi
+
+            # Clean up credentials
+            rm -f ~/.git-credentials
 
             echo "Git repository setup completed"
           '
