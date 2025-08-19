@@ -1,4 +1,4 @@
-FROM python:3.13-slim
+FROM python:3.12-slim
 
 # Install essential dependencies for EasyOCR, OpenCV, and pdf2image
 RUN apt-get update && \
@@ -14,16 +14,7 @@ WORKDIR /app
 RUN python -m venv /app/venv
 ENV PATH="/app/venv/bin:$PATH"
 
-# Install typing-extensions from PyPI to avoid metadata issue
-RUN pip install --no-cache-dir typing-extensions>=4.10.0
-
-# Install torch (CPU-only version) from PyTorch index
-RUN pip install --no-cache-dir torch==2.8.0+cpu --index-url https://download.pytorch.org/whl/cpu
-
-# Install gunicorn explicitly
-RUN pip install --no-cache-dir gunicorn==22.0.0
-
-# Install other requirements
+# Install requirements
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
