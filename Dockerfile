@@ -9,10 +9,8 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     gcc \
     python3-dev \
-    libmagic1 \
-    poppler-utils \
-    tesseract-ocr \
-    libtesseract-dev \
+    libglib2.0-0 \
+    libgl1  \
     libpng-dev \
     libjpeg-dev \
     zlib1g-dev \

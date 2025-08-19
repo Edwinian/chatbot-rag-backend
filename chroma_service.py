@@ -129,39 +129,6 @@ class ChromaService:
 
         return formatted_name
 
-    def get_docx_image_documents(self, file_path: str) -> List[Document]:
-        try:
-            file_path = self.utils_service.convert_docx_to_pdf(file_path)
-            return self.get_pdf_image_documents(file_path)
-        except Exception as e:
-            print(f"Failed to process PDF {file_path}: {str(e)}")
-            return []
-
-    def get_pdf_image_documents(self, file_path: str) -> List[Document]:
-        try:
-            image_paths = self.utils_service.convert_pdf_to_image(file_path)
-            print("PDF image_paths", image_paths)
-            all_docs = []
-
-            for image_path in image_paths:
-                try:
-                    img_docs = self.get_image_documents(image_path)
-                    print("img_docs", img_docs)
-
-                    if img_docs:
-                        all_docs.extend(img_docs)
-                except ValueError as e:
-                    logger.error(f"Failed to process image {image_path}: {str(e)}")
-                    continue
-                finally:
-                    if os.path.exists(image_path):
-                        os.remove(image_path)
-
-            return all_docs
-        except Exception as e:
-            print(f"Failed to process PDF {file_path}: {str(e)}")
-            return []
-
     def get_image_documents(self, file_path: str) -> List[Document]:
         try:
             results = self.utils_service.extract_texts_from_image(file_path)
@@ -191,27 +158,6 @@ class ChromaService:
             print(f"Failed to process image {file_path}: {str(e)}")
             raise ValueError(f"Failed to process image {file_path}: {str(e)}")
 
-    def get_image_document(self, file_path: str) -> List[Document]:
-        try:
-            with open(file_path, "rb") as image_file:
-                image_data = image_file.read()
-
-            base64_image = base64.b64encode(image_data).decode("utf-8")
-
-            doc = Document(
-                page_content=f"IMAGE_CONTENT:{base64_image}",
-                metadata={
-                    "file_path": file_path,
-                    "content_type": "image",
-                    "file_id": os.path.basename(file_path),
-                    "file_extension": os.path.splitext(file_path)[1].lower(),
-                },
-            )
-            return [doc]
-        except Exception as e:
-            logger.error(f"Failed to process image {file_path}: {str(e)}")
-            raise ValueError(f"Failed to process image {file_path}: {str(e)}")
-
     def get_split_documents(self, file_path: str) -> List[Document]:
         file_extension = os.path.splitext(file_path)[1].lower()
 
@@ -236,20 +182,6 @@ class ChromaService:
             else:
                 loader = loader_class(file_path, mode="elements")
                 documents = loader.load()
-
-            # Get documents from images as loader only gets documents from texts
-            # Comment out due to performance issues
-            # if file_extension == ".pdf":
-            #     print("file_extension", file_extension)
-            #     img_documents = self.get_pdf_image_documents(file_path)
-            #     print(f"{file_extension} img document count", len(img_documents))
-            #     documents += img_documents
-
-            # if file_extension == ".docx":
-            #     print("file_extension", file_extension)
-            #     img_documents = self.get_docx_image_documents(file_path)
-            #     print(f"{file_extension} img document count", len(img_documents))
-            #     documents += img_documents
 
             processed_docs = []
             current_content = ""
