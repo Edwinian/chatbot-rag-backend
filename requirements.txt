@@ -1,4 +1,3 @@
-torch==2.8.0+cpu
 langchain
 langchain-huggingface
 langchain-core
