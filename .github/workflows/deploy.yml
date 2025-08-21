@@ -28,7 +28,7 @@ jobs:
           max_attempts: 5
           retry_wait_seconds: 30
           command: |
-            ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=5 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+            ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30 -o ConnectionAttempts=3 -o ServerAliveInterval=60 -o ServerAliveCountMax=5 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
               set -e
               set -x
               echo "Starting Git repository setup in ${{ env.EC2_DOCKER_DIR }}"
