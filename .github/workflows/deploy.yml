@@ -83,6 +83,18 @@ jobs:
             '
         if: success()
 
+      - name: Free Disk Space
+        run: |
+          ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=5 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+            set -e
+            set -x
+            sudo -n apt-get clean
+            sudo -n docker system prune -a -f --volumes
+            sudo -n rm -rf /var/lib/apt/lists/*
+            sudo -n journalctl --vacuum-size=50M
+          '
+        if: success()
+
       - name: Configure Hostname Resolution
         run: |
           ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=5 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
