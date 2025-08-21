@@ -21,6 +21,18 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           known_hosts: ${{ secrets.EC2_HOST }}
 
+      - name: Create Directory Structure
+        run: |
+          ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=5 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+            set -e
+            set -x
+            echo "Creating directory: ${{ env.EC2_DOCKER_DIR }}"
+            sudo -n mkdir -p ${{ env.EC2_DOCKER_DIR }}
+            sudo -n chown $USER:$USER ${{ env.EC2_DOCKER_DIR }}
+            sudo -n chmod 755 ${{ env.EC2_DOCKER_DIR }}
+            echo "Directory created successfully"
+          '
+
       - name: Initialize or Update Git Repository
         uses: nick-fields/retry@v3
         with:
@@ -32,31 +44,31 @@ jobs:
               set -e
               set -x
               echo "Starting Git repository setup in ${{ env.EC2_DOCKER_DIR }}"
-              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd"
-              sudo -n git config --global credential.helper store
-              set +x
-              sudo -n bash -c "echo \"https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com\" > /root/.git-credentials"
-              set -x
-              sudo -n chmod 600 /root/.git-credentials
-              if [ $? -ne 0 ]; then
-                echo "Failed to set permissions on /root/.git-credentials"
-                exit 1
-              fi
-              if sudo -n bash -c "[ -d ${{ env.EC2_DOCKER_DIR }}/.git ]"; then
-                echo "Resetting to latest origin/master"
-                sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && git fetch origin && git checkout master && git reset --hard origin/master"
+              
+              # Change to directory
+              cd ${{ env.EC2_DOCKER_DIR }}
+              
+              # Configure git credentials temporarily
+              git config --global credential.helper "store --file=/tmp/git-credentials"
+              echo "https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com" > /tmp/git-credentials
+              
+              if [ -d .git ]; then
+                echo "Updating existing repository"
+                git fetch origin
+                git checkout master
+                git reset --hard origin/master
               else
-                echo "Initializing new Git repository"
-                sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && git init && git remote add origin \"https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com/${{ secrets.REPO_URL }}\" && git fetch origin && git checkout master"
+                echo "Cloning new repository"
+                git clone https://${{ secrets.GIT_USERNAME }}:${{ secrets.GIT_PAT }}@github.com/${{ secrets.REPO_URL }} .
+                git checkout master
               fi
-              if [ $? -ne 0 ]; then
-                echo "Git operations failed"
-                exit 1
-              fi
-              sudo -n rm -f /root/.git-credentials
+              
+              # Clean up credentials
+              rm -f /tmp/git-credentials
+              git config --global --unset credential.helper
+              
               echo "Git repository setup completed"
             '
-        if: success()
 
       - name: Create and Secure .env File
         uses: nick-fields/retry@v3
@@ -68,21 +80,19 @@ jobs:
               set -e
               set -x
               echo "Creating .env file in ${{ env.EC2_DOCKER_DIR }}"
-              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd"
-              set +x
-              sudo -n bash -c "echo \"HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}\" > ${{ env.EC2_DOCKER_DIR }}/.env"
-              sudo -n bash -c "echo \"SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}\" >> ${{ env.EC2_DOCKER_DIR }}/.env"
-              sudo -n bash -c "echo \"FRONTEND_URL=http://${{ secrets.EC2_HOST }}:3001\" >> ${{ env.EC2_DOCKER_DIR }}/.env"
-              set -x
-              sudo -n chmod 600 ${{ env.EC2_DOCKER_DIR }}/.env
-              if [ $? -ne 0 ]; then
-                echo "Failed to set .env permissions"
-                exit 1
-              fi
-              echo ".env file creation and permissions set"
+              cd ${{ env.EC2_DOCKER_DIR }}
+              
+              cat > .env << EOF
+              HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}
+              SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}
+              FRONTEND_URL=http://${{ secrets.EC2_HOST }}:3001
+              EOF
+              
+              chmod 600 .env
+              echo ".env file created and secured"
             '
-        if: success()
 
+      # ... rest of your existing steps remain the same
       - name: Free Disk Space
         run: |
           ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=5 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
@@ -93,18 +103,15 @@ jobs:
             sudo -n rm -rf /var/lib/apt/lists/*
             sudo -n journalctl --vacuum-size=50M
           '
-        if: success()
 
       - name: Configure Hostname Resolution
         run: |
           ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=5 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
             set -e
             set -x
-            # Get the current hostname
             HOSTNAME=$(hostname)
             echo "Current hostname: $HOSTNAME"
             
-            # Check if hostname is already in /etc/hosts
             if ! grep -q "$HOSTNAME" /etc/hosts; then
               echo "Adding hostname to /etc/hosts"
               echo "127.0.0.1 $HOSTNAME" | sudo tee -a /etc/hosts
@@ -112,20 +119,7 @@ jobs:
             else
               echo "Hostname already exists in /etc/hosts"
             fi
-            
-            # Also add the public IP if needed (optional)
-            PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4 || echo "")
-            if [ ! -z "$PUBLIC_IP" ]; then
-              echo "Public IP: $PUBLIC_IP"
-              if ! grep -q "$PUBLIC_IP" /etc/hosts; then
-                echo "$PUBLIC_IP $HOSTNAME" | sudo tee -a /etc/hosts
-              fi
-            fi
-            
-            echo "Updated /etc/hosts:"
-            cat /etc/hosts
           '
-        if: success()
 
       - name: Deploy Docker Container
         uses: nick-fields/retry@v3
@@ -137,71 +131,24 @@ jobs:
               set -e
               set -x
               echo "Starting Docker deployment in ${{ env.EC2_DOCKER_DIR }}"
-              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd"
-              echo "Checking disk space before build"
-              if ! sudo -n df -h / | grep -q '[0-9]G'; then
-                echo "Insufficient disk space"
-                exit 1
-              fi
-              echo "Cleaning up existing fastapi-app container"
-              if sudo -n docker ps -a -q -f name=${{ env.DOCKER_IMAGE }} | grep -q .; then
-                echo "Stopping and removing container ${{ env.DOCKER_IMAGE }}"
-                sudo -n docker stop ${{ env.DOCKER_IMAGE }} || true
-                sudo -n docker rm ${{ env.DOCKER_IMAGE }} || true
-              fi
-              echo "Cleaning up containers using port 8000"
-              sudo -n docker ps -a -q -f "publish=8000" | while read -r cid; do
-                echo "Stopping and removing container $cid"
-                sudo -n docker stop "$cid" || true
-                sudo -n docker rm "$cid" || true
-              done
-              echo "Checking for lingering processes on port 8000"
-              if sudo -n lsof -i :8000; then
-                echo "Killing processes on port 8000"
-                sudo -n lsof -i :8000 | grep LISTEN | awk "{print \$2}" | xargs -r sudo kill -9
-                sleep 2
-              fi
-              echo "Verifying port 8000 is free"
-              if sudo -n lsof -i :8000; then
-                echo "Port 8000 is still in use"
-                sudo -n lsof -i :8000
-                exit 1
-              fi
-              echo "Cleaning up Docker to free space"
-              sudo -n docker system prune -a -f --volumes
-              if [ $? -ne 0 ]; then
-                echo "Docker cleanup failed"
-                exit 1
-              fi
-              echo "Checking Docker version"
-              sudo -n docker --version
-              if [ $? -ne 0 ]; then
-                echo "Docker not installed or inaccessible"
-                exit 1
-              fi
+              cd ${{ env.EC2_DOCKER_DIR }}
+              
+              # Clean up existing containers
+              echo "Cleaning up existing containers"
+              sudo docker stop ${{ env.DOCKER_IMAGE }} 2>/dev/null || true
+              sudo docker rm ${{ env.DOCKER_IMAGE }} 2>/dev/null || true
+              
+              # Build and run new container
               echo "Building Docker image: ${{ env.DOCKER_IMAGE }}"
-              echo "Build started at $(date)"
-              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && docker build -t ${{ env.DOCKER_IMAGE }} ."
-              if [ $? -ne 0 ]; then
-                echo "Docker build failed"
-                exit 1
-              fi
-              echo "Build finished at $(date)"
+              sudo docker build -t ${{ env.DOCKER_IMAGE }} .
+              
               echo "Running new container"
-              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && docker run -d \
+              sudo docker run -d \
                 --name ${{ env.DOCKER_IMAGE }} \
                 --restart unless-stopped \
                 -p 8000:8000 \
                 --env-file .env \
-                ${{ env.DOCKER_IMAGE }}"
-              if [ $? -ne 0 ]; then
-                echo "Failed to run Docker container"
-                exit 1
-              fi
-              echo "Waiting for container to stabilize"
-              sleep 30
-              echo "Displaying container logs"
-              sudo -n docker logs ${{ env.DOCKER_IMAGE }}
-              echo "Docker deployment completed successfully"
+                ${{ env.DOCKER_IMAGE }}
+              
+              echo "Deployment completed successfully"
             '
-        if: success()
