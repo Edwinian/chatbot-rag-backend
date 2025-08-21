@@ -94,6 +94,38 @@ jobs:
           '
         if: success()
 
+      - name: Configure Hostname Resolution
+        run: |
+          ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=5 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
+            set -e
+            set -x
+            # Get the current hostname
+            HOSTNAME=$(hostname)
+            echo "Current hostname: $HOSTNAME"
+            
+            # Check if hostname is already in /etc/hosts
+            if ! grep -q "$HOSTNAME" /etc/hosts; then
+              echo "Adding hostname to /etc/hosts"
+              echo "127.0.0.1 $HOSTNAME" | sudo tee -a /etc/hosts
+              echo "::1 $HOSTNAME" | sudo tee -a /etc/hosts
+            else
+              echo "Hostname already exists in /etc/hosts"
+            fi
+            
+            # Also add the public IP if needed (optional)
+            PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4 || echo "")
+            if [ ! -z "$PUBLIC_IP" ]; then
+              echo "Public IP: $PUBLIC_IP"
+              if ! grep -q "$PUBLIC_IP" /etc/hosts; then
+                echo "$PUBLIC_IP $HOSTNAME" | sudo tee -a /etc/hosts
+              fi
+            fi
+            
+            echo "Updated /etc/hosts:"
+            cat /etc/hosts
+          '
+        if: success()
+
       - name: Deploy Docker Container
         uses: nick-fields/retry@v3
         with:
