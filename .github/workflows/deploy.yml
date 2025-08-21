@@ -80,19 +80,21 @@ jobs:
               set -e
               set -x
               echo "Creating .env file in ${{ env.EC2_DOCKER_DIR }}"
-              cd ${{ env.EC2_DOCKER_DIR }}
-              
-              cat > .env << EOF
-              HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}
-              SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}
-              FRONTEND_URL=http://${{ secrets.EC2_HOST }}:3001
-              EOF
-              
-              chmod 600 .env
-              echo ".env file created and secured"
+              sudo -n bash -c "cd ${{ env.EC2_DOCKER_DIR }} && pwd"
+              set +x
+              sudo -n bash -c "echo \"HUGGINGFACE_TOKEN=${{ secrets.HUGGINGFACE_TOKEN }}\" > ${{ env.EC2_DOCKER_DIR }}/.env"
+              sudo -n bash -c "echo \"SERPAPI_KEY=${{ secrets.SERPAPI_KEY }}\" >> ${{ env.EC2_DOCKER_DIR }}/.env"
+              sudo -n bash -c "echo \"FRONTEND_URL=http://${{ secrets.EC2_HOST }}:3001\" >> ${{ env.EC2_DOCKER_DIR }}/.env"
+              set -x
+              sudo -n chmod 600 ${{ env.EC2_DOCKER_DIR }}/.env
+              if [ $? -ne 0 ]; then
+                echo "Failed to set .env permissions"
+                exit 1
+              fi
+              echo ".env file creation and permissions set"
             '
-
-      # ... rest of your existing steps remain the same
+        if: success()
+        
       - name: Free Disk Space
         run: |
           ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -o ServerAliveCountMax=5 ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} '
