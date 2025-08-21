@@ -199,12 +199,6 @@ jobs:
               fi
               echo "Waiting for container to stabilize"
               sleep 30
-              echo "Cleaning up unused Docker images"
-              sudo -n docker image prune -f
-              if [ $? -ne 0 ]; then
-                echo "Docker image cleanup failed"
-                exit 1
-              fi
               echo "Displaying container logs"
               sudo -n docker logs ${{ env.DOCKER_IMAGE }}
               echo "Docker deployment completed successfully"
