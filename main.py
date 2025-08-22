@@ -116,7 +116,7 @@ async def upload_doc(
 ):
     chroma_service = ChromaService(collection_name=collection_name)
     file_extension = os.path.splitext(file.filename)[1].lower()
-    supported_types = chroma_service.FILE_EXTENSIONS
+    supported_types = chroma_service.FILE_EXTENSIONS + chroma_service.IMAGE_EXTENSIONS
 
     if file_extension not in supported_types:
         raise HTTPException(

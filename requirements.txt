@@ -15,4 +15,5 @@ beautifulsoup4
 unstructured[pdf,docx]
 pdf2image
 olefile
+easyocr
 
