@@ -23,7 +23,7 @@ from pydantic_models import (
     QueryResponse,
     DocumentInfo,
     DeleteFileRequest,
-    ApplicationLog,  # Add the new model
+    ApplicationLog,
 )
 from langchain_service import LangChainService
 from db_service import DBService
@@ -36,6 +36,7 @@ logging.basicConfig(filename="app.log", level=logging.INFO)
 
 app = FastAPI()
 
+# Restrict origins and headers in production
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

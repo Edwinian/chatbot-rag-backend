@@ -26,18 +26,18 @@ RUN pip install --no-cache-dir \
 
 # Install other requirements
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
 # Create directories for SQLite and Chroma with correct permissions
-RUN mkdir -p /app/chroma_db && \
-    chmod -R 777 /app/chroma_db
+RUN mkdir -p /app/chroma_db /app/data && \
+    chmod -R 755 /app/chroma_db /app/data
 
 EXPOSE 8000
 
 # Health check for the application
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=1 \
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8000/get-application-logs || exit 1
 
 CMD ["gunicorn", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "--timeout", "120", "--log-level", "debug", "main:app", "--bind", "0.0.0.0:8000"]
