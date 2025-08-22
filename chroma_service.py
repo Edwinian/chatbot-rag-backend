@@ -16,7 +16,6 @@ from langchain_core.documents import Document
 from langchain_core.retrievers import BaseRetriever
 import logging
 from pydantic_models import ModelName
-from utils_service import UtilsService
 
 # Configure logging
 logging.basicConfig(filename="app.log", level=logging.INFO)
@@ -26,7 +25,6 @@ logger = logging.getLogger(__name__)
 class ChromaService:
     DEFAULT_COLLECTION_NAME = "default_collection"
     PERSIST_DIRECTORY = "./chroma_db"
-    IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png"]
     FILE_EXTENSIONS = [
         ".pdf",
         ".doc",
@@ -41,7 +39,6 @@ class ChromaService:
         chunk_size: int = 500,
         chunk_overlap: int = 100,
     ):
-        self.utils_service = UtilsService()
         self.embedding_function = HuggingFaceEmbeddings(model_name=embedding_model)
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size,
@@ -129,41 +126,8 @@ class ChromaService:
 
         return formatted_name
 
-    def get_image_documents(self, file_path: str) -> List[Document]:
-        try:
-            results = self.utils_service.extract_texts_from_image(file_path)
-            print("texts from images", results)
-
-            if not results:
-                return []
-
-            # Combine all detected text into a single string
-            extracted_text = "\n".join(results)
-
-            # Create a Document for the extracted text
-            doc = Document(
-                page_content=extracted_text,
-                metadata={
-                    "file_path": file_path,
-                    "content_type": "image",
-                    "file_id": os.path.basename(file_path),
-                    "file_extension": os.path.splitext(file_path)[1].lower(),
-                    "source": "easyocr",
-                },
-            )
-
-            return [doc]
-
-        except Exception as e:
-            print(f"Failed to process image {file_path}: {str(e)}")
-            raise ValueError(f"Failed to process image {file_path}: {str(e)}")
-
     def get_split_documents(self, file_path: str) -> List[Document]:
         file_extension = os.path.splitext(file_path)[1].lower()
-
-        if file_extension in self.IMAGE_EXTENSIONS:
-            return self.get_image_documents(file_path)
-
         file_loader_map = {
             ".pdf": UnstructuredPDFLoader,
             ".docx": UnstructuredWordDocumentLoader,
