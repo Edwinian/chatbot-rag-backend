@@ -1,6 +1,5 @@
 FROM python:3.12-slim
 
-# Install essential dependencies for EasyOCR, OpenCV, and pdf2image
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     libgl1 \
@@ -11,11 +10,9 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-# Create and activate a virtual environment
 RUN python -m venv /app/venv
 ENV PATH="/app/venv/bin:$PATH"
 
-# Upgrade pip and install wheel
 RUN pip install --upgrade pip wheel
 
 # Install torch and torchvision (CPU-only versions) from PyTorch index
@@ -24,7 +21,6 @@ RUN pip install --no-cache-dir \
     torchvision==0.23.0+cpu \
     --index-url https://download.pytorch.org/whl/cpu
 
-# Install other requirements
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
