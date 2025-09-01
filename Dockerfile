@@ -20,8 +20,8 @@ RUN pip install --upgrade pip wheel
 
 # Install torch and torchvision (CPU-only versions) from PyTorch index
 RUN pip install --no-cache-dir \
-    torch==2.5.0+cpu \
-    torchvision==0.20.0+cpu \
+    torch==2.8.0+cpu \
+    torchvision==0.23.0+cpu \
     --index-url https://download.pytorch.org/whl/cpu
 
 # Install other requirements

@@ -94,6 +94,21 @@ def list_documents():
     return db_service.get_all_documents()
 
 
+@app.get("/get-latest-application-logs", response_model=list[ApplicationLog])
+def get_latest_application_logs() -> list[ApplicationLog]:
+    """Retrieve the latest log entry for each session_id based on created_at."""
+    logs = db_service.get_latest_application_logs()
+
+    if not logs:
+        return []
+
+    for log in logs:
+        log["model_response"] = langchain_service.format_llm_response(
+            log["model_response"]
+        )
+    return logs
+
+
 @app.get("/get-application-logs", response_model=list[ApplicationLog])
 def get_application_logs(
     session_id: Optional[str] = Query(None),

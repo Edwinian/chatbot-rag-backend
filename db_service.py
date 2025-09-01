@@ -72,6 +72,25 @@ class DBService:
                 )
             return messages
 
+    def get_latest_application_logs(self) -> List[Dict]:
+        """Retrieve the latest log entry for each session_id based on created_at."""
+        with self._get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                SELECT id, session_id, user_query, model_response, model, created_at
+                FROM application_logs
+                WHERE (session_id, created_at) IN (
+                    SELECT session_id, MAX(created_at)
+                    FROM application_logs
+                    GROUP BY session_id
+                )
+                ORDER BY created_at DESC
+                """
+            )
+            logs = [dict(row) for row in cursor.fetchall()]
+            return logs
+
     def get_application_logs(self, session_id: Optional[str] = None) -> List[Dict]:
         """Retrieve all application log entries, optionally filtered by session_id."""
         with self._get_db_connection() as conn:
