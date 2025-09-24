@@ -1,3 +1,6 @@
+import base64
+import httpx
+from fastapi.responses import RedirectResponse
 import os
 import uuid
 import logging
@@ -48,6 +51,58 @@ app.add_middleware(
 db_service = DBService()
 chroma_service = ChromaService()
 langchain_service = LangChainService()
+
+
+@app.get("/pinterest/callback")
+async def pinterest_callback(code: str, state: str = None):
+    pinterest_client_id = os.getenv("PINTEREST_APP_ID")
+    pinterest_client_secret = os.getenv("PINTEREST_APP_SECRET")
+    redirect_uri = os.getenv("PINTEREST_REDIRECT_URI")
+
+    token_url = "https://api.pinterest.com/v5/oauth/token"
+
+    data = {
+        "code": code,
+        "redirect_uri": redirect_uri,
+        "grant_type": "authorization_code",
+    }
+
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Authorization": f"Basic {base64.b64encode(f'{pinterest_client_id}:{pinterest_client_secret}'.encode()).decode()}",
+    }
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(token_url, data=data, headers=headers)
+        if response.status_code == 200:
+            token_data = response.json()
+            access_token = token_data.get("access_token")
+            refresh_token = token_data.get("refresh_token")
+
+            # Store tokens securely (database, environment variables, etc.)
+            return {"access_token": access_token, "refresh_token": refresh_token}
+        else:
+            error_detail = response.text
+            raise HTTPException(
+                status_code=400, detail=f"Token exchange failed: {error_detail}"
+            )
+
+
+@app.get("/pinterest/auth")
+async def pinterest_auth():
+    pinterest_client_id = os.getenv("PINTEREST_APP_ID")
+    redirect_uri = os.getenv("PINTEREST_REDIRECT_URI")
+
+    auth_url = (
+        f"https://www.pinterest.com/oauth/"
+        f"?client_id={pinterest_client_id}"
+        f"&redirect_uri={redirect_uri}"
+        f"&response_type=code"
+        f"&scope=user_accounts:read,boards:read,boards:write,pins:read,pins:write"
+        f"&state=random_state_string"
+    )
+
+    return RedirectResponse(url=auth_url)
 
 
 @app.get("/find-docs")
