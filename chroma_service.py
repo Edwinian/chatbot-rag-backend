@@ -1,6 +1,7 @@
 import os
 import re
 import base64
+import numpy as np
 from typing import Dict, List, Optional
 from fastapi import HTTPException
 from langchain_community.vectorstores.utils import filter_complex_metadata
@@ -357,3 +358,54 @@ class ChromaService:
 
     def get_retriever(self) -> BaseRetriever:
         return self.vectorstore.as_retriever()
+
+    def find_similarity_score(self, text1: str, text2: str) -> float:
+        """
+        Compute the cosine similarity score between two strings.
+        
+        Args:
+            text1: First string input (e.g., user query)
+            text2: Second string input (e.g., model answer)
+            
+        Returns:
+            Cosine similarity score between -1 and 1, where:
+            - 1 indicates identical semantic meaning
+            - 0 indicates no similarity
+            - -1 indicates opposite meaning
+            
+        Raises:
+            ValueError: If either input string is empty or embedding fails
+        """
+        if not text1 or not text1.strip():
+            raise ValueError("text1 cannot be empty")
+        if not text2 or not text2.strip():
+            raise ValueError("text2 cannot be empty")
+        
+        try:
+            # Get embeddings for both strings
+            embedding1 = self.embedding_function.embed_query(text1)
+            embedding2 = self.embedding_function.embed_query(text2)
+            
+            # Convert to numpy arrays
+            vec1 = np.array(embedding1)
+            vec2 = np.array(embedding2)
+            
+            # Compute cosine similarity: dot product / (norm1 * norm2)
+            dot_product = np.dot(vec1, vec2)
+            norm1 = np.linalg.norm(vec1)
+            norm2 = np.linalg.norm(vec2)
+            
+            if norm1 == 0 or norm2 == 0:
+                logger.warning("One of the embeddings has zero norm")
+                return 0.0
+            
+            similarity = dot_product / (norm1 * norm2)
+            
+            # Ensure the result is within [-1, 1] range (should be, but clamp for safety)
+            similarity = np.clip(similarity, -1.0, 1.0)
+            
+            return float(similarity)
+            
+        except Exception as e:
+            logger.error(f"Error computing cosine similarity: {str(e)}")
+            raise ValueError(f"Failed to compute cosine similarity: {str(e)}")
